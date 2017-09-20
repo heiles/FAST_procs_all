@@ -1,0 +1,27 @@
+;+
+;NAME:
+;fitazzainit - initialize to use fitazza() routine.
+;SYNTAX: @fitazzainit
+;ARGS:   none 
+;DESCRIPTION:
+;   Initialize to use the fitazza() routine. This must be called once
+;before using fitazza(). It defines the {fitazza} structure.
+;SEE ALSO
+;fitazza
+;-
+a={azzafit, $
+            numCoef:        10L    ,$; for fit
+            fittype:         1     ,$; 1-def,2-about za10,3-chebyshev 3rd order
+            freq   :         0.    ,$; Mhz
+             coef  :       dblarr(10),$;coef.
+         sigmaCoef :       dblarr(10),$; sigmas on each coef.
+             covar :       dblarr(10,10),$; covariance matrix
+            chisq  :         0.D   ,$; of fit
+           sigma   :         0.D   ,$; of fit - data
+           zaSet   :        14.    ,$; za cutoff for higher order,or pivot
+            rfNum  :         0     ,$; rcv num
+             pol   :         ' '   ,$; 'a', 'b','i' stokes I
+            type   :         ' '   ,$;gain,sefd,tsys,etc..
+           title   :         ' '   ,$; for any plots top
+           ytitle  :         ' '   ,$; for any plots left
+           date    :         ' '   } ; fit run

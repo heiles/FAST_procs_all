@@ -1,0 +1,33 @@
+
+pcount - end of datatable to end of heap. used to skip over variable
+		 length recs in heap. May include the hole between table and heap.
+
+		.. pcount grows by spectralen-hdrlen on each write..(since
+		   end of heap grows by spclen while end of table grows by
+
+theap  - start of bintable data to start of heap..
+	    .. this will decrease when the file is finally compressed..
+
+
+pat# obsmode obs_name 
+SPIDER 
+0	calonoff
+0		CAL     ON
+0		CAL     OFF
+
+0		SPIDER  ONAZ
+0		SPIDER  ONZA
+0		SPIDER  ONAZ45
+0		SPIDER  ONZA45
+
+ONOFF POSITION SWITCH 
+
+
+0	ONOFF        ON
+t
+:w	ONOFF        OFF
+0		CAL     ON
+0		CAL     OFF
+
+
+

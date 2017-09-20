@@ -1,0 +1,238 @@
+;
+; routines to handle laser ranging dx,dy ..
+; uses tslr struct in ../h/hdrTilt
+;
+
+; laser ranging routines.
+;
+; plLrD1,lr,ind,over,nolab .. plot inches offset dx,dy 1 spin 
+; plLrDa,lr,wait,overplot  .. plot inches offset ...
+; plLrPRAz,lr,ind,useroll,overplot.. plot pitch,roll vs az
+; plLrPRAzA,lr,useroll     .. plot p,roll vs az all swings
+; plLrFAz,lr,ind,useroll ,overplot.. plot pitch,roll fits vs az
+; lrCmpRes,lr,lrfit,ind,useroll  .. compute residuals fit
+; plLrResAz,lr,lrfit,ind,useroll,overplot.. plot residuals vs az  1 swin
+; plLrResAzAll,lr,lrfit,useroll          .. plot residuals vs az for all swings 
+; plLrFitZa,lrfit,ind,useroll    .. plot fits coef. vs za
+;
+; plLrPAllza,lrfit			   .. plot all pitch coef vs za
+; plLrRAllza,lrfit			   .. plot all roll  coef vs za
+; plLrAll,lr,lrfit
+;
+;---------------------------------------------------
+pro plLrD1,lr,ind,over,nolab
+;
+;	plot data dy vs dx for 1 az spin
+;
+	if (n_elements(over) eq 0) then   over=0
+	if (n_elements(nolab) eq 0) then nolab=0
+	hor,-3,3
+	ver,-2,4
+	if over eq 0 then begin
+		plot,lr[*,ind].dx,lr[*,ind].dy,xstyle=1,ystyle=1, $
+			xtitle="dx inches (west<->east)",$
+			ytitle="dy inches (south<->north)", $
+			title='az swing horizontal platform motion'
+	endif else begin
+		oplot,lr[*,ind].dx,lr[*,ind].dy
+	endelse
+	label=string(format= '("za=",i2)',fix(lr[5,ind].za+.5))
+	print,nolab 
+	if nolab eq 0 then begin
+		note,3,label
+		if (ind mod 2 ) eq 0 then begin
+	    	 label=string(format='("AZ : ",i3)',fix(lr[0,ind].az))
+	     	xyouts,lr[0,ind].dx, lr[0,ind].dy,label
+		endif else begin
+	     	label=string(format='("AZ : ",i3)',fix(lr[14,ind].az))
+	     	xyouts,lr[14,ind].dx, lr[14,ind].dy,label
+		endelse
+	endif
+	return
+end
+;---------------------------------------------------
+pro plLrDa,lr,wait,over
+;
+;	plot dy,dx for all az spins
+;
+	if (n_elements(wait) eq 0) then wait=0
+	if (n_elements(over) eq 0) then over=0
+	a=size(lr)
+	if  a[0] eq 1 then last=0 else last=a[2]-1
+	overloc=0
+	nolab  = over
+	a=' '
+	for i=0,last do begin
+		pllrd1,lr,i,overloc,nolab
+		overloc=over
+		a=" "
+		if wait ne 0 then read,a
+	endfor
+	return
+end
+;---------------------------------------------------
+pro plLrPRAz,lr,ind,useroll,overplot
+;
+; plot pitch,roll vs az 1 swing
+;
+	if n_elements(ind)     eq 0 then ind    =0
+	if n_elements(useroll) eq 0 then useroll=0
+	if n_elements(overplot) eq 0 then overplot=0
+    i=sort(lr[*,ind].az)
+	if useroll eq 0 then begin
+			y=lr[*,ind].dp 
+			labtype='PITCH'
+	endif else begin
+		y=lr[*,ind].dr
+		labtype='ROLL'
+	endelse
+	if overplot eq 0 then  begin
+    	plot,lr[i,ind].az,y[i],xstyle=1,ystyle=1,$
+			title=labtype+' from dx,dy motion for each azswing' ,$
+			xtitle='az' ,ytitle=labtype+' [deg]'
+    endif else begin
+    	oplot,lr[i,ind].az,y[i]
+	endelse
+    return
+end
+;---------------------------------------------------
+pro plLrPRAzA,lr,useroll
+;
+; plot pitch,roll vs az all swings
+;
+	overplot=0
+	a=size(lr)
+	if  a[0] eq 1 then last=0 else last=a[2]-1
+	for i=0,last do begin
+		pllrpraz,lr,i,useroll,overplot
+		overplot=1
+	endfor
+	return
+end
+;---------------------------------------------------
+pro plLrFaz,lr,lrfit,ind,useroll,overplot
+;
+; plot pitch,roll fit vs az
+;
+	forward_function azsweval
+	if n_elements(ind)     eq 0 then ind    =0
+	if n_elements(useroll) eq 0 then useroll=0
+	if n_elements(overplot) eq 0 then overplot=0
+    i=sort(lr[*,ind].az)
+	if useroll eq 0 then lrf=lrfit[ind].p else y=lrfit[ind].r
+	y=azsweval(lrf,lr[*,ind].az)
+    plot,lr[i,ind].az,y[i]
+    return
+end
+;---------------------------------------------------
+function lrCmpRes,lr,lrfit,ind,useroll
+;
+; compute residuals  fit vs az
+;
+;
+	forward_function azsweval
+	if n_elements(ind)     eq 0 then ind    =0
+	if n_elements(useroll) eq 0 then useroll=0
+	if useroll eq 0 then begin
+		lrf=lrfit[ind].p
+		yy=lr[*,ind].dp
+	endif else begin
+		lrf=lrfit[ind].r
+		yy=lr[*,ind].dr
+	endelse
+	return, (yy- azsweval(lrf,lr[*,ind].az))
+end
+;---------------------------------------------------
+pro plLrResAz,lr,lrfit,ind,useroll,overplot
+;
+; pllrresaz .. plot residuals for each az spin, 
+;
+	forward_function lrCmpRes
+	if n_elements(ind)     eq 0 then ind    =0
+	if n_elements(useroll) eq 0 then useroll=0
+	if n_elements(overplot) eq 0 then overplot=0
+	if useroll eq 0 then labtype='PITCH' else labtype='ROLL'
+	y=lrCmpRes(lr,lrfit,ind,useroll)
+	i=sort(lr[*,ind].az)
+	if (overplot) then begin
+		oplot,lr[i,ind].az,y[i]
+	endif else begin
+		plot,lr[i,ind].az,y[i],title=labtype+' residuals fit',xstyle=1,ystyle=1
+	endelse
+	return
+end
+;---------------------------------------------------
+pro plLrResAzAll,lr,lrfit,useroll
+;
+; plot res fits for all az swings
+	overplot=0
+	a=size(lr)
+	if  a[0] eq 1 then last=0 else last=a[2]-1
+	for i=0,last do begin 
+		plLrResAz,lr,lrfit,i,useroll,overplot
+		overplot=1
+	endfor
+	return
+end
+;---------------------------------------------------
+pro plLrFitZa,lrfit,ind,useroll
+;
+; plot fit residuals vs za for al az swings
+; you will typpically change the hor scales for this routine locally
+;
+    if n_elements(ind)     eq 0 then ind     = 0
+    if n_elements(useroll) eq 0 then useroll = 0
+;
+;   setup the vertical scale
+;
+    case ind of
+        0 : if useroll eq 0 then ver,-.01,.01     else ver,-.01,.01
+        1 : if useroll eq 0 then ver,-1e-4,1e-4 else ver,-1e-4,1e-4
+        2 : if useroll eq 0 then ver,.01,.02      else ver,.01,.02
+        3 : if useroll eq 0 then ver,100.,120.   else ver,190,210
+        4 : if useroll eq 0 then ver,.0,.01  else ver,.0,.01
+        5 : if useroll eq 0 then ver,260,300.  else ver,0,150.
+      else: message,'ind:0-con,1-lin,2-1azAmp,3-1azPh,4-3azAmp,5-3azPh'
+    endcase
+    plazswvsza,lrfit,ind,useroll
+    ver
+    return
+end
+;---------------------------------------------------
+pro plLrPAllza,lrfit
+;
+; plot fits for  pitch vs za
+;
+    for i=0,5 do plLrFitZa,lrfit,i,0
+    return
+end
+;---------------------------------------------------
+pro pllrrallza,lrfit
+;
+; plot fits for roll vs za
+;
+    for i=0,5 do plLrFitZa,lrfit,i,1
+    return
+end
+;---------------------------------------------------
+pro plLrAll,lr,lrfit
+;
+; plot everything
+;
+	hor
+	ver,-.005,.005
+	plLrResAzAll,lr,lrfit,0
+	plLrResAzAll,lr,lrfit,1
+	ver,-.05,.05
+	hor,0,360
+    plLrPRAzA,lr,0
+	azSwLab,lrfit,20.,.040,0
+    plLrPrAzA,lr,1
+	azSwLab,lrfit,20.,.040,1
+	hor&ver
+	plLrPAllZa,lrfit
+	plLrRAllza,lrfit
+    plLrDa,lr,0,0
+    plLrDa,lr,0,1
+	return
+end

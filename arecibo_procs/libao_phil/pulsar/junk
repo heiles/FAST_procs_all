@@ -1,0 +1,2 @@
+mv tempocomp.pro tempo_comp.pro
+mv tempoget.pro  tempo_getdata.pro

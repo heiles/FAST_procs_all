@@ -1,0 +1,24 @@
+
+Carl originally had 3 different modangle routines:
+
+modangle.pro -> returned angles in range [0,180]
+modanglem.pro -> returned angles in range [-90,+90]
+modangle360.pro -> returned angles in range [0,360], 
+		   unless /c180 set, then [-180,+180]
+
+Tim made a general version called modangle.pro:
+It defaults to [0,360].
+If EXTENT passed, [0,EXTENT].
+If /NEGPOS is set, [-EXTENT/2,+EXTENT/2].
+
+so:
+
+OLD		         NEW
+----			 ---
+modangle(ang)		 modangle(ang,180)
+modanglem(ang)		 modangle(ang,180,/NEGPOS)
+modangle360(ang)	 modangle(ang)
+modangle360(ang,/C180)	 modangle(ang,/NEGPOS)
+
+These have all been thoroughly checked.
+

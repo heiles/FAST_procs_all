@@ -1,0 +1,8 @@
+;dome 429Mhz Sep03
+; installed 26sep03, data from mar03 to sep03, backdated  
+; to jan2001 since that is when the cal was defined.
+;
+;frq typ c0          za          (za-14)^2  (za-14)^3    sigma     pol calVal
+!2001 1
+ 429.  4  1.0814e+01 -1.0356e-02 -3.1694e-02 -1.4926e-03  3.5074e-01 I   95.5  103.
+ 431.  4  1.0642e+01 -1.7722e-02 -3.2997e-02 -7.7082e-04  3.5540e-01 I   95.5  103.

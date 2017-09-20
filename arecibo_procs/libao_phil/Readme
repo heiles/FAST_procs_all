@@ -1,0 +1,12 @@
+;
+; phil's ao idl routines.
+;
+; The source is kept under svn in
+; /share/megs/phil/svn/idl
+; All changes should be made there..
+;
+; To install any changes in the production library (/pkg/rsi/local/libao/phil)/.
+; 1. cd /share/megs/phil/svn/idl
+; 2. svn update
+; 3. make install
+;

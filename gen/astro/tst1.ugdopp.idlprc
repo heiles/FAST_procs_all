@@ -1,0 +1,21 @@
+;test solar elllipticity...
+
+;assume we are in greenwich...
+nlat=0.
+wlong=0.
+
+;midnite in greenwich...
+julday0=julday(3, 22, 2011, 12. + .12)
+vel= fltarr( 4, 366)
+
+for nd=0, 365 do begin
+    isun, ra, dec, juldate=julday0+ nd ;, getlst=getlst
+vel[ *, nd]= ugdoppler( ra, dec, julday0+nd, nlat=nlat, wlong=wlong, $
+                  obspos_deg=obspos_deg, lst_mean=lst_mean)
+endfor
+
+;print, 'ra, dec = ', ra, dec
+;print, 'ha = ', lst_mean- ra, lst_mean-ra-24.
+
+end
+

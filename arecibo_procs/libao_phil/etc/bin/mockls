@@ -1,0 +1,327 @@
+#!/usr/bin/env perl
+#
+#   program to read and select files from the mock  directories.
+#   program will run many times faster than ls since perl
+#   reads the entire directory at once.
+#  see the --help below  
+use strict;
+use warnings;
+use Getopt::Long;
+
+(our $PROGNAME= $0) =~ s/.*\///; 
+#
+# the options
+#
+	our $opt_dirBase 	    =undef;
+	our $opt_projId			=undef;
+	our $opt_year			=undef;
+	our $opt_mon			=undef;
+	our $opt_day			=undef;
+	our $opt_yyyymmdd			=undef;
+	our $opt_bm				=undef;
+	our $opt_band			=undef;
+	our $opt_grp			=undef;
+	our $opt_num			=undef;
+	our $opt_oneDir			=undef;
+	our $opt_pdev			=undef;
+	our $opt_psrfits		=undef;
+	our $opt_dirI			=undef;
+	our $opt_srcname        =undef;
+	our $opt_sort			=undef;
+	our $opt_incdir     	=undef;
+	our $opt_incidl     	=undef;
+	our	$opt_verb			=undef;
+#
+#	hash for options
+#
+	our %opts = (
+		'dirBase=s'		=> \$opt_dirBase,
+		'projId=s'		=> \$opt_projId,
+		'year=o'		=> \$opt_year,
+		'mon=o'		    => \$opt_mon,
+		'day=o'			=> \$opt_day,
+		'yyyymmdd=o'	=> \$opt_yyyymmdd,
+		'bm=o'			=> \$opt_bm,
+		'band=o'		=> \$opt_band,
+		'grp=o'			=> \$opt_grp,
+		'num=o'			=> \$opt_num,
+		'dirI=s'		=> \$opt_dirI,
+		'oneDir'	    => \$opt_oneDir,
+		'pdev'		    => \$opt_pdev,
+		'psrfits'		=> \$opt_psrfits,
+		'srcname'		=> \$opt_srcname,
+        'sort'          => \$opt_sort,
+        'incdir'        => \$opt_incdir,
+        'incidl'        => \$opt_incidl,
+		'verb'		    => \$opt_verb,
+	);
+	my $getoptok=GetOptions(%opts);
+	if (scalar(@ARGV)) {
+		$getoptok=0;
+		print STDERR "$PROGNAME does not accept arguments, only --options\n";
+	}
+#
+#	if no getopt errors, verify data values
+#
+	if ((defined($opt_year)) && ($opt_year lt 2000)){
+		$getoptok=0;print STDERR "optErr: --year= is 4 digits. eg. --year=2010\n";
+	}
+	if ((defined($opt_mon)) && (($opt_mon < 1)||($opt_mon > 12))){
+		$getoptok=0;print STDERR "optErr: --mon= is 1 to 12. eg. --mon=1\n";
+	}
+	if ((defined($opt_day)) && (($opt_day < 1)||($opt_day > 31))){
+		$getoptok=0;print STDERR "optErr: --day= is day of month 1..31. eg. --day=25\n";
+	}
+#   now allow 0000mmdd or yyyy0000
+##	if ((defined($opt_yyyymmdd)) && (($opt_yyyymmdd < 20000101)||($opt_yyyymmdd > 20300101))){
+##		$getoptok=0;print STDERR "optErr: --yyyymmdd= has illegal value. eg. --yyyymmdd=20100521\n";
+##	}
+	if ((defined($opt_bm)) && (($opt_bm < 0)||($opt_bm > 6))){
+		if ($opt_bm == -1) {
+			undef $opt_bm;
+		} else {
+			$getoptok=0;print STDERR "optErr: --bm=  is 0 to 6 eg. --bm=3\n";
+		}
+	}
+	if ((defined($opt_band)) && (($opt_band < 0)||($opt_band > 1))){
+		if ($opt_band == -1) {
+			undef $opt_band;
+		} else {
+		$getoptok=0;print STDERR "optErr: --band= is  0 or 1. eg. --band=0\n";
+		} 
+	}
+	if ((defined($opt_grp)) && (($opt_grp < 0)||($opt_grp > 1))){
+		if ($opt_grp == -1) {
+			undef $opt_grp;
+		} else {
+		$getoptok=0;print STDERR "optErr: --grp= is 0 or 1. eg. --grp=0\n";
+		}
+	}
+	if ((defined($opt_num)) && (($opt_num < 0)||($opt_num > 99999))){
+		if ($opt_num == -1) {
+			undef $opt_num;
+		} else {
+		$getoptok=0;print STDERR "optErr: --num= is 0 to 99999. eg. --num=1000\n";
+		}
+	}
+	if (!$getoptok) {
+    	print STDERR "Usage:
+       	$PROGNAME [options]
+        [--dirBase=dir]	    Base directory. Def: /share/pdata
+        [--projId=projId]   project id: eg a2130
+        [--year=yyyy]       year to search. eg 2010
+        [--mon=[1-12]       month to search eg: 3
+        [--day=[1-31]       name for cal.conf.   Def: cal.conf
+        [--yyyymmdd=yyyymmdd] Date to search for etc 20101005
+                            0's in date portion searchs for any 
+                            eg: yyyymm00 is any day of yyyymm
+                                yyyy0000 same as --year
+                            yyyymm00 searches for any day
+        [--bm=[0-6]         beam/box to use 0 to 6. def=all
+        [--band=[0,1]       which band of mock box to use. def:both
+        [--grp=[0,1]        which grp of mock spectrometer def:both
+        [--num=filenum]     which filenumber. def: all
+        [--dirI=string]     Alternate directories to search.
+                            \"dirPrefix,dirSuffix\" where directory names are:
+                            dirPrefixNdirSuffix N=0..6
+                            def: \"/share/pdata,/pdev/\" 
+                            gives: /share/pdataN/pdev/ N=0..6
+        [--oneDir]          All bms,groups in one directory.
+                            Set value in dirI=\"dirName,\"
+        [--pdev]            look for .pdev data. def:aofits
+        [--psrfits]         lookfor psrfits data. Def: aofits data
+        [--srcname=srcname] if --psrfits then search for this source
+        [--sort]            sort the output in ascending order
+        [--incdir]          include directory with output
+        [--incidl]          return data parsed for idl input
+        [--verb]            output extra debug infole in Mbytes (2^20)
+
+DESCRIPTION:
+   mockls will list all or a subset of the files in the mock online directories 
+(14 in all). It will do this about 10x faster than ls. You can limit the set of
+files using one or more of the options. By default the returned files are 
+unsorted. Use --sort to sort. Use --incdir to prepend the directory names.
+   By default mockls only lists mock aofits files. Use --psrfits for 
+psrfits files and --pdev for the  xxx.pdev files.
+   For listing \"other\" directories use --dirI=\"dirPre,dirSuf\" where the new
+directories are:/dirPreNdirSuf. eg: dirI=\"/export/pdata,/pdev/\" gives:
+ /export/pdataN/pdev/. If all of the files are in a single directory 
+use: dirI=\"/export/data/allfiles,\" and --onedir.
+
+  
+EXAMPLES:
+  - List all  mock aofits files:
+    $PROGNAME
+  - List proj a2463 files on  20100521:
+    $PROGNAME --proj=a2463 --yyyymmdd=20100521
+  - List proj a2463 files,bm 0, grp 0, on 20100521:
+    $PROGNAME --proj=a2463 --yyyymmdd=20100521 --bm=0 --grp=0
+  - List proj a2133, grp 0, on 20090413, in galfas3 subdir:
+    /export/galfas30/a2133/mN 
+    $PROGNAME --proj=a2133 --yyyymmdd=20090413 --grp=0 --dirI=\"/export/galfas30/a2133/m,/\" 
+    \n";
+	exit 1;
+	}
+	
+#
+# see how fast this reads a directory
+# 
+	my $dirNm;
+	my	@alldir;		# all the files in one directory
+	my  @allfiles;		# all files from all directories
+	my  $nm;
+
+#
+	my $projId;
+	my $date;
+	my ($bm,$band,$grp);
+	my $num;
+	my $srcname;
+
+	my @bmlist;
+	my @grplist;
+	my @dirI;
+	my $suffix="fits";
+
+	$dirI[0]="/share/pdata";
+	$dirI[1]="/pdev/";
+
+	$suffix="pdev" if ($opt_pdev);
+	if ($opt_incidl) {$opt_incdir=1};
+#
+#
+#	Project id field
+#
+	$projId=($opt_projId)?$opt_projId:".+";
+#
+#	date field
+#    	individual yyyymmdd  or  year,mon,day specified
+#
+	if ($opt_yyyymmdd) {
+		$opt_year= int ( $opt_yyyymmdd / 10000 ) ;
+		$opt_mon = int( $opt_yyyymmdd / 100 ) % 100 ;
+		$opt_day = ( $opt_yyyymmdd  % 100) ;
+	}
+    if ( $opt_year || $opt_mon || $opt_day ) {
+		$date=($opt_year)?"$opt_year":"[0-9]{4}";
+		$date.=($opt_mon)?sprintf("%02d",$opt_mon):"[0-9]{2}";
+		$date.=($opt_day)?sprintf("%02d",$opt_day):"[0-9]{2}";
+   } else {
+		$date="[0-9]{8}";
+  }
+#
+#   if oneDira is not supplied then each beam,group will be in a separate
+#   directory. In that case we can tailor each bm,grp to the 
+#   value for that directory
+#
+#   if oneDir is  set, then all files are in the same directory
+#   and we can do one search
+#
+#	so we'll use bm,band,grp for the global single directory
+#	search, and bmlist,grplist for the separate directory searches.
+#
+#   b,s,g field
+#
+#
+	$bm  =(defined($opt_bm))   ?$opt_bm:"[0-6]";
+	$band=(defined($opt_band)) ?$opt_band:"[0-1]";
+	$grp =(defined($opt_grp))  ?$opt_grp :"[0-1]";
+	$srcname=(defined($opt_srcname))?$opt_srcname:".+";
+	@bmlist=(defined($opt_bm))?($opt_bm):(0,1,2,3,4,5,6);
+	@grplist=(defined($opt_grp))?($opt_grp):(0,1);
+#
+#   number field
+#
+	$num=(defined($opt_num))?sprintf("%05d",$opt_num):"[0-9]{5}";
+#
+#   directory info
+#
+	my $useDirI=0;
+	if ($opt_dirI) {
+		@dirI=split(/,/,$opt_dirI );
+	 	$dirI[1].="/" if ((scalar(@dirI) == 2) && ( $dirI[1] !~ /.*\/$/ ));
+		$useDirI=1;
+	}
+	if ($opt_oneDir) {
+		if ($opt_dirI) {
+		 $dirI[0].="/" if $dirI[0] !~ /.*\/$/;
+		} else {
+		 $dirI[0]="./";
+	    }
+	}
+	my $tmp=defined($opt_dirI)?$opt_dirI:'';
+	print "opt_dirI: $tmp dirI:@dirI\n" if ($opt_verb);
+#
+#   multiple directory search
+#
+	my $nfiles;
+    my $pat;
+	if (defined($opt_oneDir) ) {	
+    	$dirNm=$dirI[0];
+		opendir(DIRH,$dirNm) or die "can't open $dirNm";
+		@alldir=readdir DIRH;
+		$nfiles=scalar(@alldir);
+	  	$pat=($opt_psrfits) 
+				?  "^${projId}".'\.'."${date}".'\.'."${srcname}b${bm}s${band}g${grp}".'\.'."${num}".'\.'."$suffix" 
+                :  "^${projId}".'\.'."${date}".'\.'."b${bm}s${band}g${grp}".'\.'."${num}".'\.'."$suffix";
+        print "pat:$pat\n" if ($opt_verb);
+		foreach $nm (@alldir)  {
+			if ($opt_incidl) {
+				push @allfiles,$dirNm . " " . $nm if $nm =~ /^$pat/;
+			} elsif ($opt_incdir) {
+				push @allfiles,$dirNm . $nm if $nm =~ /^$pat/;
+			} else { 
+				push @allfiles,$nm if $nm =~ /^$pat/;
+			}
+		}
+	} else {
+		foreach my $grpI (@grplist) {
+			print "grpI:$grp\n" if ($opt_verb);
+  			foreach my $bmI (@bmlist) {
+				my $bmDirNum=($bmI+1) + $grpI*7;
+    			$dirNm="${dirI[0]}${bmDirNum}$dirI[1]";
+				$dirNm.="/" if $dirNm !~ /.*\/$/;
+				if (! opendir(DIRH,$dirNm)) { 
+#                   useDirI does not have to have all the dir. present
+					next if ($useDirI); 
+			        die "can't open $dirNm";
+				}
+				opendir(DIRH,$dirNm) or die "can't open $dirNm";
+				@alldir=readdir DIRH;
+				$nfiles=scalar(@alldir);
+				print "bm:$bmI $dirNm  # files found:$nfiles\n" if ($opt_verb);
+ 				$pat=($opt_psrfits)
+                     ?"^${projId}".'\.'."${date}".'\.'."${srcname}b${bmI}s${band}g${grpI}".'\.'."${num}".'\.'."$suffix"
+ 				     :"^${projId}".'\.'."${date}".'\.'."b${bmI}s${band}g${grpI}".'\.'."${num}".'\.'."$suffix";
+				print "pat:$pat\n" if $opt_verb;
+				foreach $nm (@alldir)  {
+					if ($opt_incidl) {
+						push @allfiles,$dirNm . " " . $nm if $nm =~ /^$pat/;
+					}elsif ($opt_incdir) {
+			       		push @allfiles,$dirNm . $nm if $nm =~ /^$pat/;
+				  	} else {
+			       		push @allfiles,$nm if $nm =~ /^$pat/;
+					}
+				}
+  			}
+		}
+	} 
+	@allfiles=sort @allfiles if ($opt_sort);
+	if ($opt_incidl) {
+		my ($dirL,$fnmL);
+		foreach $nm (@allfiles) {
+#                    dir        proj 
+			($dirL,$fnmL)=split(/ /,$nm);
+#                        proj    
+			if (!$opt_psrfits) {
+				$fnmL =~ /^([^.]+)\.([0-9]{8})\.b([0-6])s([0-1])g([0-1])\.([0-9]{5})/ ;
+				print "$dirL $fnmL $1 $2 $3 $4 $5 $6\n";
+			} else {
+#                          proj      date       src      bsg             
+				$fnmL =~ /^([^.]+)\.([0-9]{8})\.(.+)\.b([0-6])s([0-1])g([0-1])\.([0-9]{5})/ ;
+				print "$dirL $fnmL $1 $2 $3 $4 $5 $6 $7\n";
+			}
+		}
+	} else {
+		foreach $nm (@allfiles) { print "$nm\n"}; 
+	}

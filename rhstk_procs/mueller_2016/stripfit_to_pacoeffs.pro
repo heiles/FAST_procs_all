@@ -1,0 +1,99 @@
+pro stripfit_to_pacoeffs, qpa, apb, amb, ab, ba, sigmalimit, $
+    pacoeffs, ngoodpoints=ngoodpoints, $
+    apbfit=apbfit, ambfit=ambfit, abfit=abfit, bafit=bafit
+
+;+
+;PURPOSE: Take the correlator outputs (APB, AMP, AB, BA in the RHSTK
+;writeup and in the Heiles et al PASP article), corrected for cal phase
+;and intensity, tracked across the sky and having a healthy range of
+;parallactic angles QPA, and least square fit them a function of the form...
+;
+;
+;	(AMB, AB, BA) = A + B cos(2QPA) + C sin(2QPA),
+;
+;whereA (AMB, AB, BA) are the SOURCE DEFLECTION in one of the three
+;polarized Stokes parameters divided by A+B, and QPA is the parallactic
+;angle on the sky.  Note that the inputs must be FRACTIONAL
+;POLARIZATIONS, i.e. APB is always unity; we do this to eliminate the
+;az/za angle gain dependences.
+;
+; CALLING SEQUENCE:
+;
+;STRIPFIT_TO_PACOEFFS, qpa, apb, amb, ab, ba, sigmalimit, $
+;	pacoeffs, ngoodpoints=ngoodpoints, $
+;       ambfit=ambfit, abfit=abfit, bafit=bafit  
+;
+;INPUTS:
+;
+;	QPA, the set of astronomical parallactic angles on the sky of the
+;observed points.
+;
+;	APB, AMB, AB, BA are the usual four correlator outputs,
+;calibrated by CROSS3_GENCAL. For amplitudes, you should input
+;fractional polarizations, so that all apb = unity and the rest are
+;divided by apb.
+;
+;	SIGMALIMIT: discard points with residuals exceeding
+;sigmalimit*sigma. 
+;
+;OUTPUTS:
+;
+;	PACOEFFS, the set of ls fit coefficients, defined as follows:
+;
+;		PACOEFFS = fltarr( 3, 2, 4), where
+;
+;	the FIRST index means A, B, or C above;
+;	the SECOND index means the error in the ls fit for the above;
+;	the THIRD is the correlator output (Stokes parameter0, defined
+;as follows:
+;
+;	0 means a+b
+;	1 means a-b
+;	2 means ab
+;	3 means ba
+;
+;Note that, because we are using FRACTIONAL POLARIZATIONS,
+;PACOEFFS[0,*,0] is automatically defined to be unity and
+;PACOEFFS[1:2,*,0] are automatically defined to be zero. 
+;
+;OPTIONAL OUTPUTS:
+;
+;	NGOODPOINTS[4], the nr of points included in the fit for each
+;stokes parameter. 0th element is total nr of points; elements 1,2,3 are
+;the nr of points used in the fit for amb, ab, and ba, respectively.
+;       APBFIT, AMBFIT, ABFIT, BAFIT, the fits to apb, amb, ab, ba
+;
+; RELATED PROCEDURES/FUNCTIONS:
+;	LSFITPA_ALLCAL is used from this procedure
+;
+;MODIFICATION HISTORY: Jun 2013, CH lsfitted apb so that its pacoeffs
+;   values aren't exactly 1,0,0. shouldn't matter down the line,k and this
+;   makes the routine work whether or not things are normalized to apb.
+;7aug2016: documentation cleaned up, extraneous stuff eliminated.
+;-
+
+;ZERO THE OUTPUT ARRAY...
+pacoeffs = fltarr( 3, 2, 4)
+ngoodpoints= intarr(4)
+pacoeffs[ 0, 0, 0] = 1.
+
+;;FIT USING THE MODIFIED STOKES...
+lsfitpa_allcal, qpa, apb, sigmalimit, icoeffs, sigma, fittedpointsi, intfit=apbfit
+pacoeffs[ *, *, 0] = icoeffs
+lsfitpa_allcal, qpa, amb, sigmalimit, qcoeffs, sigma, fittedpointsq, intfit=ambfit
+pacoeffs[ *, *, 1] = qcoeffs
+lsfitpa_allcal, qpa, ab, sigmalimit, ucoeffs, sigma, fittedpointsu, intfit=abfit
+pacoeffs[ *, *, 2] = ucoeffs
+lsfitpa_allcal, qpa, ba, sigmalimit, vcoeffs, sigma, fittedpointsv, intfit=bafit
+pacoeffs[ *, *, 3] = vcoeffs
+
+;stop
+
+ngoodpoints[ 0]= n_elements( qpa)
+ngoodpoints[ 1]= n_elements( fittedpointsq)/2
+ngoodpoints[ 2]= n_elements( fittedpointsu)/2
+ngoodpoints[ 3]= n_elements( fittedpointsv)/2
+
+return
+end
+

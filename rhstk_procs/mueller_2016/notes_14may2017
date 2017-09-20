@@ -1,0 +1,20 @@
+
+fitting the mueller matrix using a single source:
+	mmfit_2016.promem 
+this now allows a nonzero Stokes V. Given the mueller matrix params, it
+calclaes the response using
+	guess_tot_st.pro
+	tdata_guess_.pro
+The 'multiple sources' versions of above are
+	mmfit_2016_multiplesources.pro*
+	guess_tot_st_multiplesources.pro
+	tdata_guess_multiplesources.pro
+the stimulus for this 'multiplesources'	was deriving the matrix coeffs
+and also the source pol properties using OH masers, specifically
+W49. For e.g. of usage, see 
+	~/dzd4/heiles/arecibo/a3020/stg1/w49
+
+and in particular, the software test file which generates a known
+paralllactic angle dependence of observed source params and solves for
+them:
+	~/dzd4/heiles/arecibo/a3020/stg1/w49/basictst.idl

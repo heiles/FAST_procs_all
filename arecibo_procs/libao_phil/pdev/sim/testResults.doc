@@ -1,0 +1,3 @@
+adcpad_mult
+	- jeff's test for overflow are 1 bit high..
+      misses some overflows.

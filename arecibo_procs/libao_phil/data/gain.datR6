@@ -1,0 +1,53 @@
+; last mod 25jun03.. data for sep01 thru aug02 updated with fits to
+; mm_archive data.
+;
+; lbngain(az,za) K/Jy az,za in degrees 
+; 3rd order fit in za: c0 +c1*za+c2*(za-14)^2 +c3*(za-14)^3  
+;                      where za-14 terms only used for za>- 14 degrees
+; az dependence it cos(naz) sin(naz) where n=1,2,3
+;
+; 21aug02 (dayno 233)  moved lbn horn focus. Fit is za only using data 21aug02 to 09sep02
+; installed 10sep02
+;
+;frq typ  c0          za          (za-14)^2  (za-14)^3    sigma     pol calVal
+!2002      233
+1300.  4  1.0718e+01 -2.2190e-02 -2.4204e-02 -8.6856e-03  5.6447e-01 I   1.54  1.67
+1375.  4  1.1187e+01 -2.7784e-02 -1.7191e-02 -1.0274e-02  4.0621e-01 I   1.78  1.89
+1415.  4  1.0810e+01 -3.0286e-02 -2.0968e-02 -7.8315e-03  3.6764e-01 I   1.90  1.97
+1500.  4  1.0575e+01 -1.9146e-02 -3.4431e-02 -5.2066e-03  3.5026e-01 I   2.21  2.45
+;
+; 01sep01 thru 20aug02. recomputed with updated cal valuse (jul02 values).
+; fits used the mm_achive for data of this data range.
+; installed 25jun03
+;frq typ  c0          za          (za-14)^2  (za-14)^3    cosAz       sinAz       cos2Az      sin2az      cos3az      sin3az      sigma     pol calVal
+!2001 244
+1300.  1  1.0424e+01 -8.0299e-02  3.5194e-02 -1.7028e-02  3.9860e-02  2.0113e-02 -6.7676e-02 -5.5425e-03 -9.9394e-02 -1.6804e-01  5.9280e-01 I   1.54  1.67
+1375.  1  1.0751e+01 -8.2921e-02  1.6978e-02 -1.2664e-02  8.8413e-02 -4.6582e-02 -8.6997e-02  1.6914e-02 -1.1467e-01 -1.8003e-01  5.1305e-01 I   1.78  1.89
+1415.  1  1.0363e+01 -8.4903e-02  2.9025e-02 -1.3854e-02  7.2067e-02 -5.2375e-02 -1.2536e-01 -2.9792e-04 -1.3564e-01 -1.8770e-01  4.8482e-01 I   1.90  1.97
+1500.  1  1.0196e+01 -8.5642e-02  2.6364e-02 -1.2648e-02  7.3778e-02 -5.9008e-02 -1.1209e-01 -6.5262e-03 -1.4971e-01 -1.8678e-01  4.9026e-01 I   2.21  2.45
+;
+;aug01 dish adjusted except for sw quad. Made a correction for this. valid for 01sep01 on
+;data taking using calib procedure and lbw. copied to lbn to used for lbn gain curve.
+;This is the data from the lbw fits. It was installed from late 2001 thru 25jun03. it was
+; then replaced with the fits above.  
+; To acces this data you can use dayno 2001  243 .. it is valid for that 1 day.
+;
+;frq typ c0          za          (za-14)^2  (za-14)^3    cosAz       sinAz       cos2Az      sin2az      cos3az      sin3az      sigma     pol calVal
+!2001      243
+1175.  1  1.1378e+01 -8.1304e-02 -2.6763e-02 -2.6350e-03  1.0319e-06 -3.1292e-07 -7.5973e-07 -1.9372e-07 -1.7180e-01 -4.6071e-02  3.0325e-01 I   10.8  9.18
+1300.  1  1.1265e+01 -9.5145e-02  4.2481e-03 -6.6783e-03  7.2271e-07  9.0897e-07  4.3958e-07 -8.1956e-07 -2.2135e-01 -7.4295e-02  4.2313e-01 I   10.8  9.38
+1375.  1  1.1114e+01 -1.0412e-01  2.3915e-02 -9.4938e-03 -8.3447e-07  1.0729e-06 -4.5402e-08 -1.3411e-07 -2.2827e-01 -8.0216e-02  3.3679e-01 I   10.6  9.32
+1415.  1  1.0999e+01 -1.0291e-01  1.3435e-02 -7.1745e-03 -5.2154e-08 -1.3225e-07  1.1642e-08 -7.3761e-07 -2.0990e-01 -9.8026e-02  3.3002e-01 I   10.7  9.26
+1550.  1  1.0786e+01 -1.0748e-01  1.9265e-02 -7.5530e-03 -7.8976e-07 -6.5565e-07 -7.4506e-08 -4.1723e-07 -2.0972e-01 -1.4330e-01  4.0199e-01 I   10.6  9.02
+1610.  1  1.0755e+01 -1.1566e-01  4.4095e-02 -1.1282e-02  6.8545e-07  1.9372e-07  8.9407e-08  3.8743e-07 -2.7493e-01 -1.7901e-01  4.7585e-01 I   10.4  8.89
+1666.  1  1.0777e+01 -1.2471e-01  5.5545e-02 -1.2572e-02  1.1176e-07 -1.1325e-06 -4.2096e-07  8.9407e-07 -3.2637e-01 -2.1109e-01  6.0014e-01 I   9.91  8.58
+;
+;Data from all calibration scans taken with lbn between 11 jan '01 and 01 aug '01.^M
+;Data is incomplete for southern sources.^M
+;
+!2000 353
+1415   1  9.0855699  -0.13198736  0.020340197 -0.012610386 0.39268538 -0.027570212 -0.48670176 -0.064635743 0.076154653 0.090970115  0.0     A   1.73 1.72 
+;
+; aug00 data taken doing on/off with correlator using lbn and a little lbw. The cals are from lbn.
+!0 1
+1405.  1  8.92204    -0.11083      .00214     -.00342+     0.41611    0.18207     -.10120      .02740     -.30386     -.14610     0          A   1.85 1.91 

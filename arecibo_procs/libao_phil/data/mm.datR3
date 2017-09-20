@@ -1,0 +1,34 @@
+#
+# mueller matrix parameters for the 610 receiver
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured and circular
+#
+#--------------------------------------------------------------------------
+!0 1
+#   The parameters come from 3C433, observed beginning about
+#3am on 6 jun 01. Setup was for the CH experiment, program a1455.
+#only board 0 data were good because of interference. these results
+#come from running (in subdirectory allcal/xxx)
+#\/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+#>                                                                     <
+#>  We HAVE NOT DETERMINED THE ROTATION REQUIRED TO MAKE PA'S     <
+#>     CORRECT FOR ASTRONOMICAL SOURCES                                <
+#>                                                                     <
+#/\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+chi=90.* !dtor
+deltag= -0.021
+psi= -156.* !dtor
+alpha= 0.4* !dtor
+epsilon=0.007
+phi= 138.* !dtor
+#M_ASTRON IS UNKNOWN, SO WE DEFINE IT AS DIAGONAL...
+angle_astron=0.
+m_astron= fltarr(4,4)
+m_astron[ 5*indgen(4)] = 1.
+pameasured=0
+circular=0
+corcal=0
+end

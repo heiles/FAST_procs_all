@@ -1,0 +1,41 @@
+#
+# mueller matrix info for sbn
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured, circular,corcal
+#---------------------------------------------------------------------------
+!0 1
+#   The parameters come from B1749+096, observed 20sep00.  The
+#There is no cfr dependence
+#parameters herein are obtained WITHOUT the relative cals having been
+#corrected. deltaG is small enough that this correction is unnecessary.
+#
+#\/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+#>                                                                     <
+#>  We HAVE NOT DETERMINED THE ROTATION REQUIRED TO MAKE PA'S     <
+#>     CORRECT FOR ASTRONOMICAL SOURCES                                <
+#>                                                                     <
+#/\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+chi=90.* !dtor
+deltag= 0.008
+epsilon=0.005
+alpha= -39.9* !dtor
+phi= 88.* !dtor
+psi= -38.* !dtor
+;NEXT GET THE CORRECTION REQUIRED TO MAKE THE PA'S CORRECT FOR
+;ASTRONOMY...
+angle_astron=-15.
+angle= angle_astron* !dtor
+m_astron= fltarr( 4,4)
+m_astron[ 0,0]= 1.
+m_astron[ 3,3]= 1.
+m_astron[ 1,1]= cos( 2.* angle)
+m_astron[ 2,1]= sin( 2.* angle)
+m_astron[ 2,2]= m_astron[ 1,1]
+m_astron[ 1,2]= -m_astron[ 2,1]
+pameasured=1
+circular=1
+corcal=1
+end

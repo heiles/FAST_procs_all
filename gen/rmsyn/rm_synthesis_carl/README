@@ -1,0 +1,13 @@
+
+rmsynthesis.pro - our generic RM synthesis code
+
+rmclean.pro - our generic RM clean code
+
+plot_rmsynth.pro - routine to run RM synthesis and RMCLEAN on an input Q
+		   and U pair and plot the results
+
+fit_fdf_peak.pro - find the brightest peak in an RMCLEANed spectrum and fit
+		   a single parabola to it
+
+get_rmsf.pro - function to return RM Spread Function
+

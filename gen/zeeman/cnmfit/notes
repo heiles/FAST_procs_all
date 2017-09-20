@@ -1,0 +1,24 @@
+
+CLOUDS.PRO
+
+generates all possible orderings of clouds along the los.
+
+
+GFITFLEX_EXP.PRO:
+
+gfitflex_exp_num.pro and gfitflex_exp.pro are idenical except one uses
+numericcal derivatives.
+
+gfitflex_exp_wgt.pro and gfitflex_exp.pro are idenical except wgt version
+allows weights.
+
+gfitflex_exp.pro fits exp(-sum of Gaussians). parameters of the gaussians
+are hgt, cen, wid. 
+
+TB_EXP.PRO calculates the emission from clouds in arbitrry ordeer,
+including both CNM and zero-opacity WNM.
+
+WNMFIT_EXP calculates tspin for WNM, using residuals from a CNM fit. 
+
+TBGFITFLEX_EXP fits multiple emission/abs components.
+

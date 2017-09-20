@@ -1,0 +1,12 @@
+#   47 Mhz reciever on carriage house
+#   these cals come from cheo and noya i have no idea how accurate they are
+#  H/L    high,low cal
+# 0. --> no meausurement
+# !yyyy daynum.. following data valid after this date
+#
+#frq nd1PaH nd1PaL nd1PbH Nd1PbL nd2PaH nd2PaL nd2PbH nd2PbL
+# 0    1       2     3       4    5       6     7       8
+#
+!0 1
+# original data
+47  5700.   0.    0.    0.       0.      0.     4792.     0. 

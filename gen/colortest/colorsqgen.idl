@@ -1,0 +1,66 @@
+wdelete,0
+window,1,xs=256,ys=256
+
+colorsqred = bytarr(256,256)
+colorsqgrn = colorsqred
+colorsqblu = colorsqred
+
+;WHITE:
+add = 0
+colorsqred[0+add:31+add,*] = 255b
+colorsqgrn[0+add:31+add,*] = 255b
+colorsqblu[0+add:31+add,*] = 255b
+
+;BLACK:
+add=add+32
+colorsqred[0+add:31+add,*] = 0b
+colorsqgrn[0+add:31+add,*] = 0b
+colorsqblu[0+add:31+add,*] = 0b
+
+;RED:
+add=add+32
+colorsqred[0+add:31+add,*] = 255b
+colorsqgrn[0+add:31+add,*] = 0b
+colorsqblu[0+add:31+add,*] = 0b
+
+;GREEN:
+add=add+32
+colorsqred[0+add:31+add,*] = 0b
+colorsqgrn[0+add:31+add,*] = 255b
+colorsqblu[0+add:31+add,*] = 0b
+
+;BLUE:
+add=add+32
+colorsqred[0+add:31+add,*] = 0b
+colorsqgrn[0+add:31+add,*] = 0b
+colorsqblu[0+add:31+add,*] = 255b
+
+;CYAN:
+add=add+32
+colorsqred[0+add:31+add,*] = 0b
+colorsqgrn[0+add:31+add,*] = 255b
+colorsqblu[0+add:31+add,*] = 255b
+
+;YELLOW:
+add=add+32
+colorsqred[0+add:31+add,*] = 255b
+colorsqgrn[0+add:31+add,*] = 255b
+colorsqblu[0+add:31+add,*] = 0b
+
+;MAGENTA:
+add=add+32
+colorsqred[0+add:31+add,*] = 255b
+colorsqgrn[0+add:31+add,*] = 0b
+colorsqblu[0+add:31+add,*] = 255b
+
+for nr=0,255b do begin &$
+colorsqred[*,nr] = (colorsqred[*,nr]*nr)/255b &$
+colorsqgrn[*,nr] = (colorsqgrn[*,nr]*nr)/255b &$
+colorsqblu[*,nr] = (colorsqblu[*,nr]*nr)/255b &$
+endfor
+
+tv, colorsqred, channel=1
+tv, colorsqgrn, channel=2
+tv, colorsqblu, channel=3
+
+

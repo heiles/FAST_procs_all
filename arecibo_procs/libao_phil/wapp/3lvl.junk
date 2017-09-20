@@ -1,0 +1,28 @@
+
+
+    bias=integCycles*.5;    /* lowest bit not read out of correlator*/
+    normalize = 1./(bias);
+    
+    acf=reform(acf,nlags,npol,nsamples,/overwrite)
+    numacf=npol*nsamples
+    lag0 = acf[0] - bias;
+    comp_a_d_s(lag0*normalize,&ads,&cordcomp);
+    ads2 = ads*ads;                 /* square of alpha/sigma*/
+    a = C_PI_D_2 * exp((double)ads2);
+    b = (a * (1. - ads2)); b = b*b/6.;
+    c = C_PI * exp((double)(ads2/2.));
+
+    acf=(acf - bias)*normalize
+    for (i=0;i<numAcf;i++){
+          temp= acf[*,i]
+          acf[*,i]= a*temp*(1. - b*temp*temp);
+          ind=where(abs(acf[*,i]) gt  .86,count)
+          if count gt 0 then begin
+              acf[ind,i]= cos(c*(lag0[i]/bias-abs(temp[ind])));
+              ii=where(temp[ind] lt 0.,count1)
+              if count1 gt 0 then acf[ind[ii],i]= -acf[ind[ii],i]
+          endif
+    endfor
+    acf[0,*]=1.
+    return
+end

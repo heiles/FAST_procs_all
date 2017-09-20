@@ -1,0 +1,8 @@
+; dome 327 Mhz
+;
+; installed 28feb05, data from mar03 to feb05, backdated  
+; to jan2001 since there is no curve before this.
+;
+;frq typ c0          za          (za-14)^2  (za-14)^3    sigma     pol calVal
+!2001 1
+ 326.  4  1.0202e+01 -2.8525e-03 -8.0061e-02  5.7126e-03  4.7142e-01 I   73.0  75.9

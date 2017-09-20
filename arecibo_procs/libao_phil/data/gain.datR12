@@ -1,0 +1,17 @@
+; sbn gain fits..
+;
+; data 01mar03 thru 29feb04. installed 09mar04 
+;frq typ c0          za          (za-14)^2  (za-14)^3    cosAz       sinAz       cos2Az      sin2az      cos3az      sin3az      sigma     pol calVal
+!2003 60
+2380.  1  9.7861e+00  2.3716e-02 -4.1181e-02 -2.2946e-03 -2.7771e-01 -7.4712e-02  1.3070e-01 -1.5043e-01  1.4205e-01  3.0068e-02  3.6266e-01 I   6.76  6.90
+;
+!2001     244
+;valid 1sep01
+;sbn gain fits aug01-nov01.3 srcs run:Sun Dec 30 09:53:00 2001
+;frq typ c0          za          (za-14)^2  (za-14)^3    cosAz       sinAz       cos2Az      sin2az      cos3az      sin3az      sigma     pol calVal
+2380.  1  9.7567e+00 -1.4662e-02 -7.8413e-02  6.0635e-03 -2.3754e-01 -8.1630e-02 -2.4594e-02 -3.1619e-02 -4.0554e-01 -9.3417e-02  3.5736e-01 I   6.76  6.90
+;
+; data from aug00 using position switching on/offs .. note it us fittype 2
+!0 1
+;frq typ  c0          za-10       (za-10)^2  (za-10)^3    cosAz       sinAz       cos2Az      sin2az      cos3az      sin3az      sigma     pol calVal
+2380.  2  6.5506e+00 -6.1362e-02 -8.2047e-03  2.8626e-04  2.2321e-01  4.3514e-01  1.1014e-01 -1.6827e-01 -1.6264e-01 -6.6516e-02  2.6533e-01 I   6.76  6.90

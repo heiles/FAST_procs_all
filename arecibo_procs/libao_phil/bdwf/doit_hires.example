@@ -1,0 +1,34 @@
+;
+; hi freq resolution processing of a burst
+;
+; 1. make edits at top
+; 2. @doit_hires
+; 3. you can then 
+;
+; hdcopytp=1 will make a hardcopy of the total power plots
+;
+;@../a2471init
+;--------start edits
+;  27dec2013 J11225473
+;yyyymmdd=20100106
+;ldate='06jan10'   ; for titles
+;srcToGet='J10475385'
+;proj='a2471'
+;fileNumDat=1500
+;savFileDir='/share/megs/phil/usr/a2471/hires/savdata/'
+;--------end edits
+;  now edit doit_hiresinit.pro 
+;  to setup run..
+;--------start edits
+doit_hiresinit,avgrow,yyyymmdd,ldate,srcToGet,proj,fileNumDat,$
+            savFileDir
+
+hdcopytp=1 
+; ----------------------------------------------------
+; input .fits files, calibrate, output to save file
+
+.run hr_makesavefile
+; ----------------------------------------------------
+; now combine bands, make the image
+;
+.run hr_makeimage

@@ -1,0 +1,29 @@
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured, circular, corcal
+#
+!0 1
+#
+#   The parameters come from B0106+130, observed 18sep00.
+# NOTE: this receiver was linear when the data was taken. It was switched
+#       to circular  nov2000
+#
+#\/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+#>                                                                     <
+#>  We HAVE NOT DETERMINED THE ROTATION REQUIRED TO MAKE PA'S     <
+#>     CORRECT FOR ASTRONOMICAL SOURCES                                <
+#>                                                                     <
+#/\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+deltag= -0.023
+epsilon= 0.006
+alpha= 0.5* !dtor
+phi= 78.6* !dtor
+chi=90.* !dtor
+psi= 150.* !dtor
+angle_astron=0.
+m_astron= fltarr(4,4)
+m_astron[ 5*indgen(4)] = 1.
+pameasured=0
+circular=0
+corcal  =1
+end

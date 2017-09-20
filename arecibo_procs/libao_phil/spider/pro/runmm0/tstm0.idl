@@ -1,0 +1,85 @@
+;enter idl with ~heiles/idlnew
+retall
+@tstm0_setup.idl
+
+board=2
+
+;KEYWORDS FOR MM0...
+plot1d= 0
+print1d= 0
+plot2d= 0
+print2d= 0
+keywait= 0
+npatterns= 1
+savemm0=1
+phaseplot=1 
+
+;;DO THE FOLLOWING TO DERIVE NEW MM COEFFICIENTS
+mm_corr=0
+mm_pro_user= ''
+m_rcvrcorr= 0
+m_skycorr= 0
+m_astro= 0
+mm4=1
+
+;;DO THE FOLLOWING TO SEE IF APPLYHING THE MM CORR WORKS; WE APPLH M_TOT BUT
+;;NOT M_SKYCORR OR M_ASTRO, SO THE DERIVED MUELLER MATRIX ELEMENTS SHOULD
+;;BE ZERO.
+;mm_corr= 1
+;mm_pro_user= 'mmp_lbw_11oct02_nocalcorr' ;;THIS MUST CONTAIN THE NEWLY
+;;	DERIVED MM COEFFICINTS. 
+;m_rcvrcorr= 1
+;m_skycorr= 0
+;m_astro= 0
+;mm4=1
+
+;;DO THE FOLLOWING TO MM-CORRECT THE DATA, ***NOT*** DERIVE NEW 
+;MM COEFFICIENTS. amd print source results.
+;mm_corr=1
+;mm_pro_user= 'mmp_lbw_11oct02_nocalcorr' 
+;;;;;mm_pro_user= '' ;making this blank uses default...
+;m_rcvrcorr= 1
+;m_skycorr= 1
+;m_astro= 1
+;srcprint= 1
+
+;KEYWORDS FOR MM4:
+mm4=1
+plt0yes= 0
+plt1yes= 1
+ps1yes= 0
+check= 0
+chnl= 0
+saveit=1
+m7=0
+
+sourcename= '3C286'
+rcvr_name= 'lbw'
+
+mmproc, outpath, corpath, corfile, board, tcalxx_board, tcalyy_board, $
+        scndata, hb_arr, a, beamin_arr, beamout_arr, indx, $
+ 
+;KEYWORDS RELEVANT TO MM0:
+	 mm_corr= mm_corr, mm_pro_user= mm_pro_user, $
+        m_rcvrcorr= m_rcvrcorr, m_skycorr= m_skycorr, m_astro= m_astro, $
+  	sourcename= sourcename, rcvr_name= rcvr_name, $
+        plot1d= plot1d, print1d= print1d, plot2d= plot2d, $
+        print2d= print2d, keywait= keywait, npatterns= npatterns, $
+        savemm0=savemm0, srcprint= srcprint, phaseplot=phaseplot, $
+ 
+;KEYWORDS RELEVANT TO MM4:
+        mm4=mm4, plt0yes=plt0yes, plt1yes=plt1yes, ps1yes=ps1yes, $
+        check=check, negate_q=negate_q, chnl=chnl, saveit=saveit, $
+        m7=m7
+
+
+
+
+
+
+
+
+
+
+;.run mueller0.idlprc
+

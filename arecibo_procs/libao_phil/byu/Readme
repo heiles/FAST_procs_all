@@ -1,0 +1,9 @@
+
+pos_skyoff.pro      - compute hex A1-A6) hex C1-C6 , hex D1-D6 az,za sky offsets
+pos_xyoff.pro       - compute hex A1-A6) hex C1-C6 , hex D1-D6 xy centers
+dipolexyoff.pro     - compute x,y offsets for 19 dipoles
+xytosky,x,y,dza,daz - convert cm x,y coord to amin on sky
+
+
+plotoffsets         - plot x,y, sky offsets
+

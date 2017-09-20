@@ -1,0 +1,414 @@
+# 
+# sband pointing model file
+# format is  az  za.  units are great circle arcseconds
+#   col 1
+#   #  - comment
+#   #!modelxx  yymmdd  start of model 
+#   blank  or number   current model data (N lines)
+#   #!       az  za    archived model data
+#  HISTORY:
+#  13jan13: used calibration data jun12-dec12
+#!modelSB18A  13 B enctbl18A  120305 model18
+# tur:76.90 ,scl:-.75 format B .. after beam repair
+#    az         za    model coefficients
+#   -34.92   -103.09  constant                                                   
+   -25.22    -91.79  constant 13jan13
+    -3.14    -97.13  cos(az)                                                    
+    93.49     -1.82  sin(az)
+  -715.60    132.62  sin(za)
+ -1089.56    721.35  sin(za)**2
+   -21.52    -10.25  cos(3az)                                                   
+   -10.85     -6.13  sin(3az)                                                   
+    18.25    -10.92  sin(za-balance)*cos(3az)
+   111.09     11.58  sin(za-balance)*sin(3az)
+     7.92      1.05  cos(2az)                                                   
+     0.13     -1.70  sin(2az)
+    -2.56     -0.26  cos(6az)                                                   
+     0.56     -0.12  sin(6az)
+#!modelSB17A  13 B enctbl17A  071216 model17
+# tur:76.90 ,scl:-.75 format B .. from 02may04 survey.
+#    03jun10 after fitting 1,2,3 az mar10-jun10
+#   -34.66   -100.99  constant ..sub [-3.68,  1.93]03jun10
+#    -7.20    -96.05  cos(az)  ..sub [-7.93, -9.93]03jun10
+#    91.53     -5.93  sin(az)  ..sub [ 8.43, -7.94]03jun10
+#   -23.10    -12.71  cos(3az) ..sub [-3.03, -0.59]03jun10
+#    -9.98     -7.52  sin(3az) ..sub [-0.81, -7.94]03jun10
+#    -0.06      0.17  cos(2az) ..sub [-6.41, -0.31]03jun10
+#    -0.92     -2.49  sin(2az) ..sub [-0.94, -1.65]03jun10
+# 09jun10 za sin(3az) off wrong. used -7.94, correct: -1.63
+#   -9.17      0.42  sin(3az)  ..sub [ -0.81, -7.94]03jun10 wrong
+#   -9.17     -5.89  sin(3az)  ..sub [ -0.81, -1.63]09jun10 correct
+#!   -30.98   -102.92 constant ..sub [ -3.68,  1.93]03jun10
+#!     0.73    -86.12  cos(az)   ..sub [-7.93, -9.93]03jun10
+#!    83.10      2.01  sin(az)   ..sub [ 8.43, -7.94]03jun10
+#!  -776.49    125.02  sin(za)
+#!  -960.35    713.55  sin(za)**2
+#!   -20.07    -12.12  cos(3az)  ..sub [ -3.03, -0.59]03jun10
+#!    -9.17      -5.89  sin(3az)  ..sub [ -0.81, -1.63]09jun10
+#!    17.95     -5.13  sin(za-balance)*cos(3az)
+#!   115.98      6.49  sin(za-balance)*sin(3az)
+#!     6.35      0.48  cos(2az)  ..sub [ -6.41, -0.31]03jun10
+#!     0.02     -0.84  sin(2az)  ..sub [ -0.94, -1.65]03jun10
+#!    -2.16      0.09  cos(6az)
+#!     1.67      0.15  sin(6az)
+#!modelSB15B  13 B enctbl15A  061211 model15
+# tur:76.90 ,scl:-.75 format B .. from 02may04 survey.
+#   -40.00   -102.55  constant
+#  -766.51    141.69  sin(za)    -[35.3,0]   10dec06
+#!   -38.00  -103.25  constant  sub [-2,.7] dec06
+#!    -7.65   -101.36  cos(az)    -[1.6,5.8]  10dec06 (see modhist:11dec06)
+#!    96.25     -7.93  sin(az)    -[3.9,3.8]  10dec06
+#!  -730.16    141.69  sin(za)    -[-35.9,0]   06apr07
+#! -1013.97    677.51  sin(za)**2
+#!   -24.53    -10.41  cos(3az)
+#!   -11.19     -7.71  sin(3az)
+#!     9.18    -10.39  sin(za-balance)*cos(3az)
+#!   106.04      0.08  sin(za-balance)*sin(3az)
+#!     3.02      0.43  cos(2az)
+#!    -1.74     -0.62  sin(2az)
+#!    -3.46      0.03  cos(6az)
+#!     1.29     -0.36  sin(6az)
+#!modelSB15A  13 B enctbl15A  040513 model15
+# tur:76.90 ,scl:-.75 format B .. from 02may04 survey.
+#!   -40.00   -102.55  constant
+#!    -6.05    -95.56  cos(az)
+#!    92.35     -4.13  sin(az)
+#!  -731.21    141.69  sin(za)
+#! -1013.97    677.51  sin(za)**2
+#!   -24.53    -10.41  cos(3az)
+#!   -11.19     -7.71  sin(3az)
+#!     9.18    -10.39  sin(za-balance)*cos(3az)
+#!   106.04      0.08  sin(za-balance)*sin(3az)
+#!     3.02      0.43  cos(2az)
+#!    -1.74     -0.62  sin(2az)
+#!    -3.46      0.03  cos(6az)
+#!     1.29     -0.36  sin(6az)
+#!modelSB14A  13 B enctbl14A  030304 model14 done.used to verify feeds
+# tur:76.90 ,scl:-.75 format B  .. new turret pos 02may04 survey instal 08may04
+# tur:76.56 ,scl:-.75 format B  .. new turret 14feb04 from survey
+# tur:76.83 ,scl:-.75 format B  ..
+#   -38.81    -79.26  constant
+#   -50.96    -79.26  constant  new turret pos 14feb04
+#  -50.96    -62.26  constant  10apr04 track after kevlar tension
+#   -21.96    -107.26 constant 09apr04 before pnt true
+#!  -38.37    -99.23  constant  09apr04 after pnt run. used model -16.41,+8.03
+#!   -6.41   -100.92  cos(az)
+#!   99.16     -5.74  sin(az)
+#!  -713.84    175.81  sin(za)
+#! -1028.24    489.81  sin(za)**2
+#!   -22.20    -11.42  cos(3az)
+#!   -12.08     -7.80  sin(3az)
+#!     7.31      4.00  sin(za-balance)*cos(3az)
+#!   111.56      1.25  sin(za-balance)*sin(3az)
+#!     2.49      0.43  cos(2az)
+#!    -0.69     -0.42  sin(2az)
+#!    -1.93     -0.30  cos(6az)
+#!     0.91     -0.19  sin(6az)
+#
+#!modelSB11A  13 B enctbl11A  000206 model11 done. then used to verify feeds
+# tur:76.83 ,scl:-.75 format B  ..
+#   40.14    -99.14  offset tx (+1.52,-9.1) from verify.. redo...
+#!   -41.66    -90.04  offsets 
+#!   -14.28    -95.08  cosaz 
+#!    91.27    -11.98  sinaz
+#!   -969.26    261.77  sinza az enc jump 16sep02
+#!  -796.59   -348.23  sinza*sinza
+#!   -22.31    -10.79  cos3az
+#!   -13.95     -7.12  sin3az
+#!    31.40    -14.38  cos3az*sin(za-balance)
+#!   119.20     18.99  sin3az*sin(za-balance)
+#!     2.40      3.95  cos2az
+#!    -6.11     -1.75  sin2az
+#!    -2.89      0.91  cos6az
+#!    -0.19     -0.77  sin6az
+#
+#!modelSB10D  13 B enctbl10a  000129  horns moved then used to make model 11
+# tur:76.83 ,scl:-.75 format B  ..
+#                               
+#  -40.99    -84.8   offsets  horn moved.. till 1feb00
+#  809.88     62.71  sinza
+#!    -70.99    -64.8   offsets  1feb00 -40->-75->-60->-70 az,-76->-84->-64 za
+#!   -16.19    -96.82  cosaz
+#!    94.12    -14.03  sinaz
+#!   809.88      0.    sinza    1feb00... 
+#! -1549.79    325.55  sinza*sinza
+#!   -22.45    -10.42  cos3az
+#!   -11.79     -6.48  sin3a
+#!    29.68     -9.38  cos3az*sin(za-balance)
+#!   109.85     10.82  sin3az*sin(za-balance)
+#!     3.03      5.49  cos2az
+#!    -6.62     -1.19  sin2az
+#!    -1.76     -0.24  cos6az
+#!     1.05      0.08  sin6az
+#
+#!modelSB10C  13 B enctbl10  981230  981230->000129.. before model
+# tur:76.6 ,scl:-.75 format B  ..
+#						       afte dome  realignment
+#! -40.99    -76.13  1 offsets 
+#! -16.19    -96.82  2 cosaz
+#!  94.12    -14.03  3 sinaz
+#! 809.88     62.71  4 sinza
+#! -1549.79    325.55 5  sinza*sinza
+#! -22.45    -10.42  6 cos3az
+#! -11.79     -6.48  7 sin3a
+#!  29.68     -9.38  8 cos3az*sin(za-balance)
+#! 109.85     10.82  9 sin3az*sin(za-balance)
+#!   3.03      5.49  10 cos2az
+#!  -6.62     -1.19  11 sin2az
+#!  -1.76     -0.24  12 cos6az
+#!   1.05      0.08  13 sin6az
+#!modelSB10B  13 B enctbl9  981218 
+# tur:76.6 ,scl:-.75 format B  ..
+#							    data for model 10 taken with model10b
+#   -37.27     -32.34 offsets  oct 8 updates.. 
+#   -13.43     -56.63 cosAz
+#    52.02      -9.00 sinAz
+#! -29.14     -42.84 offsets  az off 8.13, za offset -10.5
+#! -13.43     -94.63 cosAz    lat change 18 20 36.6->18 21 14.2
+#!  90.02      -9.00 sinAz          04h 27m   .793s->04h 27m   .720
+#! 763.56    -234.42 sinZa
+#!-1578.65     896.11 sinZa*sinZa
+#! -22.98      -7.86 cos3az
+#! -14.70      -6.77 sin3az
+#!  33.33     -20.95 cos3az*sin(za-balance)
+#! 109.32      22.21 sin3az*sin(za-balance)
+#!   0.15       2.27 cos2az
+#!  -2.35      -2.04 sin2az
+#!  -3.68       0.55 cos6az
+#!   0.51      -0.57 sin6az
+#
+#!modelSB10A  13 B enctbl9  981217 and 981218 thru 0318+164
+# tur:76.6 ,scl:-.75 format B  ..new model after dome tilt
+#!  -37.27     -32.34 offsets  oct 8 updates.. 
+#!  -13.43     -56.63 cosAz
+#!   52.02      -9.00 sinAz
+#!  763.56    -234.42 sinZa
+#!-1578.65     896.11 sinZa*sinZa
+#!  -22.98      -7.86 cos3az
+#!  -14.70      -6.77 sin3az
+#!   33.33     -20.95 cos3az*sin(za-balance)
+#!  109.32      22.21 sin3az*sin(za-balance)
+#!    0.15       2.27 cos2az
+#!   -2.35      -2.04 sin2az
+#
+#!modelSB9  13 B enctbl9  980528 
+# tur:75.0 ,scl:-.75 format B  ..28may98 all data, only 1st 1/2 last src
+#							             tmcon:.224
+#   -46.73     -32.34 offsets
+#   -11.63     -48.49 cosAz
+#    45.33     -11.13 sinAz
+#  8oct98 after georges add offsets: 9.46 0
+#                           cosAz  : -1.80  -8.14 
+#                           sinAz  :  6.69   2.13 
+#!  -37.27     -32.34 offsets  oct 8 updates.. 
+#!  -13.43     -56.63 cosAz
+#!   52.02      -9.00 sinAz
+#!  763.56    -234.42 sinZa
+#!-1578.65     896.11 sinZa*sinZa
+#!  -22.98      -7.86 cos3az
+#!  -14.70      -6.77 sin3az
+#!   33.33     -20.95 cos3az*sin(za-balance)
+#!  109.32      22.21 sin3az*sin(za-balance)
+#!    0.15       2.27 cos2az
+#!   -2.35      -2.04 sin2az
+#!   -3.68       0.55 cos6az
+#!    0.51      -0.57 sin6az
+#!
+#!modelSB9B 13 B enctbl9B 980523 
+# tur:75.0 ,scl:-.75 format B  ..23may98 all data, new enctable,last src all
+#!   -48.17    -35.26 offsets
+#!   -11.58    -48.46 cosAz
+#!    45.03    -10.91 sinAz
+#!   775.43   -204.30 sinZa
+#! -1602.90    829.61 sinZa*sinZa
+#!   -23.24     -8.19 cos3az
+#!   -14.24     -6.79 sin3az
+#!    35.31    -17.14 cos3az*sin(za-balance)
+#!   106.45     19.09 sin3az*sin(za-balance)
+#!     0.43      2.07 cos2az
+#!    -2.28     -2.05 sin2az
+#!    -3.51      0.22 cos6az
+#!     0.70     -0.59 sin6az
+#
+#!modelSB9A 13 B enctbl7 980522 
+# tur:75.0 ,scl:-.75 format B  ..from may98 data. but same encTbl as SB8
+#!   -43.96    -44.35 offsets
+#!   -11.59    -48.39 cosAz
+#!    45.12    -11.38 sinAz
+#!   725.58    -93.41 sinZa
+#! -1475.54    550.68 sinZa*sinZa
+#!   -22.85     -9.15 cos3az
+#!   -14.24     -6.26 sin3az
+#!    34.61     -8.82 cos3az*sin(za-balance)
+#!   108.93     16.62 sin3az*sin(za-balance)
+#!     0.30      2.21 cos2az
+#!    -2.55     -1.85 sin2az
+#!    -2.78      0.14 cos6az
+#!     0.71     -0.18 sin6az
+#
+#!modelSB8 13 B enctbl7 980430 
+# tur:75.0 ,scl:-.75 format B  ..-15 arc sec offset za after tert tilted
+#
+#   -47.5626      -5.4897 offsets  old
+#    -47.5626     -25.4897 offsets	J0745+101 30apr98
+#    -47.5626     -45.4897 offsets	after J0745+101 30apr98
+#    -47.5626     -195.4897 offsets	after J0745+101 1may98
+#     -47.5626     -22.9897 offsets	starting 02may 19:0
+#    -47.5626      -52.9897 offsets	starting 11may 3c286
+#!     -47.5626    -32.9897 offsets	starting 12may 3c286..lock for new model
+#!    -18.2705     -68.6485 cosAz
+#!     63.6188     -21.3361 sinAz
+#!    753.4523    -106.8762 sinZa
+#!  -1520.5494     409.2893 sinZa*sinZa
+#!    -21.5628      -8.1415 cos3az
+#!    -12.3515      -7.6062 sin3az
+#!     25.9566     -46.0313 cos3az*sin(za-9.15)
+#!     96.0349      16.7237 sin3az*sin(za-9.15)
+#!      4.8112       2.7913 cos2az
+#!     -4.6584      -1.2751 sin2az
+#!     -1.5199       0.7486 cos6az
+#!      0.9746      -0.3744 sin6az
+#!modelSB7 13 B enctbl7 980118
+# tur:60.54,scl:-.75 format B
+#
+#!  -47.5626      -5.4897 offsets
+#!  -18.2705     -68.6485 cosAz
+#!   63.6188     -21.3361 sinAz
+#!  753.4523    -106.8762 sinZa
+#!-1520.5494     409.2893 sinZa*sinZa
+#!  -21.5628      -8.1415 cos3az
+#!  -12.3515      -7.6062 sin3az
+#!   25.9566     -46.0313 cos3az*sin(za-9.15)
+#!   96.0349      16.7237 sin3az*sin(za-9.15)
+#!    4.8112       2.7913 cos2az
+#!   -4.6584      -1.2751 sin2az
+#!   -1.5199       0.7486 cos6az
+#!    0.9746      -0.3744 sin6az
+#
+#   modesb7 with J0832+185 analyzed with wrong za off.
+#    -47.5626      -6.7737 offsets
+#    -18.2705     -68.7107 cosAz
+#     63.6188     -21.6248 sinAz
+#    753.4523     -98.8299 sinZa
+#  -1520.5494     398.2196 sinZa*sinZa
+#    -21.5628      -8.1719 cos3az
+#    -12.3515      -6.8894 sin3az
+#     25.9566     -45.1004 cos3az*sin(za-9.15)
+#     96.0349       9.6326 sin3az*sin(za-9.15)
+#      4.8112       3.0839 cos2az
+#     -4.6584      -1.2130 sin2az
+#     -1.5199       1.0704 cos6az
+#      0.9746      -0.3175 sin6az
+#
+#!modelSB6 13 B enctbl6 980110 
+#tur:60.54,scl:-.75 format B
+#!  -42.4665  -14.2801  offsets
+#!  -18.0082  -68.4146  cosaz
+#!   65.2687  -21.3593  sinaz
+#!  707.3076    7.9045  sinza
+#!-1401.4548   93.1508  sinza**2
+#!  -23.3206   -9.5082  cos3az
+#!  -13.0765   -6.6359  sin3az
+#!   35.8120  -22.0143  cos3az*sin(za-9.15)
+#!   88.8868    8.0807  sin3az*sin(za-9.15)
+#!    4.5853    1.2380  cos(2az)
+#!   -3.3837   -0.8299  sin(2az)
+#!   -1.1857    0.2266  cos(6az)
+#!    1.8408   -0.0735  sin(6az)
+#-------------------------------------------------------
+# history 
+# formats  - old : const + sinaz + cosaz + sinza
+#          - A   : const+sinza+cosaz+sinza+(sinza)^2+sin(za*57.1429)+
+#					cos3az+sin3az+cos3az*sin(za-.1596997627)+
+#					+sin3az*sin(za-.1596997627)
+#          - B   : const+sinza+cosaz+sinza+(sinza)^2+
+#					cos3az+sin3az+cos3az*sin(za-.1596997627)+
+#					+sin3az*sin(za-.1596997627) +
+#	                 cos2az+sin2az+cos6az+sin6az 
+#					+ encTbl
+#  model sb  - old format 
+#        sb1 - format A, turret scale 1 
+#        sb2 - format A, turret scale .75, bad pnt za=60 deg
+#        sb3 - format A, turret scale .75r, more decs
+#        sb5 - format A, turret scale -.75
+#        sb6 - format B, turret scale -.75
+#
+#!modelSB5 10 A none 971219 
+#    turret scale -.75 format A 
+#!   -40.2787   -19.3645  offsets
+#!   -19.2414   -69.6293  cosAz
+#!    70.5450   -18.9357  sinAz
+#!    668.467    65.9725  sinZa
+#!   -1242.92  -104.9139  sinZa*sinZa
+#!  -0.186047   -12.3431  sin 57 Za
+#!   -29.7606   -9.40068  cos3Az
+#!  -10.26309   -5.57490  sin3Az
+#!   -55.6470   -2.75763  cos3Az sin (ZA-balance)
+#!    118.517    19.8289  sin3Az sin (ZA-balance)
+#
+#
+#!modelSB3 10 A none 971219 
+#
+#!    3.47869   -19.3645
+#!    -29.1186   -69.6293
+#!     29.8550   -18.9357
+#!    -11.4669    65.9725
+#!     1242.92  -104.9139
+#!    0.186047   -12.3431
+#!     29.7606   -9.40068
+#!     10.26309   -5.57490
+#!     55.6470   -2.75763
+#!    -118.517    19.8289
+#
+#!modelSB2 10 A none 971218   
+#          reran modelSB1. this has bug za=60 degrees in 1 point
+#! -16.427868 -19.364479   offset
+#! -30.338035 -69.629341   cos az
+#!  29.4173   -18.935695   sin az
+#! 297.394734  65.972513   sin za
+#! 351.953470 -104.913937  sin^2 za
+#!  -0.779906 -12.343112   sin(za*57)
+#!  28.037206 -9.400683    cos 3az
+#!  11.186360 -5.574897    sin 3az
+#!  57.827877 -2.757634    cos 3az sin (za  - balance)
+#! -134.030034 19.828901    sin 3az sin (za - balance)
+
+#
+#!modelSB1 10 A none 971218
+#     added sin**2,za wiggle, 3az, (za-balance) terms
+#!    4.542333 -19.364479   offset
+#!  -29.752358 -69.629341   cos az
+#!   30.188953 -18.935695   sin az
+#!  -22.281899  65.972513   sin za
+#! 1270.867853 -104.913937  sin^2 za
+#!    0.514052 -12.343112   sin(za*57)
+#!   30.025056 -9.400683    cos 3az
+#!   10.167930 -5.574897    sin 3az
+#!   64.769175 -2.757634    cos 3az sin (za  - balance)
+#! -117.959191 19.828901    sin 3az sin (za - balance)
+#
+#!modelSBT 4 M none 971201
+#	  format old. model used during tilt measurement
+#!-45.9    85.0       offsets
+#!-24.18  -44.5       cosAz
+#! 50.2   -22.4       sinAz
+#!328.5   -44.8       sinZa
+#!0.    0.
+#!0.    0.
+#!0.    0.
+#!0.    0.
+#!0.    0.
+#!0.    0.
+#
+#!modelSB 4 M none 971101
+#       format old (original) 
+#!-18.4    -1.0		offsets
+#!-24.18  -44.5       cosAz
+#! 50.2   -22.4		sinAz
+#!328.5   -44.8		sinZa
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.

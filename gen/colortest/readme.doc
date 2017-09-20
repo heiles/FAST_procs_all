@@ -1,0 +1,13 @@
+(1) Don't use a startup file:
+
+> setenv IDL_STARTUP
+
+(2) Start IDL.
+
+> idl
+
+(3) Set the super-secret keyword that the developers gave us:
+
+IDL> device, /INSTALL_COLORMAP
+
+(4) Try this DirectColor test (r

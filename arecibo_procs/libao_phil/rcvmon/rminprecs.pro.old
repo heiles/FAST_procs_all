@@ -1,0 +1,109 @@
+;+
+;NAME:
+;rminprecs - input rcvmonitor records 
+;SYNTAX: nrecs=rminprecs(lun,nrecsReq,d,rcvnum=rcvnum,smo=smo)
+;ARGS:
+;   lun :       int file containing data to read
+;   nrecsReq:  long requested number of records to read
+;KEYWORDS:
+;   rcvnum: int only return data for this receiver.. 1..12
+;      smo: int smooth and decimate by this amount.  should be an odd number
+;				>= 3. The data will be smoothed and decimated by this amount.
+;RETURNS:
+;   nrecs : long    number of records input.
+;   d[nrecs]:{rcvmon} data input from file
+;DESCRIPTION:
+;   This routine is normally called via rminpday or rmmoninp.
+;
+;   rminprecs will try to read the requested number of records from the 
+;receiver monitoring file that lun points to (you need to open the file
+;before calling this routine). The number of records actually read is
+;returned in nrecs. The routine will preallocate an array of nrecsReq
+;before reading.
+;
+;EXAMPLE:
+;   openr,lun,'/share/obs4/rcvmon/rcvmN',/get_lun
+;   nrecs=rminprecs(lun,9999,d)
+;-
+function rminprecs,lun,nrecreq,inpdat,rcvnum=rcvnum,smo=smo
+;
+    on_ioerror,done
+
+	dosmo=0
+	if keyword_set(smo) then begin
+		if smo gt 2 then dosmo=1
+	endif
+
+    inpdat=replicate({rcvmon},nrecreq)
+    inpdat.year=-1 
+    readu,lun,inpdat
+done:
+    ind=where(inpdat.year eq -1,count)
+    if count gt 0 then inpdat=temporary(inpdat[0:ind[0]-1])
+;
+; swap if little endian machine
+;
+    a=1234L
+;   byteorder,a,/swap_if_little_endian
+    byteorder,a,/htonL
+    if a ne 1234L then inpdat=temporary(swap_endian(inpdat))
+    if n_elements(rcvnum) gt 0 then begin
+        ind=where(inpdat.rcvnum eq rcvnum,nrecs)
+        if nrecs gt 0 then begin
+            inpdat=inpdat[ind]
+        endif else begin
+            inpdat=''
+        endelse
+    endif else begin
+        nrecs=n_elements(inpdat)
+    endelse
+;
+	if dosmo then begin
+		nrecsmo=nrecs/smo + 16L
+		d=replicate(inpdat[0],nrecsmo)
+		rcvnumfound=lonarr(16)
+        icur=0L
+		rcvlist=lindgen(16)
+		if n_elements(rcvnum) gt 0 then rcvlist=rcvnum
+        for i=0,n_elements(rcvlist)-1 do begin
+			ircv=rcvlist[i]
+            if (rmconfig(ircv) eq 1) then begin
+                ind=where((inpdat.rcvnum eq ircv),count)
+                if count ge smo then begin
+		           aa=select(inpdat[ind].stat,smo/2,smo)
+				   inew=n_elements(aa)
+				   aa=''
+					ii=icur
+					jj=icur+inew-1
+		 d[ii:jj].key   =inpdat[ind[0]].key
+		 d[ii:jj].rcvnum=inpdat[ind[0]].rcvnum
+		 d[ii:jj].stat  =select(inpdat[ind].stat,smo/2,smo)
+		 d[ii:jj].year  =select(smooth(inpdat[ind].year,smo,/edge),smo/2,smo)
+		 d[ii:jj].day=select(smooth(inpdat[ind].day,smo,/edge),smo/2,smo)
+	    d[ii:jj].T16k=select(smooth(inpdat[ind].T16K,smo,/edge),smo/2,smo)
+	    d[ii:jj].T70k=select(smooth(inpdat[ind].T70K,smo,/edge),smo/2,smo)
+	    d[ii:jj].Tomt=select(smooth(inpdat[ind].Tomt,smo,/edge),smo/2,smo)
+	    d[ii:jj].pwrP15=select(smooth(inpdat[ind].pwrP15,smo,/edge),smo/2,smo)
+	    d[ii:jj].pwrN15=select(smooth(inpdat[ind].pwrN15,smo,/edge),smo/2,smo)
+  d[ii:jj].postampP15=select(smooth(inpdat[ind].postampP15,smo,/edge),smo/2,smo)
+					for k=0,2  do begin
+d[ii:jj].dcur[k,0]=select(smooth(inpdat[ind].dcur[k,0],smo,/edge),smo/2,smo)
+d[ii:jj].dcur[k,1]=select(smooth(inpdat[ind].dcur[k,1],smo,/edge),smo/2,smo)
+d[ii:jj].dvolts[k,0]=select(smooth(inpdat[ind].dvolts[k,0],smo,/edge),smo/2,smo)
+d[ii:jj].dvolts[k,1]=select(smooth(inpdat[ind].dvolts[k,1],smo,/edge),smo/2,smo)
+					endfor
+					icur=icur+inew
+            	endif  ; count ge smo
+			endif	   ; rmconfig eq 1
+		
+        endfor	; i =0,15
+		nrecs=icur
+		if nrecs ne nrecsmo then d=d[0:nrecs-1]
+;
+;		put back in date order
+;	 
+		ind=sort(d.day)
+		inpdat=d[ind]
+	endif
+    return,nrecs
+end

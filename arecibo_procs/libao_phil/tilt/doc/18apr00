@@ -1,0 +1,21 @@
+start 130200 (46920). az=0, za=10 (requested) .1 deg/sec.
+	actual position was 96.3228,9.9795
+
+compute what should have been from idl and compare it with what was
+measured.
+
+start 142200  az spin az=0,za=10 .2 deg/sec dome actually stationary
+
+start 150700  az spin az=0 za=4  .2 deg/sec
+
+
+start 154200 az spin az=0,za=16 .2deg/sec
+		till az 15.. td 4 had gone into the down limit. 
+			check that the zero velocity is not creeping.
+		
+	1. needed to recompile tieProg.. had old limits.
+	2. tdChkLim needs to be fixed... isn't working if you hit the
+	   maxLim on 1 td an min limit on the other...
+
+start 16:16:00   az=0,za=360, .2 deg/sec ..
+		reloaded tieProg recompiling with new limits..

@@ -1,0 +1,3 @@
+@geninit
+addpath,'ri'
+;

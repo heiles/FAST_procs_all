@@ -1,0 +1,29 @@
+#
+# mueller matrix info for sbh
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured,circular,corcal
+#--------------------------------------------------------------------------
+!0 1
+# NOTE: this is dummy data
+alpha=0.
+alpha= !dtor* alpha
+epsilon= 0.0
+phi=0.
+phi= !dtor* phi
+psi=!dtor* (0.)
+deltag= 0.
+chi=  0.* !dtor
+angle_astron=0.
+angle= angle_astron* !dtor
+#
+# make diagonal
+m_astron= fltarr( 4,4)
+m_astron[findgen(4)*5]=1
+pameasured=0				; we haven't measured the position angle rotation
+circular=0
+corcal=1
+end
+#--------------------------------------------------------------------------

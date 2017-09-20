@@ -1,0 +1,134 @@
+;+
+;riget - input an ri record
+;SYNTAX: istat=riget(lun,b,scan=scan,numrecs=numrecs)
+;ARGS:   lun	: unit number for file (already opened)
+;        b[]    : {riget} return data here.
+;KEYWORDS:
+;		scan	: long . position to start of this scan before reading
+;       numrecs : long .. number of records to return
+;RETURNS:
+; 	     istat  : int
+; 			1 - gotit
+; 			0 - hit eof
+;          -1 - could not position to requested scan
+;          -2 -  bad data in hdr
+;DESCRIPTION:
+;	Read the next ri numrecs (default 1) record from lun. Start at the current
+;record position unless the scan keyword is present.
+;The data is returned in the structure b. If numrecs is set greater than
+;1 then b[numrecs] will be an array of structures and all the next
+;numrec records must be the same type (hdr and data).
+;
+;	The caller should have already defined the {hdr} structure  before calling
+;this routine (usually done in the xxriinit routine for the particular 
+;datataking program). The structure contains:
+;
+;   b.h  header
+;     h.std
+;     h.ri,proc,pnt,iflo depending on the datataking program used
+;   b.d1[2,npts]  - 1st or only data channel i,q
+;   b.d2[2,npts]  - if both input channels (fifos) used this is the 2nd
+; 05jun02 .. 
+; b.d[1,*] is leftmost  (I dig)
+; b.d[0,*] is rightmost (Q dig)
+;-
+; modification history:
+; 07jun00 - switched the return order so d[*,0] is polA (left digitizer)
+; 08jun00 - check to make sure all the recs are the same scan
+; 24aug00 - implement numrecs.., scan keyword
+;
+function  riget, lun, b,scan=scan,numrecs=numrecs
+;
+;	on_error,1
+	hdr={hdr}
+	on_ioerror,ioerr
+	retstat=1
+	if  not n_elements(numrecs) then numrecs=1
+	recsRead=0
+	if  keyword_set(scan)  then begin
+		istat=posscan(lun,scan,1L)
+		case istat of
+			0: begin 
+				print,$
+				'riget: position to:',scan,', but found increasing scannumber'
+				retstat=-1
+			   end 
+		   -1: begin
+				print,'riget:position did not find scan:',scan
+				retstat=-1
+			   end
+		 else: 
+		 endcase
+	endif
+	if retstat ne 1 then goto,done
+	for i=0,numrecs-1 do begin
+		readu,lun,hdr
+		if ( string(hdr.std.hdrMarker) ne 'hdr_' ) then begin
+			print,'riget;bad hdr. no hdrid:hdr_h, numrec:',i+1
+			retstat=-2
+			goto,done
+		endif
+		if (hdr.ri.smpPairIpp gt 65536) then begin
+			print,'riget: smpPairIpp > 65535,numrec:',i+1
+			retstat=-2
+			goto,done
+		endif
+    	pntsPerRec=hdr.ri.smpPairIpp*hdr.ri.ippsPerBuf
+        fifoNum=hdr.ri.fifoNum
+;
+; 		if first rec to read, allocate structure
+;
+		if i eq 0 then begin
+			case 1 of
+			(fifoNum eq 1) or (fifoNum eq 2): begin
+		     	 	a={h:hdr,d1:fltarr(2,pntsPerRec,/nozero)}
+		     		tmp=intarr(2,pntsPerRec)
+			  		numfifo=1
+    			end
+			(fifoNum eq 12): begin
+		      		a={h:hdr,$
+				  	  d1:fltarr(2,pntsPerRec,/nozero),$
+				      d2:fltarr(2,pntsPerRec,/nozero)}
+		     	    tmp=intarr(2,2,pntsPerRec)
+			        numfifo=2
+				end
+			else: begin
+					print,'riget: illegal fifoNumber in hdr:',fifoNum
+					retStat=-2
+					goto,done
+				end
+			endcase
+			b=replicate(a,numrecs)
+    		scanNum=hdr.std.scannumber
+    		grpNum =hdr.std.grpnum
+		endif
+    	b[i].h=hdr
+		readu,lun,tmp
+		if numFifo eq 1 then begin
+			b[i].d1=tmp
+		endif else begin
+			b[i].d1=tmp[*,0,*]
+			b[i].d2=tmp[*,1,*]
+		endelse
+		recsRead=recsRead+1
+;		print,'riget,scan,grp,numrecs:',$
+;			b[i].h.std.scannumber,b[i].h.std.grpnum,numrecs
+	endfor
+	retstat=recsRead
+done:
+	return,retstat
+ioerr:
+	hiteof=eof(lun)
+	on_ioerror,NULL
+	if (not hiteof) then begin
+		message, !ERR_STRING, /NONAME, /IOERROR
+	 endif else begin
+		if recsRead eq 0 then begin
+	 		retstat=0 
+		endif else begin
+			b=b[0:recsRead-1]		; return what we found
+			retStat=recsRead
+		endelse
+	endelse
+ 	goto,done
+end

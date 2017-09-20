@@ -1,0 +1,52 @@
+#
+# mueller matrix info for cband
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured, circular,corcal
+#----------------------------------------------------------------------------
+!0 1
+#   INCOMPLETE does not include the final rotation required to make
+#pa's correct for astronomical sources.
+#   The parameters come primarily from B0017+154 and B2209+080, and
+#secondarily from B1615+212, observed 16sep00, 17sep00, and15sep00,
+#respectively. The source 0333+321, observed 20sep00, had crappy fits and
+#gave conflicting results and was totally ignored.
+#
+#   The behavior of psi with frequency implies a cable length
+#difference for the correlated cal of 58 cm if one restricts attention to
+#the three upper frequencies (4860, 5000, 5400 MHz). The lowest
+#frequency, 4500 MHz, did not lie on this straight line at all. The
+#reason for such a large path difference, and also for the inconsistent
+#result at 4500 MHz, is a total mystery.
+# pjp.. the sideband of the 4500 Mhz band is oppposite the other 3..
+#
+# 17apr13 !! error?? should be cos(2*angle) ,sin(2*angle), not
+#              2*cos(angle),2*sin(angle)
+cfr50= cfr- 5000.
+alpha= -1.23
+alpha= !dtor* alpha
+epsilon= 0.005
+phi= 132.
+phi= !dtor* phi
+if (cfr gt 4800.) then psi= -125.+ 0.102*cfr50
+if (cfr le 4800.) then psi=78.
+psi= !dtor*psi
+chi= 90.*!dtor
+deltag= 0.020
+#
+angle_astron= -78.
+angle= angle_astron* !dtor
+m_astron= fltarr( 4,4)
+m_astron[ 0,0]= 1.
+m_astron[ 3,3]= 1.
+m_astron[ 1,1]= 2.* cos( angle)
+m_astron[ 2,1]= 2.* sin( angle)
+m_astron[ 2,2]= m_astron[ 1,1]
+m_astron[ 1,2]= -m_astron[ 2,1]
+pameasured=1
+circular=0
+corcal=1
+end
+#----------------------------------------------------------------------------

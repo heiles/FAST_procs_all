@@ -1,0 +1,249 @@
+#
+# cband model..
+# format is:
+# # comment, 
+# #!modelXX hdr for model, 
+# #! num num  archived data for model
+#    num num  current dat for model
+#  hdr line for model:
+# #!modelXX numcoef format encTbl date
+# units are great circle arcseconds
+#  HISTORY:
+#  13jan13: used calibration data jun12-dec12
+#  31may12:  sub 4.78 from zaerr after reinstall
+#  11sep13:  updated za from aug13 data after reinstall
+#!modelCB18A  13 B enctbl18A  120305 model18
+# tur:206.77 ,scl:-.75 format B .. after beam repair
+#    az         za    model coefficients
+#   -36.01   -81.43  verify run after 5th src 08may12
+#   -34.90    -77.42  constant till 05jun12
+#   -34.90    -82.20  constant  31may12
+#   -37.70    -86.00  constant 13jan13
+   -37.70    -78.13  constant 10sep13 data after reinstall
+    -3.14    -97.13  cos(az)
+    93.49     -1.82  sin(az)
+  -715.60    132.62  sin(za)
+ -1089.56    721.35  sin(za)**2
+   -21.52    -10.25  cos(3az)
+   -10.85     -6.13  sin(3az)
+    18.25    -10.92  sin(za-balance)*cos(3az)
+   111.09     11.58  sin(za-balance)*sin(3az)
+     7.92      1.05  cos(2az)
+     0.13     -1.70  sin(2az)
+    -2.56     -0.26  cos(6az)
+     0.56     -0.12  sin(6az)
+#!modelCB17A  13 B enctbl17A  071216 model17
+# tur:206.77 ,scl:-.75 format B .. from 02may04 survey.
+#  -36.52    -79.41  constant offset used for verify run.
+#   -36.85    -79.60  from verify run 06feb08
+#    03jun10 after fitting 1,2,3 az mar10-jun10
+#   -37.44    -78.95  constant ..sub [-3.68,  1.93]03jun10
+#    -7.20    -96.05  cos(az)  ..sub [-7.93, -9.93]03jun10
+#    91.53     -5.93  sin(az)  ..sub [ 8.43, -7.94]03jun10
+#   -23.10    -12.71  cos(3az) ..sub [-3.03, -0.59]03jun10
+#    -9.98     -7.52  sin(3az) ..sub [-0.81, -7.94]03jun10
+#    -0.06      0.17  cos(2az) ..sub [-6.41, -0.31]03jun10
+#    -0.92     -2.49  sin(2az) ..sub [-0.94, -1.65]03jun10
+# 09jun10 za sin(3az) off wrong. used -7.94, correct: -1.63
+#   -9.17      0.42  sin(3az)  ..sub [ -0.81, -7.94]03jun10 wrong
+#   -9.17     -5.89  sin(3az)  ..sub [ -0.81, -1.63]09jun10 correct
+#!   -33.76    -80.88 constant ..sub [ -3.68,  1.93]03jun10
+#!     0.73    -86.12  cos(az)   ..sub [-7.93, -9.93]03jun10
+#!    83.10      2.01  sin(az)   ..sub [ 8.43, -7.94]03jun10
+#!  -776.49    125.02  sin(za)
+#!  -960.35    713.55  sin(za)**2
+#!   -20.07    -12.12  cos(3az)  ..sub [ -3.03, -0.59]03jun10
+#!    -9.17      -5.89  sin(3az)  ..sub [ -0.81, -1.63]09jun10
+#!    17.95     -5.13  sin(za-balance)*cos(3az)
+#!   115.98      6.49  sin(za-balance)*sin(3az)
+#!     6.35      0.48  cos(2az)  ..sub [ -6.41, -0.31]03jun10
+#!     0.02     -0.84  sin(2az)  ..sub [ -0.94, -1.65]03jun10
+#!    -2.16      0.09  cos(6az)
+#!     1.67      0.15  sin(6az)
+#
+#!modelCB15B  13 B enctbl15A  061211 model15
+# tur:206.77 ,scl:-.75 format B .. from 02may04 survey.
+#  -49.02   -103.07  constant  same offset as mod14. use for verify1
+#   -44.02    -83.07  constant  + 5 2 + 20 verify2
+#   -42.45    -80.32  constant  20may04 from verify run
+#  -766.51    141.69  sin(za)    -[35.3,0]   10dec06
+#!    -40.45   -81.02  constant  sub [-2,.7] dec06
+#!   -7.65   -101.36  cos(az)    -[1.6,5.8]  10dec06 (see modhist:11dec06)
+#!    96.25     -7.93  sin(az)    -[3.9,3.8]  10dec06
+#!  -730.16    141.69  sin(za)    -[-35.9,0]   06apr07
+#! -1013.97    677.51  sin(za)**2
+#!   -24.53    -10.41  cos(3az)
+#!   -11.19     -7.71  sin(3az)
+#!     9.18    -10.39  sin(za-balance)*cos(3az)
+#!   106.04      0.08  sin(za-balance)*sin(3az)
+#!     3.02      0.43  cos(2az)
+#!    -1.74     -0.62  sin(2az)
+#!    -3.46      0.03  cos(6az)
+#!     1.29     -0.36  sin(6az)
+#!modelCB15A  13 B enctbl15A  040513 model15
+# tur:206.77 ,scl:-.75 format B .. from 02may04 survey.
+#  -49.02   -103.07  constant  same offset as mod14. use for verify1
+#   -44.02    -83.07  constant  + 5 2 + 20 verify2
+#!   -42.45    -80.32  constant  20may04 from verify run
+#!    -6.05    -95.56  cos(az)
+#!    92.35     -4.13  sin(az)
+#!  -731.21    141.69  sin(za)
+#! -1013.97    677.51  sin(za)**2
+#!   -24.53    -10.41  cos(3az)
+#!   -11.19     -7.71  sin(3az)
+#!     9.18    -10.39  sin(za-balance)*cos(3az)
+#!   106.04      0.08  sin(za-balance)*sin(3az)
+#!     3.02      0.43  cos(2az)
+#!    -1.74     -0.62  sin(2az)
+#!    -3.46      0.03  cos(6az)
+#!     1.29     -0.36  sin(6az)
+#!modelCB14A  13 B enctbl14A  030304  model 14
+# tur:206.38 ,scl:-.75 format B  new turret 14feb04
+# tur:206.65 ,scl:-.75 format B  ..
+#  -36.23    -83.50  constant same offset sbn as model11
+#	-24.63   -87.22  verify offsets 05mar03 add: 11.6029     -3.72457
+#  -47.83    -79.78  10mar03 17:10 above offsets entered backwards
+#   -59.98    -79.78  14feb03 new turret pos
+#!   -59.98    -62.78  10apr04 track after kevlar tension
+#!    -6.41   -100.92  cos(az)
+#!    99.16     -5.74  sin(az)
+#!  -713.84    175.81  sin(za)
+#! -1028.24    489.81  sin(za)**2
+#!   -22.20    -11.42  cos(3az)
+#!   -12.08     -7.80  sin(3az)
+#!     7.31      4.00  sin(za-balance)*cos(3az)
+#!   111.56      1.25  sin(za-balance)*sin(3az)
+#!     2.49      0.43  cos(2az)
+#!    -0.69     -0.42  sin(2az)
+#!    -1.93     -0.30  cos(6az)
+#!     0.91     -0.19  sin(6az)
+#!modelCB11A  13 B enctbl11A  000209 used to verify model 11
+# tur:106.65 ,scl:-.75 format B  ..
+#   -41.66    -90.04  offsets used for verify 09feb00
+#    -39.08    -94.28  offsets verify gave +2.58 az, -4.24 za
+#	-84.08   -94.28    for slava test 13apr02. turpos->107.65
+#!    -39.08    -94.28  done with slave test .. 14apr02
+#!   -14.28    -95.08  cosaz
+#!    91.27    -11.98  sinaz
+#!   -969.26    261.77  sinza az enc jump 16sep02
+#!  -796.59   -348.23  sinza*sinza
+#!   -22.31    -10.79  cos3az
+#!   -13.95     -7.12  sin3az
+#!    31.40    -14.38  cos3az*sin(za-balance)
+#!   119.20     18.99  sin3az*sin(za-balance)
+#!     2.40      3.95  cos2az
+#!    -6.11     -1.75  sin2az
+#!    -2.89      0.91  cos6az
+#!    -0.19     -0.77  sin6az
+#!modelCB10  13 B enctbl10  981230
+# tur:206.65 ,scl:-.75 format B  ..
+#                              afte dome  realignment
+#  -40.99    -76.13  offsets   from modelSB10
+#!   -42.50    -70.07  offsets   -1.51,6.06 from modelverify 1jan99 
+#!   -16.19    -96.82  cosaz
+#!    94.12    -14.03  sinaz
+#!   809.88     62.71  sinza
+#! -1549.79    325.55  sinza*sinza
+#!   -22.45    -10.42  cos3az
+#!   -11.79     -6.48  sin3a
+#!    29.68     -9.38  cos3az*sin(za-balance)
+#!   109.85     10.82  sin3az*sin(za-balance)
+#!     3.03      5.49  cos2az
+#!    -6.62     -1.19  sin2az
+#!    -1.76     -0.24  cos6az
+#!     1.05      0.08  sin6az
+#
+#!modelCB9 13 B enctbl9 980529
+# tur:206.65 ,scl:-.75 format B .. model 9 with 1/2 of last src.
+#   -46.73     -32.34 offsets sband offset
+#   31.44     -22.34 offsets  29may98 keep same relative offsets
+#  -11.63     -48.49 cosAz
+#   45.33     -11.13 sinAz
+#  12oct98 after georges add offsets: 9.46 0
+#                           cosAz  : -1.80  -8.14
+#                           sinAz  :  6.69   2.13
+#  40.90     -22.34 offsets  12oct98
+# -13.43     -56.63 cosAz
+#  52.02      -9.00 sinAz
+#  763.56    -234.42 sinZa
+#-1578.65     896.11 sinZa*sinZa
+#  -22.98      -7.86 cos3az
+#  -14.70      -6.77 sin3az
+#   33.33     -20.95 cos3az*sin(za-balance)
+#  109.32      22.21 sin3az*sin(za-balance)
+#    0.15       2.27 cos2az
+#   -2.35      -2.04 sin2az
+#   -3.68       0.55 cos6az
+#    0.51      -0.57 sin6az
+#
+#!modelCB9B 13 B enctbl9B 980524
+# tur:206.65 ,scl:-.75 format B .. model 9 with all of last src.
+#   -48.17    -35.26 offsets sband offsets
+#!    30.      -25.26 offsets  23may looking for src...
+#!   -11.58    -48.46 cosAz
+#!    45.03    -10.91 sinAz
+#!   775.43   -204.30 sinZa
+#! -1602.90    829.61 sinZa*sinZa
+#!   -23.24     -8.19 cos3az
+#!   -14.24     -6.79 sin3az
+#!    35.31    -17.14 cos3az*sin(za-balance)
+#!   106.45     19.09 sin3az*sin(za-balance)
+#!     0.43      2.07 cos2az
+#!    -2.28     -2.05 sin2az
+#!    -3.51      0.22 cos6az
+#!     0.70     -0.59 sin6az
+#
+#!modelCB8 13 B enctbl7 980509
+# tur:205.25 scl:-.75 format B
+# use sband tx model with old cband offsets till we can check the offsets
+#	 19.2	  0.  	    offsets  from old cband model.. need to update
+# 	 19.2	     -17.5  10may98 updated for tert motion 	   
+#  	 19.2	     -47.5  15may98 updated 206.75
+# 	-48.3	     -47.5  15may98         205.25 
+#  	-14.55       -47.5  15may98       205.25 
+#!   	 19.2	     -47.5  15may98       205.25
+#!    -18.2705     -68.6485 cosAz
+#!     63.6188     -21.3361 sinAz
+#!    753.4523    -106.8762 sinZa
+#!  -1520.5494     409.2893 sinZa*sinZa
+#!    -21.5628      -8.1415 cos3az
+#!    -12.3515      -7.6062 sin3az
+#!     25.9566     -46.0313 cos3az*sin(za-9.15)
+#!     96.0349      16.7237 sin3az*sin(za-9.15)
+#!      4.8112       2.7913 cos2az
+#!     -4.6584      -1.2751 sin2az
+#!     -1.5199       0.7486 cos6az
+#!      0.9746      -0.3744 sin6az
+#!modelCB7 13 B enctbl7 980213
+# tur:309.12,scl:-.75 format B
+# use sband tx model with old cband offsets till we can check the offsets
+#!	 19.2	  0.  	    offsets  from old cband model.. need to update
+#!    -18.2705     -68.6485 cosAz
+#!     63.6188     -21.3361 sinAz
+#!    753.4523    -106.8762 sinZa
+#!  -1520.5494     409.2893 sinZa*sinZa
+#!    -21.5628      -8.1415 cos3az
+#!    -12.3515      -7.6062 sin3az
+#!     25.9566     -46.0313 cos3az*sin(za-9.15)
+#!     96.0349      16.7237 sin3az*sin(za-9.15)
+#!      4.8112       2.7913 cos2az
+#!     -4.6584      -1.2751 sin2az
+#!     -1.5199       0.7486 cos6az
+#!      0.9746      -0.3744 sin6az
+#
+#!modelCB2 4 M none 971115   za offset 51.4 --> 0 
+#! 19.2	  0.  	    offsets
+#!-17.5	 -56.9		cosAz
+#! 63.8	 -34.8		sinAz
+#!237.5	 -15.9		sinZa
+#! 0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!modelCB1 4 M none 971114   original model
+#!19.2	  0.  	    offsets
+#!-17.5	 -56.9		cosAz
+#! 63.8	 -34.8		sinAz
+#!237.5	 -15.9		sinZa

@@ -1,0 +1,6 @@
+14aug02
+	corsubset() - to create subset of a data struct by sbc
+	coravg.pro  - switched to use corsubset.
+				  old version -> Old/coravg.pro
+	corcalonoffm - added edgefract, spc 
+				  oldversion -> Old/corcalonoffm.pro

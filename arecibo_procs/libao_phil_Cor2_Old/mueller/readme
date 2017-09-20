@@ -1,0 +1,42 @@
+routines to convert save files to structure:
+
+
+save: mm0_bdN.12sep00.x102.1.sav .. from mueller0.idlprc.pro
+data: hdrscan, hdr1info, hdr2info,strp_stk_cal,
+		strp_cfs, sigstrp_cfs, strp_tmps, b2dcfs, har, nrc,
+
+save: strpstk_mm0_bdN.12sep00.x102.1.sav .. from mueller0.idlprc.pro
+data: strp_stk
+
+to update save data
+
+1. in directory /proj/x102/cal
+	- update file mmfilesgen.sc to include and new directories
+	- in shell run     mmgenfiles.sc
+2. in idl with permissions to write to /proj/x102/cal
+	@corinit, @mminit
+	.run mmdoit   -  this creates /proj/x102/cal/mmdata.sav
+
+
+to access the data
+	login to idl
+	@corinit
+    .. if using the default /proj/x102/cal
+	@mmrestore
+	.. else
+	restore,'mmdata.sav' using whatever directory..
+
+The data will be:
+	mm	- all the data sorted by receiver then source
+	MM100        STRUCT    = -> MUEL Array[192]
+	MM12         STRUCT    = -> MUEL Array[104]
+	MM3          STRUCT    = -> MUEL Array[78]
+	MM5          STRUCT    = -> MUEL Array[616]
+	MM6          STRUCT    = -> MUEL Array[272]
+
+	MMRCVIND     STRUCT    = -> MMRCVIND Array[5] .. start/end index in mm
+   		STARTIND        starting index in mm this rcv
+   		ENDIND          ending index in mm this rcv
+   		RCVNUM          receiver number 2,3,5,6,9,12,100
+		
+	MMSRCNAMES      STRING    = Array[14].. list of source names in mm

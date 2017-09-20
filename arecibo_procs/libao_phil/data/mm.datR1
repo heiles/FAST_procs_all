@@ -1,0 +1,24 @@
+#
+# mueller matrix info for 327
+# this data is dummy data ...
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured,circular,corcal
+!0 1
+chi=90.* !dtor
+deltag= 0.00
+epsilon=0.0
+alpha= 0.0
+phi= 0.
+psi= 0.
+angle_astron=0.
+angle=angle_astron*!dtor
+angle_astron=0.
+m_astron= fltarr(4,4)
+m_astron[ 5*indgen(4)] = 1.
+pameasured=0
+circular=0
+corcal=1
+end

@@ -1,0 +1,30 @@
+#   rcvnum 6  lband narrow
+#  nd1/2  noise diode 1/2
+#  Pa/b   feeding polarization a/b
+#  H/L    high,low cal
+# 0. --> no meausurement
+# !yyyy daynum.. following data valid after this date
+# note there are 2 diodes in lbn receiver. even thought if have
+#  listed it below as 1 diode..
+#frq nd1PaH nd1PaL nd1PbH Nd1PbL nd2PaH nd2PaL nd2PbH nd2PbL
+# 0    1        2      3      4      5      6      7       8
+#
+# karen oneils reduction of 28jan02 data
+#
+!0 1
+1200   0.     2.52     0.     2.55   0.     0.     0.     0.
+1360   0.     1.73     0.     1.85   0.     0.     0.     0.
+1220   0.     2.06     0.     2.09   0.     0.     0.     0.
+1380   0.     1.80     0.     1.90   0.     0.     0.     0.
+1240   0.     1.77     0.     1.82   0.     0.     0.     0.
+1400   0.     1.86     0.     1.95   0.     0.     0.     0.
+1260   0.     1.60     0.     1.68   0.     0.     0.     0.
+1420   0.     1.91     0.     1.98   0.     0.     0.     0.
+1280   0.     1.54     0.     1.65   0.     0.     0.     0.
+1440   0.     1.96     0.     2.03   0.     0.     0.     0.
+1300   0.     1.54     0.     1.67   0.     0.     0.     0.
+1460   0.     2.02     0.     2.10   0.     0.     0.     0.
+1320   0.     1.59     0.     1.72   0.     0.     0.     0.
+1480   0.     2.09     0.     2.23   0.     0.     0.     0.
+1340   0.     1.66     0.     1.79   0.     0.     0.     0.
+1500   0.     2.21     0.     2.45   0.     0.     0.     0.

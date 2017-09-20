@@ -1,0 +1,38 @@
+;+
+;NAME:
+;cormon - monitor data from file.
+;SYNTAX: cormon,lun,b,m=pltmsk,han=han,vel=vel,pol=pol
+;    ARGS:
+;           lun:    int assigned to open file.
+;KEYWORDS:
+;             m:    which sbc to plot.. bitmask b0->b3 for brd1->4
+;           vel:    if set then plot versus velocity. def:freq.
+; RETURNS:
+;             b:    {corget}  data from last read
+;DESCRIPTION:
+;   Monitor the data in a file. When the routine hits the end of file it
+;will continue plotting as new data becomes available. This routine
+;is normally used for online monitoring. To exit the routine use ctrl-c.
+;-
+pro cormon,lun,b,m=pltmsk,han=han,vel=vel,pol=pol
+;
+; monitor from file
+;
+    on_error,1
+    forward_function waitnxtgrp
+    if (n_elements(pltmsk) eq 0) then pltmsk=15
+    if (n_elements(pol) eq 0) then pol=0
+    if (not keyword_set(vel)) then vel=0
+    for i=0L,99999  do begin
+        istat=waitnxtgrp(lun)
+        if (istat  ne 0)  then begin
+            print,"waitnxtgrp error. istat",istat
+            return
+        endif
+        point_lun,-lun,a
+        istat=corget(lun,b)
+        if istat ne 1 then return
+        if keyword_set(han) then corhan,b
+        corplot,b,m=pltmsk,vel=vel,pol=pol
+    endfor
+end

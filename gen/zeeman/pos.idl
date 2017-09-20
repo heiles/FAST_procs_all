@@ -1,0 +1,12 @@
+.run posang_conv
+
+ell=0.d0
+bee=45.d0
+;bee=90.d0
+glactc, ra, dec, 2000.d0, ell, bee, 2, /deg
+print, ra, dec
+posang_conv, ra, dec, 0., glon, glat, gangle, /eq_to_gal;, /inverse
+;glactc, ra, dec, 2000.d0, glon, glat, 1, /deg
+
+print, glon, glat, gangle
+

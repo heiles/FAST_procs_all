@@ -1,0 +1,9 @@
+03aug07 - carls changes to fix jumps in some of the measured pol params.
+          . mainly in mmlsfit.pro
+          . he added a few new params to muellerparams_carl
+            They aren't needed in my muellerparams_carl but i guess i'll
+            add them an hopefully the stokes save files will still work
+            (the ones used to compute the stokes params).
+	         new struct values:
+             .polsrc, .pasrc, .sigpolsrc , .sigpasrc
+

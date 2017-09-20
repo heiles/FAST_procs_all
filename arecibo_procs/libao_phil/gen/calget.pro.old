@@ -1,0 +1,82 @@
+;+
+;NAME:
+;calget - return the cal value for the requested freq
+;
+;SYNTAX: stat=calget(hdr,freq,calval,date=date)
+;
+;ARGS:
+;      hdr: {hdr}  .. header holding at least hdr.iflo
+;     freq: float  .. freq in Mhz for cal value.
+;KEYWORDS:
+;    date[2]: int   .. [year,daynumber] data for calvalue. Default is the
+;                      date in the header.
+;
+;RETURNS:
+;calval[2]: float .. calValues in deg K for polA,polB
+;     stat: int   .. -1 error, 0 got the values ok.
+;
+;DESCRIPTION:
+;   Return the cal values in degrees K for the requested freq. The hdr can be
+;a correlator or ri header (as long as it includes hdr.iflo). This 
+;routine always returns 2 values: pola, and polB.
+;
+;   The calvalues for the receiver in use are looked up and then the
+;values are interpolated to the observing frequency.
+;
+;NOTE:
+;   Some cals have measurements at a limited range of frequencies (in some
+;cases only 1 frequency). If the requested frequency is outside the range
+;of measured freqeuncies, then the closest measured calvalue is used 
+;(no extrapolation is done).
+;   hdr should be a single element rather than an array.
+;	This routine extracts info from the header and then calls
+;corget1().
+;
+;SEE ALSO:calget1, calval, calinpdata, corhcalval
+;-
+function calget,hdr,freq,calval,date=date
+;
+; return the cal value for this freq
+; retstat: -1 error, ge 0 ok
+;
+    forward_function iflohrfnum,iflohcaltype,calval,iflohlbwpol,calget1
+    common cmcorcaldat,cmcorcaldat
+     
+    calVal=fltarr(2)               ; return polA,b here
+    rfnum =iflohrfnum(hdr.iflo)     ; get rcvr number
+    calnum=iflohcaltype(hdr.iflo)
+    hybrid=0
+    if iflohlbwpol(hdr[0].iflo) eq 1 then hybrid=1
+	return,calget1(rfnum,calnum,freq,calval,hybrid=hybrid,date=date)
+;   if rfnum eq 6 then calnum = 0   ; lbn only has low cor cal.. now done calinp
+    rdfile=(n_elements(cmcorcaldat) eq 0 )
+    if n_elements(date) eq 2 then begin
+        year  =date[0]
+        dayNum=date[1]
+    endif else begin
+        year  =hdr[0].std.date / 1000
+        dayNum=hdr[0].std.date mod 1000
+    endelse
+    if (not rdfile) then begin
+       if  (cmcorcaldat.rcvnum ne rfnum)  or $
+           (cmcorcaldat.calnum ne calnum) or $
+
+           ((cmcorcaldat.startYr  gt year) or $
+            (cmcorcaldat.endYr    gt year) or $
+
+            ((cmcorcaldat.startYr eq year) and $
+             (cmcorcaldat.startDaynum gt dayNum)) or $
+
+            ((cmcorcaldat.endYr eq year) and $
+             (cmcorcaldat.endDaynum le dayNum)) ) then rdfile=1
+    endif
+    if (rdfile) then begin
+        datel=[year,dayNum]
+        if  calinpdata(rfnum,calnum,cmcorcaldat,date=datel) lt 1 then return,-1
+    endif
+    hybrid=0
+    if iflohlbwpol(hdr[0].iflo) eq 1 then hybrid=1
+    if (calval(freq,cmcorcaldat,cal,hybrid=hybrid) lt 0 ) then return,-1
+    calval=cal
+    return,1
+end

@@ -1,0 +1,98 @@
+X-Account-Key: account2
+X-UIDL: 467c56ee00000002
+X-Mozilla-Status: 0011
+X-Mozilla-Status2: 10000000
+X-Mozilla-Keys:                                                                                 
+Return-Path: <heiles@astro.berkeley.edu>
+Received: from fusion01.naic.edu (fusion01 [192.65.176.25])
+	by mofongo.naic.edu (8.12.8/8.12.8) with ESMTP id l5MN9O9b019851
+	for <phil@naic.edu>; Fri, 22 Jun 2007 19:09:24 -0400
+Received: from vermi.berkeley.edu (vermi.Berkeley.EDU [128.32.92.30])
+	by fusion01.naic.edu (8.13.7/8.13.7) with ESMTP id l5MN9NAA002019
+	for <phil@naic.edu>; Fri, 22 Jun 2007 19:09:24 -0400
+Received: by vermi.berkeley.edu (Postfix, from userid 363)
+	id 473F6470FC; Fri, 22 Jun 2007 16:09:34 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by vermi.berkeley.edu (Postfix) with ESMTP id 43BA4470EC;
+	Fri, 22 Jun 2007 16:09:34 -0700 (PDT)
+Date: Fri, 22 Jun 2007 16:09:34 -0700 (PDT)
+From: carl heiles <heiles@astro.berkeley.edu>
+X-X-Sender: heiles@vermi
+To: Phil Perillat <phil@naic.edu>
+cc: heiles@astron.Berkeley.EDU
+Subject: Re: revised proc...
+In-Reply-To: <Pine.LNX.4.64.0706221601310.312@vermi>
+Message-ID: <Pine.LNX.4.64.0706221608170.312@vermi>
+References: <200602051735.k15HZW112115@megs.naic.edu> <Pine.LNX.4.64.0706221601310.312@vermi>
+MIME-Version: 1.0
+Content-Type: MULTIPART/MIXED; BOUNDARY="545267292-5197038-1182553774=:312"
+X-Spam-Score: undef - SENDER Whitelisted (Sender heiles@astro.berkeley.edu is whitelisted)
+X-Canit-Stats-ID: 1528861 - ff902ea3331b
+X-Scanned-By: CanIt (www . roaringpenguin . com) on 192.65.176.25
+Status:   
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--545267292-5197038-1182553774=:312
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+
+
+of course, i forgot to include the proc! here it is...
+
+(it goes without saying that i;d appreciate it very much if you gave this 
+a brief test, comparing old results with new!)
+
+thanks, c
+
+-------------------------------------------
+Carl Heiles   heiles@astro.berkeley.edu
+Astronomy Department
+545 Campbell Hall
+University of California
+Berkeley, CA 94720-3411
+voice phone: 510 642 4510 fax: 510 642 3411
+
+
+On Fri, 22 Jun 2007, carl heiles wrote:
+
+> 
+> hi phil...
+> 
+> in the spider scan reductions, when we do the pol calibration to get the 
+> mueller maatrix coeffs, there is a routine (aattached) thaat was 
+> incorrect. the effect would be to sort of randomly change the derived 
+> source position angle by 90 degreees; to change the derifved value of 
+> 'alpha' (see PASP mueller matrix paper) by 90 deg; to change the derived 
+> value of 'psi' by 180 deg; and to reverse the direction of rotation of the 
+> 2X2 rotation matrix in the bottom right of the mueller matrix. 
+> 
+> this fixes it. this routine assumes nominal linear. for nominal circular, 
+> the keyhword 'parameter_fixup' should not be set--there might be other 
+> isssues, too, but i think that's it. 
+> 
+> came across thsi when we were looking into GBT polarization calibration 
+> problems. 
+> 
+> so, if yhou ever made a plot of the angle 'psi' versus calendar date (this 
+> measured the relative diff between the cable lengths of the cal connected 
+> to the X and Y pols), and found it jumping by 180 deg; or plottted the 
+> off-diagonal elements of the abovementioned rotaion matrix and found sign 
+> changes; or plotted 'alpha' and found it not to be almost zero but 
+> sometimes about 90 deg, this is the reason. and if you rerun all the 
+> spider scan calibs, those problems should disappear.
+> 
+> how are things? still a small chance i'll get there for that meeting later 
+> this summer...hope so, anyway!
+> 
+> --c
+> 
+> -------------------------------------------
+> Carl Heiles   heiles@astro.berkeley.edu
+> Astronomy Department
+> 545 Campbell Hall
+> University of California
+> Berkeley, CA 94720-3411
+> voice phone: 510 642 4510 fax: 510 642 3411
+> 
+> 

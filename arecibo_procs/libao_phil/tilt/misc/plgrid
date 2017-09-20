@@ -1,0 +1,87 @@
+;
+; plot p,r,focus and components vs az
+;
+note3='za20=...'
+pltdcor,tdpos,prgridtmp,/pitch,/roll,/prq,/focrad,/focrp,/focp,note3=note3
+;
+pltdcor,tdpos,prgrid,/pitch,/roll,/prq,/focrad,/focrp,/focp,note3=note3
+pltdcor,tdpos,prgrid,td=12 ,note3=note3
+pltdcor,tdpos,prgrid,pitp=12 ,note3=note3
+pltdcor,tdpos,prgrid,rolp=12 ,note3=note3
+;
+pltdcor,tdpos,prgrid,td=4 ,note3=note3
+pltdcor,tdpos,prgrid,pitp=4 ,note3=note3
+pltdcor,tdpos,prgrid,rolp=4 ,note3=note3
+;
+pltdcor,tdpos,prgrid,td=8 ,note3=note3
+pltdcor,tdpos,prgrid,pitp=8 ,note3=note3
+pltdcor,tdpos,prgrid,rolp=8 ,note3=note3
+;
+; tdpos min .2 inches
+;
+note3='pitch=pitch - .2 degrees.  za20=...'
+pltdcor,tdposmp2,prgridmp2,/pitch,ver=[-.3,.1],note3=note3
+pltdcor,tdposmp2,prgridmp2,/focp,ver=[0,14] ,note3=note3
+pltdcor,tdposmp2,prgridmp2,/prq ,note3=note3
+;
+pltdcor,tdposmp2,prgridmp2,td=12,ver=[-15,25] ,note3=note3
+pltdcor,tdposmp2,prgridmp2,pitp=12 ,note3=note3
+;
+pltdcor,tdposmp2,prgridmp2,td=4,ver=[-15,25] ,note3=note3
+pltdcor,tdposmp2,prgridmp2,pitp=4 ,note3=note3
+;
+pltdcor,tdposmp2,prgridmp2,td=8,ver=[-15,25] ,note3=note3
+pltdcor,tdposmp2,prgridmp2,pitp=8 ,note3=note3
+;
+; remove mean pitch,roll and replot
+;
+tsdxdycor,az,za,pdxdy,rdxdy
+meanp=total(reform(prgrid.p) - pdxdy)/(360.*41)
+meanr=total(reform(prgrid.r) - rdxdy)/(360.*41.)
+
+prgridzm=prgrid
+prgridzm.p=prgridzm.p - meanp
+prgridzm.r=prgrid.r- meanr
+tdposzm=tdcmpgrid(prgridzm)
+note3='set mean dome pitch,roll to zero (leave in dxdy) za20=...'
+;
+pltdcor,tdposzm,prgridzm,/pitch,ver=[-.2,.2],note3=note3
+pltdcor,tdposzm,prgridzm,/roll,ver=[-.2,.2],note3=note3
+pltdcor,tdposzm,prgridzm,/prq,note3=note3
+pltdcor,tdposzm,prgridzm,/focp,ver=[-10,4],note3=note3
+
+pltdcor,tdposzm,prgridzm,td=12,ver=[-15,25] ,note3=note3
+pltdcor,tdposzm,prgridzm,pitp=12 ,note3=note3
+pltdcor,tdposzm,prgridzm,rolp=12 ,note3=note3
+
+pltdcor,tdposzm,prgridzm,td=4,ver=[-15,25] ,note3=note3
+pltdcor,tdposzm,prgridzm,pitp=4 ,note3=note3
+pltdcor,tdposzm,prgridzm,rolp=4 ,note3=note3
+
+pltdcor,tdposzm,prgridzm,td=8,ver=[-15,25] ,note3=note3
+pltdcor,tdposzm,prgridzm,pitp=8 ,note3=note3
+pltdcor,tdposzm,prgridzm,rolp=8 ,note3=note3
+;
+; plot td motion do to dxdy
+;
+prgriddxy=prgrid
+tsdxdycor,az,za,pdxdy,rdxdy
+prgriddxy.p=reform(pdxdy,360,41)
+prgriddxy.r=reform(rdxdy,360,41)
+tdposdxy=tdcmpgrid(prgriddxy)
+
+note3='use only pitch,roll from dxdy motion. za20=...'
+;
+pltdcor,tdposdxy,prgriddxy,/pitch,ver=[-.2,.2],note3=note3
+pltdcor,tdposdxy,prgriddxy,/roll,ver=[-.2,.2],note3=note3
+pltdcor,tdposdxy,prgriddxy,/prq,note3=note3
+pltdcor,tdposdxy,prgriddxy,/focp,ver=[-10,4],note3=note3
+
+pltdcor,tdposdxy,prgriddxy,pitp=12 ,note3=note3 ,ver=[-5,5]
+pltdcor,tdposdxy,prgriddxy,rolp=12 ,note3=note3 ,ver=[-5,5]
+
+pltdcor,tdposdxy,prgriddxy,pitp=4 ,note3=note3 ,ver=[-5,5]
+pltdcor,tdposdxy,prgriddxy,rolp=4 ,note3=note3 ,ver=[-5,5]
+
+pltdcor,tdposdxy,prgriddxy,pitp=8 ,note3=note3 ,ver=[-5,5]
+pltdcor,tdposdxy,prgriddxy,rolp=8 ,note3=note3 ,ver=[-5,5]

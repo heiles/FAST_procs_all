@@ -1,0 +1,250 @@
+
+Given observed polarized sources, there are three programs that fit the
+data to provide the Mueller matrix elements:
+
+1. mmfit_2016.pro
+
+Given a single polarized source observed over a range of parallactic
+angles, this least squares fits the data to provide the Mueller matrix
+parameters. This is our classic fitting procedure, modified to allow
+nonzero Stokes V. It is intended for the very common case where you have
+well-sampled parallactic angle covereage of a single polarization
+calibration standard source.
+
+The input data consist of the PA dependences of each of the 3 observed
+fractional Stokes parameters, which are expressed by 3 parameters for
+each observed stokes parameter:
+
+(AMB, AB, BA) = A + B cos(2PA) + C
+
+The coefficients A, B, and C are fitted to the observed fractional
+stokes parameters by STRIPFIT_TO_PACOEFFS. Thus, there are 9 input
+numbers (3 sets of ABC, one for each of the three fractional Stokes
+parameters).
+
+There are up to 8 parameters to fit:
+
+	    5 Mueller matrix parameters (chi is not fit for. It should
+	    be set to 90 degrees)
+	    3 source Stokes parameters (Q, U, V)
+
+You can choose any combination of the 8 parameters to fit. For example,
+if you know the source Stokes parameters, you specify that they not be
+fit. Because the number of fitting parameters can be as high as 8, and
+there are only 9 inputs, the more parameters you can fix, the better.
+
+In fact, if you fit for all 8 parameters, there is only 1 degree of
+freedom, and the degeneracies (covariances) are so strong that under no
+circumstances can you actually fit all 8 parameters. So you have to
+eliminate fitting for one or more parameters. In our classic fits, we
+forced the Stokes V parameter to equal zero, because our calibration
+sources were classic continuum sources with very little V. Now, however,
+we might want to use OH masers, which can have strong Stokes V. 
+
+With nonzero V, you must eliminate other parameters from the fit. The
+most important Muellar matrix parameters are deltag and psi, and you
+always need to solve for them.  Because a reasonably well-engineered
+feed will have small imperfections, the parameters that express these
+imperfections can be eliminated from the fit. These parameters are
+epsilon and its associated phase angle phi; and alpha and its associated
+angle chi. Almost always, epsilon is the least important parameter
+because it is the smallest. For any native polarization you can set
+epsilon equal to zero and its angle to anything and not solve for
+them. This should be enough to obtain a good fit. You can reduce
+covariance problems further by fixing alpha: for native dual linear you
+set alpha=0 and chi=90 deg; for dual circular, alpha=45 degrees and
+chi=90 degrees. The program never allows a fit for chi, and chi should
+always be set to 90 degrees.
+
+
+
+2.  mmfit_2016_multiplesources.pro
+
+This is like mmfit_2016.pro, but treats the case when you have
+observations of more than one source and want to derive Mueller matrix
+parameters by including the data from all those sources. You can also
+obtain the Stokes parameters for all, or any combination of, the
+sources.
+
+The most important use for this is when you have well-sampled PA
+coverage of a polarized OH maser, e.g. W49, for which you can regard
+each spectral channel as an independent source. The program then
+provides the 3 Stokes parameter spectra.  For each source (or spectral
+channel), the input data consist of the PA dependence of each of the 3
+observed fractional Stokes parameters, which is expressed by 3
+parameters for each observed stokes parameter--a total of 9 data points
+for each source. The total number of input datapoints is then 9N_src.
+
+If you don't know the source polarizations, then you are fitting for 5
+Mueller matrix elements plus 3 Stokes parameters per source. The total
+number of fittig parameters is 5 + 3N_src. So the number of degrees of
+freedom is the difference between these two numbers, which is
+6N_src-5. So having only just two sources instead of one has a big effect
+because it changes the number of degrees of freedom from 1 to
+7. Nevertheless, if the feed is good you still might want to not fit for
+epsilon and phi, and also alpha.
+
+A caution for large N_src (e.g., hundreds or thousands of channels in a
+single spectrum): The number of parameters being solved for is 5 +
+3N_src. Suppose N_src = 1000, i.e. you have a three 1000-channel spectra
+(one for each fractional Stokes parameter)--so 3N_src=3000. The
+covariance matrix is then a 3005 x 3005 matrix, and the program has to
+evaluate its inverse. The computer time required goes as (3N_src +
+5)^3. CUBED! When N_src exceeds a few hundred, the time can become
+excessive. You can deal with this in a two-step fashion: step 1, rebin
+the spectra so that you have fewer channels, and do the fit at lower
+spectral resolution; step 2, apply the derived mueller matrix to the
+spectra with full resolution.
+
+
+The above comments about (1) above apply here equally well.
+
+3. mparamsfit.pro
+
+This program determines Mueller matrix parameters when you have
+observations of 2 or more sources and little or no parallactic angle
+coverage. You have to know the polarizations of the observed
+sources. For example, if you have observations of several continuum
+polarization standard calibrators, each at 1 or more parallactic angles,
+this will provide the Mueller matrix parameters. But it cannot provide
+the source stokes parameters; you have to know them.
+
+The FAST and Galt telescopes need this program because of their limited
+or zero coverage in parallactic angle. The sources can be continuum
+polarization calibrators or a known OH maser spectrum; the latter is
+especially convenient because you don't have to do position switching.
+
+For each observed source, the input data are its 3 observed fractional
+polarized Stokes parameters, so the number of input datapoints is
+3N_src. There are five Mueller matrix to solve for, so with 2 sources
+there is 1 degree of freedom (but see paragraphs below). As in (1)
+above, this isn't enough, so you need to exclude epsilon and phi, and
+maybe also alpha, from the fit.  The more sources, the better; the fewer
+parameters to solve for, the better.
+
+4. Complications in real life: discussion for a native dual-linear
+feed. 
+
+4.1. The mounting angle of the feed.
+
+Consider a native dual-linear feed. We fit the 'observed Stokes
+parameters', which are XX+YY, XX-YY, XY, YX, to their variation with
+parallactic angle theta_par. (Here XX is the X self-product, etc.)
+Question: just exactly what do we mean by this parallactic angle
+theta_par?  Answer: it's the parallactic angle of the feed probe that we
+are calling X. This is easy to see: The observed Stokes parameter
+Q_obs=XX-YY. For a source whose polarization position angle is 0 deg
+(i.e., its polarization is north-south with no east-west component),
+Q_obs is maximized when the X probe is north-south, i.e. when the X
+probe's parallactic angle is zero.
+
+The relationship between the source's parallactic angle and the X
+probe's parallactic angle depends on how the feed is mechanically
+mounted on the telescope. Consider the telescope being pointed towards
+zenith. In this case, the parallactic angle equals the azimuth angle +
+180 degrees. For polarization, this 180 degrees might as well be zero
+degrees because polarization is concerned with orientation, not
+direction, so for now we will forget about the 180 degrees and consider
+the two angles to be equal. Place yourself at the feed looking down at
+the ground. You see azimuth increase clockwise; parallactic angle also
+increases clockwise. If the X probe is aligned north-south, then both
+its azimuth and its parallactic angle are zero. If the X probe is
+rotated clockwise by some angle theta_feed, then both its azimuth and its
+parallactic angle equal theta_feed.
+
+Now consider the telescope being pointed towards some source.  Define a
+new spherical coordinate system whose pole is the direction of the
+source; call this the z axis. The two linear probes are two orthogonal
+lines that define a plane. This plane is perpendicular to the line of
+sight to the source, so we can call this the x-y axes of the new
+coordinate system. In this new system, the relatiionships among the
+telescope, feed, and sky are identical in spirit to the telescope
+pointing towards the zenith in the terrestrial alt-az system, with the
+exception that for theta_feed=0 the parallactic angle of the x-probe is
+equal to the parallactic angle of the source parang_src. So, generally,
+we can write
+
+        parang_Xprobe= parang_src + theta_feed
+
+In our least square fits for the parallactic angle dependence of the
+observed Stokes parameters, we should be using parang_xprobe as the
+independent variable. 
+
+4.2. The effects of interchanged cables.
+
+A native dual-linear feed and receiver system presents two cables to the
+digital backend. Suppose they are labelled at the ends, where they plug
+into the backend, and these labels say X_cable and Y_cable. Suppose
+further that at the feed we have probe X_probe, as above, and probe
+Y_probe. In real life the labeling can be interchanged. This can happen
+for the initial installation, and also during maintenance and repair.
+
+Similarly, the backend has four outputs: time (t) integrated values of
+XX, YY, XY, and YX. For a correlator, the crosscorrelation product
+XY(tau)=<X(t)Y(t+tau)> and YX(tau)=<X(t+tau)Y(t)>, where the <> indicate
+time averages. For a Fourier backend, we also have four outputs, two
+auto and two cross product. In practice, the communication between the
+astronomer and the engineer may not be perfect, and when commissioning
+a new backend one cannot know for sure that XY and YX are not
+interchanged. 
+
+If cables or cross-products are interchanged, the derived Mueller matrix
+coefficients and also the source Stokes parameters are affected. In
+particular, it can change the 'handedness' of the position angle of
+linear polarization. We used our fitting programs to investigate these
+effects, which we show in the table below.  'X<->Y' means X_cable is
+conneced to Y_probe and vice-versa, so that XX-YY changes sign and XY,YX
+are interchanged; 'XY<->YX' means the backend cross-product outputs are
+reversed but the X and Y cable labels are correct.
+
+	X<->Y	                  XY<->YX	     X<->Y
+DeltaG_{X<->Y}=-DeltaG	DeltaG_{XY<->YX}=DeltaG		
+
+psi_{X<->Y}=-(psi + 90)       psi_{XY<->YX}=-(psi + 90)
+
+alpha_{X<->Y}=-alpha          alpha_{XY<->YX}=(alpha + 90)
+
+epsilon_{X<->Y}=epsilon       ----
+
+phi{X<->Y}=phi + 180	      ----
+
+Q_src{X<->Y}=-Qsrc          Q_src{XY<->YX}=-Qsrc
+
+U_src{X<->Y}=-Usrc          U_src{XY<->YX}=-Usrc
+
+V_src{X<->Y}=Vsrc           V_src{XY<->YX}=-Vsrc
+
+pasrc{X<->Y}=(pasrc + 90)   pasrc{XY<->YX}=(pasrc + 90)
+
+
+
+
+pasr
+cond    DeltaG  psi     alpha   epsilon  phi    Qsrc   Usrc   Vsrc    pasrc
+
+OKsrc0  .0450   .9250   .0500   -.0050   1.726  .0200  -.0300 -.0400  -28.155
+                                                .0220  -.0300  .0400  -26.873
+                                                .0180  -.0300 -.400   -29.518
+
+both    -.0450  -2.4958  -.0500  .0050   1.726  -.0200  .0300 -.0400   61.845
+                                                -.0220  .0300  .0400   63.127
+                                                -.0180  .0300 -.400    60.481
+
+xx<->yy -.0450   .9250   -.0500   ----   ---    0      0      -.0400   ----
+                                                0      0      .0400    ----
+                                                0      0      -.400
+
+ 
+
+XY<->YX  .0450 -2.4958  1.6208   6e-6  7.8540 -.0200   .0300  .0400   61.845
+                                               -.0220   .0300 -.0400   63.127
+                                               -.0180   .0300  .400    60.482
+
+
+both
+
+
+
+What are
+the effects on our calibration?
+

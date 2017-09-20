@@ -1,0 +1,35 @@
+let MaxVelInpsec be the maximum velocity
+limAccMaxSec - given seconds to reach top speed.
+limMaxVelDac - maximum velocity dac units
+bw		  - maximum bandwidth for loop in hz.
+
+limmaxVelInPsec = maxVelDac/2048*MaxVelInppsec 
+limmaxAccInPsec2= maxVelInpsec/accMaxSec
+
+If you input a sine wave - Asin(wt)  a in inches,w in rad/sec
+
+then maxVelSinInpS= A*w
+then maxAccSinInpS= A*w*w
+
+for no velocity limiting you must have
+
+A*w <= MaxVelInppsec*maxVelDac/2048
+A   <= MaxVelInppsec*maxVelDac/(2048*w)
+
+for no accel limiting
+
+A*w*w<=  MaxVelInppsec/accMaxSec
+
+w*(MaxVelInppsec*maxVelDac/2048) <= MaxVelInppsec/accMaxSec
+w <= (2048/maxVelDac) / accMaxSec
+
+
+So 
+f <= (2048/maxVelDac)/(accMaxSec*2*pi)
+at maxFreq, maxAmpl is:
+
+A <= MaxVelInppsec*maxVelDac/(2048*(2048/maxVelDac)/accMaxSec))
+A <= MaxVelInppsec*(maxVelDac/2048)^2 *accMaxSec
+
+
+

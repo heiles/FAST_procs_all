@@ -1,0 +1,144 @@
+pro cross3_gencal_inp,lun,board, stokes, b_0, b_1, b_2, b_3,$
+            returnstatus,monitor=monitor,startscan=startscan,$
+            totalquiet= totalquiet
+;+
+;NAME:
+;cross3_gencal_inp - input a pattern for cross3_gencal
+;SYNTAX:
+;   cross3_gencal_inp,lun,board, stokes, b_0, b_1, b_2, b_3,$
+;           returnstatus,monitor=monitor,startscan=startscan,$
+;           totalquiet= totalquiet
+;
+;INPUTS:
+;   lun: int    assigned to file to read.
+; board: int    0..3 board that we want to process.
+;
+;KEYWORDS:
+;   monitor : if set then wait for new records to become available
+;  startscan: long If provided, then position to this scan before reading.
+; totalquiet: if set then don't output any messages.
+;
+;RETURNS:
+;   returnstatus: 1 got the pattern 
+;                 0 hit eof
+;                -1 some other error.
+;   stokes[128,4,242]: float    input data
+;     b_0,b_1,b_2,b_3: {corget} first record for each of the 4 strips.
+;
+;DESCRIPTION:
+;   Input a complete pattern for cross3_gencal. By default, start reading from 
+;the current position in the file. The keyword startscan will position to
+;the scan startscan before starting to read. The routine will then read in
+;a complete pattern. If a partial pattern is found then it will continue
+;to the next pattern.
+;-
+;   see if we position to scan before starting.
+;
+    if (n_elements(startscan) gt 0) and (not keyword_set(monitor)) then begin
+        print, 'POSITIONING FILE TO SCAN ', startscan
+        istat=posscan(lun,startscan,1)
+        if istat ne 1 then begin
+            print,'unable to position to scan:',startscan
+            returnstatus=-1
+            return
+        endif
+    endif
+;
+    nrl=0
+    while (nrl lt 242) do begin
+
+;-----------------MONITOR MODE---------------------------
+;IF IN MONITOR MODE, READ A RECORD USING PHIL'S MAGIC SENSOR...
+        IF keyword_set( monitor) then BEGIN             ;IFyesmon
+            istat=waitnxtgrp(lun)
+            if (istat  ne 0)  then begin
+                print,"waitnxtgrp error. istat",istat
+                returnstatus=-1
+                return
+            endif
+        endif
+;--------------------------------------------------------
+        istat= corget( lun,b, /noscale)
+;   CHECK FOR END OF FILE...IF YOU HAVE ONE, IT'S BAD!!!
+        if  ( istat eq 0) then begin
+            print, 'FOUND END OF FILE...RETURNING', string(7b)
+            returnstatus=0
+            return
+        endif
+;
+;   CHECK TO SEE IF THIS IS THE RECORD WE WANT:
+;
+checkrec: goodrec=0
+        case 1 of
+;
+;   LOOKING FOR CAL ON REC
+;
+        nrl eq 0:begin
+             if ( ( string(b.(0).h.proc.procname) eq 'calonoff') and $
+                 (( string(b.(0).h.proc.car))[ 0] eq 'on'    ) and $
+                 (corhstokes(b.(0).h) eq 1                  ) ) then goodrec=1
+             end
+;
+;   LOOKING FOR CAL OFF REC
+;
+        nrl eq 1: begin
+             if ( ( string(b.(0).h.proc.procname) eq 'calonoff') and $
+                 (( string(b.(0).h.proc.car))[ 0] eq 'off'    ) and $
+                 (corhstokes(b.(0).h) eq 1                  ) ) then goodrec=1
+             end
+;
+;   LOOKING FOR REC NUM (NRL-2) MOD 60) + 1
+;
+        nrl gt 1: begin
+             if ( ( string(b.(0).h.proc.procname) eq 'corcrossch') and $
+                  ( b.(0).h.std.grpnum eq ((nrl-2) mod 60) + 1) and $
+                  (corhstokes(b.(0).h) eq 1                  ) ) then goodrec=1
+             end
+        else    : begin
+              end
+        endcase
+;
+        if not goodrec then begin
+;
+;       IF WE WERE AFTER THE CAL ON REC, GO BACK AND RECHECK TO SEE IF THIS
+;       IS THE START OF A NEW SCAN
+;
+            print, 'THIS PATTERN WAS INCOMPLETE!!!', string(7b)
+            if nrl ne 0 then begin
+                nrl=0
+                goto,checkrec 
+            endif
+            nrl=0
+            goto,botloop 
+        endif
+;
+;       skip this pattern
+;
+        if ( (n_tags(b) -1)  lt board) then begin
+            nrl=0
+            goto,botloop 
+        endif
+
+        IF (KEYWORD_SET( TOTALQUIET) NE 1) and (nrl eq 0) THEN BEGIN
+                print, ' '
+                print, '  FOUND    SCAN NR                 ', $
+                        b.(0).h.std.scannumber
+        ENDIF
+;
+;   store rec in our arrays
+;
+        case  nrl of
+            2: b_0= b
+           62: b_1= b
+          122: b_2= b
+          182: b_3= b
+          else:  nrl=nrl
+        endcase
+;;      tmcrd_sep00, nrl, board, b, stokes
+        nrl=nrl+1L
+
+botloop:
+    endwhile
+    returnstatus=1
+    return
+end

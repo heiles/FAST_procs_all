@@ -1,0 +1,112 @@
+
+file='/share/aeron5/t1793_dec03/t1793_05dec03.001'
+openr,lun,file,/get_lun
+
+;
+code88 =[$
+  1.,-1.,-1., 1.,-1.,-1.,-1.,-1.,-1., 1., 1., 1.,-1., 1., 1.,-1.,-1., 1.,-1.,$
+  1., 1.,-1.,-1.,-1., 1.,-1.,-1., 1., 1.,-1., 1.,-1., 1., 1., 1., 1.,-1., 1.,$
+ -1., 1.,-1., 1., 1., 1.,-1.,-1.,-1.,-1.,-1.,-1., 1.,-1.,-1., 1.,-1., 1.,-1.,$
+ -1.,-1.,-1.,-1.,-1., 1.,-1., 1., 1.,-1.,-1., 1., 1., 1.,-1.,-1.,-1., 1.,-1.,$
+  1., 1.,-1.,-1., 1., 1., 1.,-1.,-1.,-1., 1.,-1.]
+
+codeBrkr=[1., 1., 1.,1.,1.,-1.,-1.,1.,1.,-1.,1.,-1.,1.]
+
+code=codeBrkr
+codelen=n_elements(code)
+;
+print,atmget(lun,d,nrec=500,rectype='rpwr',/search)
+;
+; assume 1 rcv win
+;
+smpTx  =d[0].h.sps.smpInTxPulse
+smpHght=d[0].h.sps.rcvwin[0].numSamples	 ; just use first rcv window
+smp1ipp=d[0].h.ri.smppairipp
+rcvWinStartUsec=d[0].h.sps.rcvwin[0].startusec
+ippsRec=d[0].h.ri.ippsPerBuf
+gw     =d[0].h.sps.gw
+;
+dcdHghts=smpHght-(codelen-1)
+nrecs=n_elements(d)
+ippToAvg=nrecs*ippsRec
+;
+; figure out fftlen
+;
+ipow2=0
+itemp=smpHght
+done=0
+while (itemp gt 1) do begin &$
+	itemp=itemp/2 &$
+	ipow2=ipow2+1 &$
+endwhile
+if (2^ipow2) lt smpHght then ipow2=ipow2+1
+fftlen=2^ipow2
+smpFill=fftlen-smpHght
+;
+; make the code a complex array
+;
+ccode=complex(code,0)
+;
+; extend it to length of ipp (should be len ipp +codelen-1)
+;
+ccode=[ccode,complexarr(fftlen-codelen)]
+;
+; go to the freq dome with the code, take complex conjugate.
+;
+spccode=fft(ccode)
+avgrec =fltarr(dcdHghts)
+b=complexarr(fftlen,ippToAvg)
+;
+; grab the data fifo 1, reform to be smpIpp,ippsrec*nrec
+;
+b[0:smpHght-1,*]=(reform(d.d1,smp1Ipp,ippsrec*nrecs))[smpTx:smpTx+smpHght-1,*]
+;
+avgrec=avgrec*0.
+;
+;
+for i=0,ippToAvg-1 do begin &$
+	avgrec=avgrec+ (abs(fft(conj(fft(b[*,i]))*spccode))^2)[0:dcdHghts-1] &$
+endfor
+scl=(fftlen*1.)^3/(ippToAvg)
+x=(findgen(dcdHghts)*gw + rcvWinStartUsec)*.15
+;ver,0,3000
+;ps,'power88.ps'
+plot,x,avgrec*scl,$
+xtitle='height [km]',ytitle='power [linear]',$
+	title='05dec03 raw Power 21:13:00 10 sec average (not r^2 corrected'
+;hardcopy
+;x
+
+
+
+
+
+plot,avgrec
+b1=b[0:3071,0]
+
+dcd=fft(fft(b1)*spccode,-1)
+
+
+
+print,atmget(lun,d,nrec=500,rectype='rpwr88',/search)
+istat=atmpwrcmp(d,dcdpwr,/usecal)
+usedome=0
+ za=(keyword_set(usedome))?d[0].h.std.grttd/10000. $
+                            :d[0].h.std.chttd/10000.
+ lab=string(format=$
+ '("power profile tm:",a," az:",f6.2," scan:",i9)',$
+    fisecmidhms3(d[0].h.std.time),d[0].h.std.azttd*.0001,d[0].h.std.scannumber)
+
+;  compute the height from the range   
+
+range=(findgen(n_elements(dcdpwr))*d[0].h.sps.gw  + $
+			d[0].h.sps.rcvwin[0].startusec)*.15
+   hght =range*cos(za*!dtor)
+   maxhght=(long(hght[n_elements(hght)-1L])+49L)/50L *50L
+   maxpow=max(dcdpwr)
+   maxpow=long(maxpow+49)/50l * 50
+   hor,0,maxpow
+   ver,0,maxhght
+   plot,dcdpwr,hght,title=lab,xtitle='power',ytitle='altitude [km]' 
+
+

@@ -1,0 +1,108 @@
+;
+; 05jul03 what mike is leaving out of the headers:w
+;sec.xxx.id  (leftmost 8 bits of section word). i got around this in 
+;		      hdrPrintAll.c by looking at the lenghths when sec.xxx.id is 0
+			  while sec.xxx is non zero.
+			  ;
+;--> mike has added an extra value to clp header.. at end??
+; actually 52 13*4 
+clp   len: 56
+;
+pwr   len: 56
+;
+mracf len: 80
+;-----------------------------------------------------------
+; std hdrs most files:
+;-----------------------------------------------------------
+std.
+Marker:hdr_      PrgId:clp       Vers:      HdrLen:444       RecLen:154556
+  Date:2003186    Time:23406   ExpNum:     0  Scan:        0 RecNum:     0
+  grpNum:   201  grpRTot:    1  grpRCur:   1    Data:        stScanTm:    0
+  posTm :23406020  azPos:4879870  grPos:149999 chPos:150002
+  InputSec:       0       offset:  128     length:    48
+  ProcSec:       0       offset:  176     length:    56
+  TimeSec:       0       offset:  232     length:   212
+;-----------------------------------------------------------
+clp: progId 
+ ;
+;clp procd
+;
+Id     :          Version:       ippsAvg: 1000     numIf:  0
+spcLen :   64  zeroExtend:0     decimate:  8   decCodLen:   0  1stTxSmpl:  0
+numHght: 1302     1stHght:   0  hghtStep:  0  spcThisRec:  0
+;
+sps.spsVer2.@  not null terminated???
+;-----------------------------------------------------------
+dspc:???
+ ProcSec:       0       offset:  176     length:    80 i interpret as clp
+
+;-----------------------------------------------------------
+; files .line/greg
+;-----------------------------------------------------------
+; pwr:
+;
+Id     :          Version:       PrgMode:1000       recType:0        dcdMode:0
+spcRec :  0    spcRec/Grp:  0   ippsAvgd: 1000     txScl:0.00e+00
+spcAvgd:    0  spcNumHght:   0  spc1Hght:   0  spcLenFft:   0  spcThisRec:  0
+
+
+;-----------------------------------------------------------
+; xxxx.clp files
+;-----------------------------------------------------------
+.std same as above
+;
+;.clp same as above
+;
+;-----------------------------------------------------------
+; xxxx.mracf files
+;-----------------------------------------------------------
+
+mracf.
+Id     :          Version:       ippDAvg: 5000     numIf:   0
+numLags:   64     numTxSw:   0   ippNAvg:    0   txspipp:   0  1stTxSmp:  0
+numHght:   20  hgtThisRec:   0    txHght:0       dataRec:0
+numDC  :    0  dcPThisRec:  0
+ txFrq1:      0.0    Frq2:      0.0 frq3:      0.0  frq4:      0.0
+
+?? the sps part of this buffer says there are 256 tx samples..
+
+/share/aeron2/29jun03qz10.greg
+;--------------------------------
+;  possible def of mracf datarec
+;
+d.h
+d.tx
+d.atm
+d.noise
+d.dc
+window1:2048 samples
+window2:640 samples
+
+numlags=64
+spclen=2*numlags
+nhght=4
+nsmpN= (nhght+1)*spclen
+nhght=16
+nsmpA= (nhght+1)*spclen
+
+;
+;--------------------------------
+;  possible def of power datarec
+;
+d.h
+d.tx     46
+d.d     
+d.calon
+d.caloff
+;--------------------------------
+;  possible def of clp datarec
+; 38528 = 64 * 602
+; smpintxpulse= 220 .. not included
+d.h
+d.tx     
+d.atm     
+d.calon
+d.caloff
+;--------------------------------
+
+for 

@@ -1,0 +1,16 @@
+;
+; for herb/frank we want to do the individual channel 
+; fitting for the gain too . 
+; to do this:
+;  add extra keyword parameter
+;
+;	mmInfo_arrChn[128,nfitsTot]
+; 
+; Do total power then
+; loop doing each channel. Just grab the
+; single channel and stuff into temp version of total power..
+;
+; 17sep09.. polBad=1 now can be used to get only one pol..
+;
+; 19mar12 .. ch data  astro mode. 
+;            polA=crr1, polB=crr2=20Mhz

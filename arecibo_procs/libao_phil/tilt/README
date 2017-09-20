@@ -1,0 +1,28 @@
+01feb00	- just a floor sping
+31jan00 - ao9 survey .., 4 za strips same spot
+mar00   - az spins 2,4,6,8,10.. to 19.5
+7apr00  - az spins 2,4,6,8,10.. to 19.5 .. partial za strip , flr spin
+20apr00 - flr,spin, ao9 survey
+21apr00 - flr spin, then azswings 2->19.5 and za strips 242.87,302.87
+		  to give complete coverage average ao9 survey
+23apr00 - floor spins vs za, za strips every 60 degrees, floor spins. 
+		  td track hght
+04aug01 - floor spin, az,za spins .. see x101/010804
+;
+29nov06.. -the pitch tilt sensor is switchable with the temperature
+		   sensor. It is in the left iflo rack (looking from the front).
+		  - the roll tilt sensor is always enabled.It is in the right
+			rack in the rfi box??
+		  - if1 "if1_tilt true/false" switches between the 
+			tilt sensor and the temp monitor.
+		  - the routine montilt start will flip the bit and stop 
+			the montemp routine for you. 
+		  - montilt stop will stop the monTilt program. 
+			You need to manually start the monTemp with rsh da monTempStart
+			when done with the tilt sensor.
+
+18feb08 - moved routines from tilt/tspro/ to tilt/
+			 
+			
+
+

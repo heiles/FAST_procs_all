@@ -1,0 +1,28 @@
+redtitle='RED'
+grntitle='GRB'
+blutitle='BLUE'
+
+redlabel= 'red'
+redlabel1= '1.'
+redlabel2= '250000'
+reddata= findgen( 541, 541) 
+
+grnlabel= 'grn'
+grnlabel1= '1'
+grnlabel2= '2'
+grndata= findgen( 541, 541) + 250.^2
+
+blulabel= 'blu'
+blulabel1= '1'
+blulabel2= '2'
+bludata= findgen( 541, 541) +125.^2
+
+redpwr=1.0
+grnpwr=1.0
+blupwr=1.0
+
+rgbimg, redtitle, redlabel1, redlabel2, redpwr, reddata, $
+grntitle, grnlabel1, grnlabel2, grnpwr, grndata, $
+blutitle, blulabel1, blulabel2, blupwr, bludata, $
+fileout=fileout, close=close, ftexgamma=ftexgamma, $
+plot_position= plot_position

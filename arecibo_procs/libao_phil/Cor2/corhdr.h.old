@@ -1,0 +1,16 @@
+;
+; correlator header version 2
+; 7jul00 moved to idl/h/hdrCor.h 
+;
+@~phil/idl/h/hdrStd.h
+@~phil/idl/h/hdrCor.h
+@~phil/idl/h/hdrPnt.h
+@~phil/idl/h/hdrIfLo.h
+@~phil/idl/h/hdrDop.h
+@~phil/idl/h/hdrProc.h
+a={hdr, std:{hdrstd}  ,$
+		cor:{hdrcorv2},$
+        pnt:{hdrpnt}  ,$
+	   iflo:{hdriflo} ,$
+	    dop:{hdrdop} ,$
+	   proc:{hdrproc} }

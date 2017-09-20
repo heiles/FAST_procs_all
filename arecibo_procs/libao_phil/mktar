@@ -1,0 +1,21 @@
+#
+# make correlator tar file
+#
+tar -cf idl.tar ./ReadmeExport ./gen ./data ./Cor2 ./was ./was2 ./wapp ./h \
+	./ri ./atm ./psrfits ./usrproj ./pdev ./mas ./doc ./etc \
+	-C ~phil/public_html ./swmodhistory.html \
+	-C ~phil/public_html ./cordoc.html  \
+	-C ~phil/public_html ./wasdoc.html  \
+	-C ~phil/public_html ./gendoc.html \
+	-C ~phil/public_html ./wappdoc.html \
+	-C ~phil/public_html ./atmdoc.html \
+	-C ~phil/public_html ./ridoc.html \
+	-C ~phil/public_html ./cormapdoc.html  \
+	-C ~phil/public_html ./usrprojdoc.html  \
+	-C ~phil/public_html ./pdevdoc.html  \
+	-C ~phil/public_html ./masdoc.html  \
+	-C ~phil/public_html ./psrfdoc.html  \
+	-C ~phil/public_html ./pntdoc.html 
+tar -tf idl.tar
+cp idl.tar ~phil/public_html/download/aoIdl.tar
+gzip -c idl.tar > ~phil/public_html/download/aoIdl.tar.gz

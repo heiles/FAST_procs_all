@@ -1,0 +1,68 @@
+#
+# mueller matrix info for lbw
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured, circular,corcal
+# --------------------------------------------------------------------------
+# installed 14may05
+# valid date 156= 04jun04 when drifting cal stabilized
+!2004 156
+#   11 jul 04: determined m_tot and m_astron for 3C138 for the NEW LBW.(ch)
+#   note.. i think this data was taken before the new cal values were installed
+#          i reprocessed the data witht he new calvalues but never
+#          updated them here.(see /share/megs/phil/x102/x102/newcal/lbw 
+#          after checking it think that at least deltag should be close to 0.
+#
+cfr1400= cfr- 1400.
+alpha= 0.009 + cfr1400* 0.003/250.
+epsilon= 0.007 - cfr1400* 0.005/250.
+phi= 0.
+psi= -0.44 - cfr1400*0.07/250.
+deltag= -0.10- cfr1400* 0.03/250.
+chi= 90.* !dtor
+angle_astron=-90
+angle=angle_astron*!dtor
+#
+m_astron=fltarr(4,4)
+m_astron[0,0] =1.
+m_astron[3,3] =-1.
+m_astron[ 1,1]= cos( 2.* angle)
+m_astron[ 2,1]= sin( 2.* angle)
+m_astron[ 2,2]= m_astron[ 1,1]
+m_astron[ 1,2]= -m_astron[ 2,1]
+pameasured=1                ; we've measured the position angle
+circular=0
+corcal=1
+end
+# --------------------------------------------------------------------------
+!0 1
+# The parameters come primarily from B0017+154, observed 16sep00.
+#HISTORY:
+#   15 oct 2002: in m_astron, the m_vv matrix elements was changed to
+# -1 from its previous value of +1 to reflect the correct sign of OH masers
+#in W49 and, also, helix tests done in spring of 1999.
+#   16 oct 2002: phil found the duplicate conversion of alpha from
+#    deg to radians. removed; see below commentary
+alpha  = .25*!dtor
+epsilon= .0015
+phi    = -148.*!dtor
+psi    = -175.4*!dtor
+chi    =  90.*!dtor
+cfr20=cfr - 1420.
+deltag= 0.100 + 0.015* cos( 2.* !pi* cfr20/300.)
+angle_astron=-45.
+angle=angle_astron*!dtor
+m_astron=fltarr(4,4)
+m_astron[0,0] =1.
+m_astron[3,3] =-1.
+m_astron[ 1,1]= cos( 2.* angle)
+m_astron[ 2,1]= sin( 2.* angle)
+m_astron[ 2,2]= m_astron[ 1,1]
+m_astron[ 1,2]= -m_astron[ 2,1]
+pameasured=1				; we've measured the position angle
+circular=0
+corcal=1
+end
+#--------------------------------------------------------------------------

@@ -1,0 +1,2 @@
+@geninit
+addpath,'dwtemp'

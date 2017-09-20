@@ -1,0 +1,537 @@
+;+
+;NAME:
+;cormapbc   - band pass correct a map 1 strip at a time
+; 
+;SYNTAX: mbpc=cormapbc(m,numbpedg,pol=pol,edge=edge,$
+;             tsys=tsys,degfit=degfit,cumfilter=cumfilter,$
+;             mask=mask,fractmask=fractmask,coef0=coef0,coef1=coef1 
+;
+;ARGS:
+; m[2,pntstrip,numstrips] : {}  input map array.
+; numbpedg : int. How to do the band pass correction:
+;           ge 0. This is the number of bandpasses on each edge of a strip 
+;                 to use for the bandpass correction (0 is the same as 1). 
+;                 The edge keyword can choose just the left or right edge.
+;              -1 The bandpass correction is computed for each strip by 
+;                 doing a linear fit for each channel over the samples of
+;                 a strip. Outliers are thrown out. The keyword edge will 
+;                 be ignored.
+;              -2 Use the entire strip to compute the bandpass by averaging
+;                 over the strip.
+;              -3 Use the entire strip to compute the bandpass by computing
+;                 the median by freq chn along the strip.
+;              
+;KEYWORDS:
+;     pol :  int, 1 or 2. if provided, then only process this pol
+;   edge[]:  int Determine which edge of each strip to use for the 
+;                bandpass,tsys correction. If edge is a single variable then
+;                the specified edge will be used for all strips. If edge
+;                is an array, then it must be dimensioned edge[numstrips].
+;                In this case, the edge used for the bandpass correction
+;                for strip i (count from zero) will be edge[i]. This
+;                lets you change the edge used in case a continuum source
+;                appears at the edge of a strip. The values for edge are:
+;                  -1  use numbpedg on the starting edge of each strip
+;                      for the bandpass correction.
+;                   1  use numbpedg on the ending edge of each strip
+;                      for the bandpass correction.
+;                   0  use numbpedge from both edges.
+;                If the edge keyword is not supplied then edge=0 is used.
+;   tsys: int   This keyword determines how to remove the system temperature
+;               from each spectra:
+;               0 -(default) compute tsys from bpc spectra. 
+;                   linearly interpolate between each edge if two edges.
+;                   if a single edge, use that for the entire strip
+;               1 - linearly interpolate the total power using all of the 
+;                   spectra of the strip. If numbpedg = -1 then
+;                   the average of the linear fits by channel is used.
+;               2 - compute the mean Tsys for each spectra of the strip and 
+;                   remove it.
+;               3 - do not remove tsys
+;               4 - compute the median Tsys for each spectra of the strip and 
+;                   remove it.
+;               5 - compute Tsys with a robust average and then remove it.
+;   degfit: int if tsys eq 1 then this is the deg of the polynomial fit to
+;                   use. The default is 1
+;   cumfilter:      If tsys!=2 and this keyword is set, a cumfilter is run
+;                   on the Tsys before the fit. This will normally exlude
+;                   the continuum sources from the fit. see cumfilter (under
+;                   general software)
+;   mask[nchn] int  mask to use for removing Tsys. If provided then it 
+;                   should have the same number of channels a m[0,0].d
+;                   It will use the non-zero channels to compute and remove
+;                   Tsys (depending on keyword tsys). The routine will
+;                   always use all of the channels when doing the bandpass
+;                   correction (since the cal was averaged over all 
+;                   channels). Note.. to use this polA and polB must
+;                   have the same number of channels.
+;   fractmask: float fraction of channels on each side of spectra to ignore
+;                   when computing tsys for tsys removal. Use this instead
+;                   of mask= keyword. If you have 1024 channels then
+;                   fractmask=.05 would ignore 51 channels from each side.
+; 
+;RETURNS:
+;     mbpc[2,pntstrip,numstrips] : map after bandpass correction
+;     coef0[nlags,nstrips]: float bandpass fit by channel for each strip.
+;                           This is the constant.
+;     coef1[nlags,nstrips]: float bandpass fit by channel for each strip.
+;                           This is the linear term (-nsmp/2,nsmp/2)
+;
+;DESCRIPTION:
+;   Bandpass correct a map 1 strip at a time and then subtract off the
+;system temperature. For the bandpass correction the options are:
+;
+;1. use a set of bandpasses from 1 or both edges of each strip for the
+;   bandpass correction. This is controlled by numbpedge ge 0 and the edge 
+;   keyword. By default numbpedge spectra from each edge are used. If edge
+;   is -1 or +1 then only the left or right edge is used for the entire map.
+;   If edge[nstrips] is an array then you can choose a different edge
+;   for each strip. This is overriden by /allstrip keyword and numbpedge =-1.
+;
+;2. The /allstrip keyword will use the average bandpass of the entire strip ;
+;   for the bandpass correction (numbpedge is ignored).
+;
+;   The Tsys removal is determined by the tsys= keyword. It will compute
+;   Tsys by averaging over all of the spectral channels. The mask=
+;   keyword lets you supply a mask that specifies which spectral points
+;   to use when computing Tsys (see blmask() in general routines). The
+;   fractedge= keyword specifies the fraction of channels on each edge of
+;   the bandpass to not use. 
+;   The options for removing the Tsys by strip are:
+;
+;3. If numbpedge is lt 0 then the bandpass correction will be done 
+;   by doing a linear fit to each channel (over the samples in a strip).
+;   The fitting iterates throwing out any outliers over 2 sigma.
+;   The fit uses -nsmp/2 to +nsmp/2 for the x values. The constant term
+;   from the fit of each channel is used for the bandpass value for that
+;   channel.
+;
+;   Tsys removal is determined by the tsys keyword.
+;
+;Tsys=0   
+;   For each strip compute Tsys from the spectra used for the bandpass 
+;   correction. If bandpasses from both edges are used then linearly
+;   interpolate the tsys from the 2 sides across the entire strip.
+;
+;Tsys=1
+;   Compute Tsys for each spectra of a strip and then linearly interpolate
+;   this data across the strip. Remove the fitted tsys. The degfit= keyword
+;   let's you use a higher order fit. The cumfilter keyword will not use
+;   outlier points (continuum sources) in the fit.
+;
+;Tsys=2
+;   Compute Tsys for each spectra and remove it from each spectra. This is
+;   handy if you want to get rid of the continuum sources.
+;
+;Tsys=4
+;   Same as Tsys=2 but use the median rather than the mean.
+;Tsys=5
+;   Same as Tsys=2 but use a robust average. All points 3 sigma away from
+;   mean are excluded, and then the mean is recomputed. Continue looping
+;   till no points are thrown out.
+;
+;Tsys=3
+;   Do not remove Tsys.
+;Take a look at: <A HREF="http://www.naic.edu/~phil/obstechniques/cormapbc_tsysremoval.html">Comparing mean,median,robustAvg</A> for a comparison of tsys=2,4,5.
+;
+;For each strip the routine will:
+;  1. Average the bandpasses for the bandpass correction.
+;  2. For the i'th spectra in each strip compute:
+;      spectra[i]=(spectra[i]/normalized(avgBP) -Tsys[i]
+;      where normalized(avbBp) is the normalized average bandpass computed
+;      in step 1. Tsys[i] is the system temperature computed from  the
+;      keywords tsys= etc..
+;EXAMPLES:
+;1. Bandpass correct using 3 channels on each side of the map. Remove tsys
+;   using all spectral channels and interpolating between the 3 bandpassed
+;   on each edge.
+;   m=cormapbc(m,3)
+;
+;2. Bandpass correct using only the starting edge. When computing Tsys
+;   ignore 5% of the channels on each edge.
+;   m=cormapbc(m,3,edge=-1,fractmask=.05)
+;
+;3. Suppose you want to make a continuum map..
+;   Bandpass correct averaging all of the spectra of a strip. Remove
+;   tsys by linearly interpolating the tsys from each spectra. Do not
+;   use 5% of the channels on each edge of the spectra. Use the cumfilter
+;   to not include the continuum sources in the tsys fit.
+;   ignore 5% of the channels on each edge. 
+;   m=cormapbc(m,0,/allstrip,fractmask=.05,tsys=1,/cum)
+;
+;4. You want to remove the continuum sources (ie. you are looking for galaxies)
+;   Use the average of each strip for the bandpass correction. Remove Tsys
+;   by subtracting the Tsys of each spectra. Throw out 5% of the channels
+;   from each edge.
+;   m=cormapbc(m,0,/allstrip,fractmask=.05,tsys=2)
+;
+;5. Band pass correct averaging over all strips but do not remove tsys.
+;   m=cormapbc(m,0,/allstrip,tsys=3)
+;
+;RECENT HISTORY:
+;   07jul04 - added tsys=5. use avgrobbychan for tsys removal.
+;   06jul04 - added tsys=4. uses median rather than mean for Tsys removal.
+;   07feb04 - bandpass by channel, after fit, recheck all the 
+;             residuals for being with nsig, not just the current good ones.
+;             Bug in the residual compare, was not using abs().
+;   14jan04 - allstrip -> numbpedg=-2
+;   07jan04 - added bcbychan option. does a linear fit by chan along
+;             each strip to determine the bandpass.
+;   03sep03 - if mask supplied (or edge fract) then the normalizatino
+;             of the bandpass for bandpass correction should be
+;             over the mask, and not the entire bandpass. Before it was
+;             normalizing over the entire bandpass, dividing, and then
+;             using the mask to compute the tsys subtraction.
+;   27jan03 - added cumfilter keyword
+;   27jan03 - for tsys removal if tsys=1 then allow option to 
+;             iterate throwing out pnts above 3sigma
+;-
+;   26jan03 - added tsys=3 option to not remove tsys (for testing)
+;   ???     - added tsys=2 option to remove tsys by spectra
+;   09dec01 - Routine now removes average system temperature.
+;             Allow edge keyword to be an array.
+;             Removed /normal keyword..
+;   01nov01.. fixed bug in bpavgI computation if > 1 bandpass on edge
+; (thanks to bon-chul koo for pointing it out).
+; from:
+; bpavgI=(total(m[polI,0:numbpedg-1,i].d,3) + $
+;               total(m[polI,nsmp-numbpedg:nsmp-1,i].d,2)/(numbpedg*2.))
+; to:
+; bpavgI=(total(m[polI,0:numbpedg-1,i].d,3) + $
+;               total(m[polI,nsmp-numbpedg:nsmp-1,i].d,3))/(numbpedg*2.)
+;
+; The bandpass correction would have been
+; numbpedge*spectraLeft + spectraRight/(numbpedge*2)
+; so the band pass would have been too large by a factor of about numbpedge.
+;
+;
+function cormapbc,m,numbpedg,pol=pol,edge=edge,tsys=tsys,degfit=degfit,$
+                  mask=mask,fractmask=fractmask,allstrip=allstrip,$
+                  cumfilter=cumfilter,coef0=coef0,coef1=coef1,bcbychan=bcbychan
+;
+; coding:
+;	numbpedg = -1  bp correct by channel
+;                  bcbychan=1
+;	numbpedg = -2  bp correct by average
+;				   allstrip=1
+;				   edgeLoc=-1
+;				   numbpEdgeL=nsmp
+;				   edge1=-1
+;	numbpedg = -3  bp correct by median
+;				   allstrip=1
+;				   usemedian=1
+;				   edgeLoc=-1
+;				   numbpEdgeL=nsmp
+;				   edge1=-1
+; 
+    numbpedgL=numbpedg
+    bcbychan=numbpedgL eq -1
+    if keyword_set(allstrip) then begin
+        numbpedgL=-2
+    endif else begin
+        allstrip=numbpedgL eq -2
+    endelse
+    usemedian=0
+    if numbpedgL eq -3 then begin
+        numbpedgL=-2
+        usemedian=1
+        allstrip=1
+    endif
+    a       =size(m)
+    nstrips =(a[0] eq 2)? 1 : a[3]
+    nsmp    =a[2]
+    nlagsPol=lonarr(2)
+    nlagsPol[0]=n_elements(m[0].d)
+    nlagsPol[1]=n_elements(m[1].d)
+    polISt =0
+    polIEnd=1
+    if keyword_set(pol) then begin
+        polISt =pol-1
+        polIEnd=pol-1
+    endif
+    if keyword_set(bcbychan) then begin
+            coef0=fltarr(max(nlagsPol),nstrips)
+            coef1=coef0
+    endif
+;
+;   see if the want a mask for tsys
+;
+    usemask=0
+    if n_elements(mask) gt 0 then begin
+        usemask=1
+    endif 
+    if keyword_set(fractmask) then begin
+        if fractmask ge .5 then message,'The fractmask must be < .5'
+        nlags=nlagsPol[polISt]
+        mask= intarr(nlags)
+        i1=((long(fractmask*nlags+.5)) > 0) < (nlags/2-1)
+        i2=nlags-i1-1
+        mask[i1:i2]=1
+        usemask=1
+    endif
+    if usemask then begin
+        if nlagsPol[polIst] ne nlagsPol[polIend] then $
+            messages,'when using mask, the # of  polA chan must eq polB chan'
+        mind=where(mask ne 0,count)
+        if count eq 0 then  message,'mask is all zeros..'
+        if count eq nlagspol[polISt] then usemask=0
+        mcount=count*1.
+    endif
+        
+    if not keyword_set(tsys) then tsys=0
+    case 1 of
+        n_elements(edge) eq 0: edgeLoc=intarr(nstrips)
+        n_elements(edge) eq 1: edgeLoc=intarr(nstrips) + edge
+        n_elements(edge) eq nstrips: edgeLoc=edge
+        else                :$
+        message,'edge keyword must have 1 or nstrips entries'
+    endcase
+;
+;   see if they want to use the entire strip
+;
+    ind=where(edgeLoc lt 0,count)
+    if count gt 0 then edgeLoc[ind]=-1
+    ind=where(edgeLoc gt 0,count)
+    if count gt 0 then edgeLoc[ind]=1
+;
+    nfrqchn =(size(m[0,0,0].d))[1]
+    if allstrip then begin
+        numbpedgL=nsmp              ; use entire strip
+        edgeLoc=edgeLoc*0   -1
+    endif else begin
+        if numbpedgL gt nsmp/2 then begin
+            print,'number of  spectra on edge for bandpass > numspectra/2'
+            return,''
+        endif
+    endelse
+;
+;    allocate the bandpass array
+;
+    maxfitloop=10
+    sigclip   =2.
+    ml=m
+    if tsys eq 1 then begin
+        x=findgen(nsmp)             ; used for polyfit if tsys=1
+        if n_elements(degfit) eq 0 then degfit=1
+    endif
+    for i=0,nstrips-1 do begin
+;
+;       compute inverse of bandpass correction so we can multiply by it
+;
+        edge1=edgeLoc[i]
+        for polI=polIst,polIend do begin
+
+;-------------------------------------------------------
+        case 1 of
+;
+;============================================================
+;    try bandpass correcting each strip channel by channel
+;
+        keyword_set(bcbychan): begin
+            nlag=nlagspol[polI]
+            bpcorN=fltarr(nlag,/nozero)
+            indall=indgen(nsmp)
+            xx=findgen(nsmp)-nsmp/2.
+            fmin=999
+            fmax=0
+            favg=0.
+;
+;           loop over each spectral channel
+;
+            for ilag=0,nlag-1 do begin
+                indgd=indall
+                curCnt=nsmp
+;
+;               loop finding all points in channel whose fit
+;               residuals are nsig*sigma
+;
+                for j=0,maxfitloop-1 do begin
+                    coef=poly_fit(xx[indgd],m[polI,indgd,i].d[ilag],1,$
+                                  yerror=sigma)
+                    yfit=poly(xx,coef)
+                    ii=where(abs(m[polI,*,i].d[ilag]-yfit) lt $
+                            (sigclip*sigma),count)
+                    if count eq  curCnt then goto,efitloop ; no change
+                    indgd=ii
+                    curCnt=count
+                endfor
+efitloop:       bpcorN[ilag]=coef[0]
+                coef0[ilag,i]=coef[0]
+                coef1[ilag,i]=coef[1]
+                fmin=(fmin < (j+1))
+                fmax=(fmax > (j+1))
+                favg=favg+(j+1)
+            endfor
+            favg=favg/(nlag*1.)
+            lab=string(format=$
+        '("strip:",i2,"_",i1,"  min/max/avgl:",i2,i3,f4.1)',$
+            i,polI,fmin,fmax,favg)
+            print,lab
+            if usemask then begin
+                meanbp=mean(bpcorN[mind])
+            endif else begin
+                meanbp=mean(bpcorN)
+            endelse
+            bpcorN= bpcorN/meanBp
+            if (usemask) then begin
+                mc0=mean(coef0[mind,i]/bpcorN[mind])
+                mc1=mean(coef1[mind,i]/bpcorN[mind])
+                avgpwrL=mc0 + mc1*xx[0]
+                avgpwrR=mc0 + mc1*xx[nsmp-1]
+            endif else begin
+                mc0=mean(coef0[*,i]/bpcorN)
+                mc1=mean(coef1[*,i]/bpcorN)
+                avgpwrL=mc0 + mc1*xx[0]
+                avgpwrR=mc0 + mc1*xx[nsmp-1]
+            endelse
+            tsysCmpByChn=mc0+mc1*xx
+        end     ;case (bpcbychan)
+
+;============================================================
+;        
+        numbpedgL gt 1: begin
+            case edge1 of
+;============================================================
+;		edge1=0 use numbpedgL both edges,
+                0:begin
+                    bpsumL=total(m[polI,0:numbpedgL-1        ,i].d,3)
+                    bpsumR=total(m[polI,nsmp-numbpedgL:nsmp-1,i].d,3)
+                    if (usemask) then begin
+                        avgPwrL=mean(bpsumL[mind])/numbpedgL
+                        avgPwrR=mean(bpsumR[mind])/numbpedgL
+                    endif else begin
+                        avgpwrL=mean(bpsumL)/numbpedgL
+                        avgpwrR=mean(bpsumR)/numbpedgL
+                    endelse
+                    bpcorN=(bpSumL+bpSumR)/(numbpedgL*(avgpwrL+avgPwrR))
+                 end
+;============================================================
+;		edge1=-1 use numbpedgL left edge only (or whole strip)
+               -1:begin
+                    if usemedian then begin
+                        bpsumL=medianbychan(reform(m[polI,0:numbpedgL-1,i].d,$
+                                    nlagsPol[polI],nsmp))
+                    endif else begin
+                        bpsumL=total(m[polI,0:numbpedgL-1        ,i].d,3)
+                    endelse
+                    if (usemask) then begin
+                        avgPwrL=mean(bpsumL[mind])/numbpedgL
+                        avgPwrR=avgPwrL
+                    endif else begin
+                        avgpwrL=mean(bpsumL)/numbpedgL
+                        avgpwrR=avgPwrL
+                    endelse
+                    bpcorN=(bpSumL)/(numbpedgL*(avgpwrL))
+                  end
+;============================================================
+;		edge1=1 use numbpedgL right edge only 
+                1:begin
+                    bpsumR=total(m[polI,nsmp-numbpedgL:nsmp-1,i].d,3)
+                    if (usemask) then begin
+                        avgPwrR=mean(bpsumR[mind])/numbpedgL
+                        avgPwrL=avgPwrR
+                    endif else begin
+                        avgpwrR=mean(bpsumR)/numbpedgL
+                        avgpwrL=avgPwrR
+                    endelse
+                    bpcorN=(bpSumR)/(numbpedgL*(avgpwrR))
+                  end
+            endcase
+        end
+;============================================================
+;         single sample left,right or both edges
+
+        else: begin
+            case edge1 of
+                0: begin
+                    if (usemask) then begin
+                        avgPwrL=mean(bpsumL[mind])
+                        avgPwrR=mean(bpsumR[mind])
+                    endif else begin
+                        avgpwrL=mean(m[polI,0     ,i].d)
+                        avgpwrR=mean(m[polI,nsmp-1,i].d)
+                    endelse
+                    bpcorN=((m[polI,0,i].d + m[polI,nsmp-1,i].d)/$
+                            (avgpwrL+avgpwrR))
+                   end
+               -1: begin
+                    if (usemask) then begin
+                        avgPwrL=mean(bpsumL[mind])
+                        avgPwrR=avgPwrL
+                    endif else begin
+                        avgpwrL=mean(m[polI,0,i].d)
+                        avgpwrR=avgpwrL
+                    endelse
+                    bpcorN=m[polI,0,i].d/(avgpwrL)
+                   end
+                1: begin
+                    if (usemask) then begin
+                        avgPwrR=mean(bpsumR[mind])
+                        avgPwrL=avgPwrR
+                    endif else begin
+                        avgpwrR=mean(m[polI,nsmp-1,i].d)
+                        avgpwrL=avgpwrR
+                    endelse
+                    bpcorN=m[polI,nsmp-1,i].d/(avgpwrR)
+                   end
+            endcase
+           end
+        endcase 
+;
+        if tsys eq 0 then begin
+;
+;           this is the average Tsys to remove for each spectra.
+;           if bandpass edges where used on both sides then we
+;           linearly interpolated between the two sides.
+;
+            TsysCmp=findgen(nsmp)/(nsmp-1.) * (avgpwrR-avgpwrL) + avgpwrL
+            for j=0,nsmp-1 do begin 
+                ml[polI,j,i].d=(m[polI,j,i].d / bpcorN) - TsysCmp[j]
+            endfor
+        endif else begin 
+            for j=0,nsmp-1 do begin
+                ml[polI,j,i].d=(m[polI,j,i].d / bpcorN) 
+            endfor
+            if tsys ne 3 then begin 
+                if usemask then begin
+                    case tsys of
+                         4: tsysCmp= medianbychan(transpose($
+                                    reform(ml[polI,*,i].d[mind],mcount,nsmp)))
+                         5: tsysCmp= avgrobbychan(transpose($
+                                   reform(ml[polI,*,i].d[mind],mcount,nsmp)))
+                      else: tsysCmp=reform(total(ml[polI,*,i].d[mind],1))/mcount
+                    endcase
+                endif else begin
+                    case tsys of
+                         4: tsysCmp= medianbychan(transpose($
+                                    reform(ml[polI,*,i].d,nlagsPol[polI],nsmp)))
+                         5: tsysCmp= avgrobbychan(transpose($
+                                    reform(ml[polI,*,i].d,nlagsPol[polI],nsmp)))
+                      else: tsysCmp=reform(total(ml[polI,*,i].d,1))/nlagsPol[polI]
+                    endcase
+                endelse
+;
+;           lineary interpolate using total power from each spectra
+;
+                if tsys eq 1 then begin
+                   if keyword_set(bcbychan) then begin
+                       tsysCmp=tsysCmpByChn
+                   endif else begin
+                       if keyword_set(cumfilter) then begin
+                          cumfilter,tsysCmp,nsmp/4,3.,indxgood
+                          coef=poly_fit(x[indxgood],tsysCmp[indxgood],degfit)
+                       endif else begin
+                          coef=poly_fit(x,tsysCmp,degfit)
+                       endelse
+                       tsysCmp=poly(x,coef)
+                   endelse
+                endif
+                for j=0,nsmp-1 do begin
+                    ml[polI,j,i].d=ml[polI,j,i].d - tsysCmp[j]
+                endfor
+            endif
+        endelse
+    endfor      ; pol loop
+    endfor      ; strip loop
+    return,ml
+end

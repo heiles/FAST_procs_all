@@ -1,0 +1,47 @@
+##
+## za encoder table for ch. units are gc arc seconds
+## .5 deg steps from 0 to 20 (41 entries). 2 numbers/line
+## 1st : az, 2nd:za. # in col 1 is a comment
+##
+#!enctblch 10feb98  all zeros
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0
+	0			 0

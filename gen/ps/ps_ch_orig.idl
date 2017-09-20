@@ -1,0 +1,82 @@
+pro ps_ch, ps, psfilename, open=open, close=close, color=color, $
+           defaults=defaults, $
+           xsize=xsize, ysize=ysize, $
+           pcharsize=pcharsize, pthick=pthick, xthick=xthick, ythick=ythick, $
+           verbose=verbose, inch=inch
+
+;+
+;ps_ch, ps, psfilename, open=open, close=close, color=color, $
+;           defaults=defaults, $
+;           xsize=xsize, ysize=ysize, $
+;
+;set linewidth, etc, for ps plots. 
+;
+;to set up a ps plot:
+;       ps_ch, 1, 'filenme.ps', /open, /color, /defaults
+;
+;to go back to X:
+;       ps_ch, /close
+;-
+
+if n_elements( inch) eq 0 then inch=1
+
+if keyword_set( close) then goto, closeit
+
+if n_elements( ps) eq 0 then begin
+   ps=0
+   goto, closeit
+endif
+
+;print, xsize
+
+;ps=0
+;
+;if ps eq 0 then begin
+;   if !d.name ne 'X' then begin
+;      close=1
+;      goto, closeit
+;   endif
+;  return
+;endif
+
+;stop
+if keyword_set( open) and ps ne 0 then begin
+if n_elements( color) eq 0 then color=0
+;if keyword_set( defaults) eq 0 then begin
+if keyword_set( defaults) eq 1 then begin
+   if n_elements( pcharsize) eq 0 then !p.charsize=1.1
+   if n_elements( pthick) eq 0 then !p.thick=4
+   if n_elements( xthick) eq 0 then !x.thick=6
+   if n_elements( ythick) eq 0 then !y.thick=6
+endif
+if n_elements( xsize) eq 0 then xsize=8.0
+if n_elements( ysize) eq 0 then xsize=10.5
+   psopen, psfilename, /times, /bold, /isolatin1, color=color, $
+           xsize=xsize,ysize=ysize, inch=inch
+   setcolors, /sys
+   !p.font=0
+endif
+
+if keyword_set( verbose) then help, /st, !p
+if keyword_set( verbose) then help, /st, !x
+if keyword_set( verbose) then help, /st, !y
+
+closeit:
+
+;stop
+
+if keyword_set( close) then begin
+;   if keyword_set( defaults) then begin
+      !p.charsize=0
+      !p.thick=0
+      !x.thick=0
+      !y.thick=0
+;   endif
+if !d.name eq 'X' then return
+   psclose
+   setcolors, /sys
+   !p.font=-1
+endif
+
+return
+end

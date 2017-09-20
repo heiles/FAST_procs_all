@@ -1,0 +1,138 @@
+;
+; this plots current and change of pitch and roll
+;
+pro prfkplot1,prfk1,prfk2,prfkT,pitchMod,rollMod
+;
+ 	ls=1;
+	lslim=2
+	collim=2
+	fig=1
+	scl=.6
+	cs=1.5
+	xpfig=.85
+	xpln=2
+	tdparms,slimits=tdlimits
+	a =min(tdlimits[1,*])
+	tdlimup=[a,a]
+	a =max(tdlimits[0,*])
+	tdlimdwn =[a,a]
+	minkips=[5,5]
+	cmod=3
+	croll=2
+	cpitch=1
+	collim=4
+;------------------------------------------
+	!p.multi=[0,1,3]
+	ver,-.25,.2 
+	hor,0,21
+	lab=string(format=$
+'("current and modified pitch,Roll vs (az,za). (mods P:",f6.3," R:",f6.3,")")',$
+	pitchMod,rollMod)
+	plot,prfk1.za,prfk1.pitch,/ystyle,/xstyle,xtitle="za",ytitle="pitch [deg]",$
+		title= lab,charsize=cs
+	fig=fignum(fig,xp=xpfig,ln=xpln)
+	ln=1.5
+    note,ln,'Vertical lines at each za are a complete az spin'
+	oplot,prfk1.za,prfk1.roll,color=croll
+	oplot,prfk2.za,prfk2.pitch,linestyle=ls
+	oplot,prfk2.za,prfk2.roll,linestyle=ls,color=croll
+	ln=8
+	xx=.24 &$
+	xxinc=.07 &$
+	note,ln,"solid:current",xpos=.05
+	note,ln,"pitch,",xpos=xx,color=cpitch
+	note,ln,"roll",xpos=xx+xxinc,color=croll
+;
+	note,ln+scl,"dash:modified",xpos=.05
+	note,ln+scl,"pitch,",xpos=xx,color=cpitch
+	note,ln+scl,"roll",xpos=xx+xxinc,color=croll
+
+;
+;	td position
+;
+	hor,0,21
+	ver,-10,30
+
+	plot,prfk1.za,prfk1.tdpos[0],/xstyle,/ystyle, $
+title='td Position vs (az,za) with modified pitch and roll(temp=72F)',$
+		xtitle='za',ytitle='tdPos [inches]',charsize=cs
+	ln=17 
+	note,ln    ,"solid:current  tdPos",xpos=.05
+	note,ln+scl,"dash:modified tdPos",xpos=.05,color=cmod
+	oplot,prfk2.za,prfk2.tdPos[0],linestyle=ls,color=cmod
+	oplot,[0,20],tdlimup,linestyle=lslim,color=collim
+    oplot,[0,20],tdlimdwn,linestyle=lslim,color=collim
+
+
+    hor,0,21
+    ver,0,100
+    plot,prfk1.za,prfk1.kips[0,*],/xstyle,/ystyle, $
+        xtitle='za',ytitle='tension 1 tiedown block [kips]',$
+       title='td tension 1 block vs (az,za) with modified pitch',$
+		charsize=cs
+	ln=27 
+	note,ln    ,"solid:current  kips",xpos=.05
+	note,ln+scl,"dash:modified kips",xpos=.05,color=cmod
+    oplot,prfk2.za,prfk2.kips[0,*],linestyle=ls,color=cmod
+	oplot,[0,20],minkips,linestyle=lslim,color=collim
+;------------------------------------------
+;	plot tdpositions values for temps 60,70,80,90
+;
+!p.multi=[0,1,3]
+	ver,0,25
+	for i=0,3 do begin  &$
+    	if i eq 0 then begin  &$
+        	plot,prfkt[*,i].za,prfkT[*,i].tdPos[0],linestyle=i+1,color=i+1,$
+            /xstyle,/ystyle,xtitle='za [deg]', ytitle='tdpos [in]',$
+			charsize=cs,title=$
+'td Position vs (az,za) with modified pitch,roll for temps:60,70,80,90' 
+	fig=fignum(fig,xp=xpfig,ln=xpln) &$
+		ln=1.5 &$
+    	note,ln,'Vertical lines at each za are a complete az spin'  &$
+		xx=.45 &$
+		xxinc=.04 &$
+		ln=8 &$
+    	note,ln,'top to bottom degF:',xpos=.2  &$
+    	note,ln,'60,',xpos=xx,color=1  &$
+    	note,ln,'70,',xpos=xx+xxinc,color=2  &$
+    	note,ln,'80,',xpos=xx+2*xxinc,color=3  &$
+    	note,ln,'90',xpos=xx+3*xxinc,color=4  &$
+	    oplot,[0,20],tdlimup,linestyle=lslim,color=collim
+     	oplot,[0,20],tdlimdwn,linestyle=lslim,color=collim
+    	endif else begin  &$
+        	oplot,prfkT[*,i].za,prfkt[*,i].tdPos[0],linestyle=i+1,color=i+1  &$
+    	endelse  &$
+	endfor
+ 
+	ver,-20,120
+	for i=0,3 do begin  &$
+   	 if i eq 0 then begin  &$
+   	     plot,prfkt[*,i].za,prfkT[*,i].kips[0],linestyle=i+1,color=i+1,$
+            /xstyle,/ystyle,xtitle='za [deg]', ytitle='tension 1 blk [kips]',$
+			charsize=cs,$
+title=$
+'tension 1 blk vs (az,za) with modified pitch,roll for temps:60,70,80,90'  &$
+		oplot,[0,20],minkips,linestyle=lslim,color=collim &$
+	    endif else begin  &$
+   	     oplot,prfkT[*,i].za,prfkt[*,i].kips[0],linestyle=i+1,color=i+1  &$
+   	 endelse  &$
+	endfor
+;-----------------------------------------------------------------------------
+; do total tension at 60,90 degrees..
+;
+	ver,0,300
+	for i=0,3 do begin  &$
+	 kipst=prfkT[*,i].kips[0]+prfkT[*,i].kips[1]+ prfkT[*,i].kips[2] &$
+   	 if i eq 0 then begin  &$
+   	     plot,prfkt[*,i].za,kipst,linestyle=i+1,color=i+1,$
+            /xstyle,/ystyle,xtitle='za [deg]', ytitle='total tension [kips]',$
+			charsize=cs,$
+title=$
+'total tension vs (az,za) with modified pitch,roll for temps:60,70,80,90'  &$
+	    endif else begin  &$
+   	     oplot,prfkT[*,i].za,kipst,linestyle=i+1,color=i+1  &$
+   	 endelse  &$
+	endfor
+!p.multi=0
+	return
+end

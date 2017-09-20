@@ -1,0 +1,26 @@
+docalpos - call calpos0 with 01nov00 data...
+
+calpos0 - given constant dac value fit encoder to pot.
+		- linear fit for encoder velocity (at constant dac)
+
+dactst  - dac1-dac3  move back, forth stepping dac -1024 to 1024
+		  plot residual encVel - fitToDac shows jump at 0.
+		- fit encoder to velocity feedBack..
+		- fit velocity feedback vs dac. use this to verify that
+		  dac output is ok.
+		- plot potVel vs velocity feedback.
+
+dosin - 	dat.sin1 too fast, sin2 ok 
+			plot req-actual position. and error
+
+dosin1 - 	cycle .01 thru .06 hz see if glitch at peak a 
+			function of velocity.. answer: no.. probably backlash
+mpvtodac - monitor port velocities to dac 
+sim		- simulator directory
+
+
+terloginp(0) - input data (0) before monPort added 17nov00
+tersurvey.h  - defines transform struct to input sokkia data.
+tersurveyinp - input survey transform info
+;
+020804 terparmsN have the new parameters for tertiary positions.

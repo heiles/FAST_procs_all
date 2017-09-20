@@ -1,0 +1,20 @@
+retall
+
+.run fft_fltr
+
+in= findgen( 16)
+in= abs( findgen(16)-8)
+length=8*2*2
+
+fft_fltr, in, length, out  ;;, /truncate
+
+wset,0
+plot, out- in,psym=-4
+
+wset,1
+plot, out, psym=-4
+
+wset,2
+plot, in, color=!red, psym=-4
+
+help, in, out

@@ -1,0 +1,6 @@
+1.	  piBw
+.707  piDamping
+1024  maxVelDacCnts
+.5    accTm
+1.    kfGain
+500   kiThr

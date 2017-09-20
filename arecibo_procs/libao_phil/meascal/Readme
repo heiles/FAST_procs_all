@@ -1,0 +1,29 @@
+chkcumall.pro     mcalinp.pro       skyabsdiag.pro    skyabsplspec.pro
+crinpplot.pro     mcalinp1.pro      skyabsinp.pro
+crnewcal.pro      skyabscmp.pro     skyabsmakeps.pro
+mcalinit.pro      skyabscumall.pro  skyabsplot.pro
+
+process sky,absorber cal:
+see skyabsakeps.pro
+;
+skyabsinp.pro : input data 
+skyabscmp.pro : compute cal values
+skyabscumall.pro: cum filter all measurements of the same freq together.
+skyabsdiag.pro : output if1mp,if2mp, 0lag, power counters.
+skyabsplspec.pro: plot spectra over entire range for each measurement 
+skyabsplot.pro  : make the plots of calvalue vs freq.
+
+
+
+cal ratio of other cals:
+
+crinpplot.pro   - input data, plot, compute ratios, output ratio file
+crnewcal.pro	- input the new file and compute the cals in K
+
+order
+1. copy routines from here to local directory
+2. edit inp.pro,cmp.pro
+
+@mcalinit
+.run skyabsinp
+@skyabsmakeps

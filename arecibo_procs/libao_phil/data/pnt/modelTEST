@@ -1,0 +1,35 @@
+#  13may13 test receiver in cbh position
+#     - lincoln labs feed
+# cband high (6to8) pointing model file
+# format is  az  za.  units are great circle arcseconds
+#   col 1
+#   #  - comment
+#   #!modelxx  yymmdd  start of model 
+#   blank  or number   current model data (N lines)
+#   #!       az  za    archived model data
+#
+#
+#!modelTEST18A  13 B enctbl18A  120305 model18
+# tur:162.1 ,scl:-.75 format B .. after beam repair
+# 15may13:updated constants from 14may13 x102 run
+#    avg err was: -10.88,20.58 .subr from [-34.20,-93.52]
+#    az         za    model coefficients
+#  -36.09    -91.50  constant  verify run
+#   -34.20    -93.52  constant used for x102 14may13
+# 13may14  ..linclab kildall feed x102 runs
+#            measured offsets: -5.53, -4.12
+#            
+#    -23.32  -114.10  consant 15may13 from 14may13x102.
+   -19.2   -108.57   consant 14may14 from 13may14 x102.
+    -3.14    -97.13  cos(az)
+    93.49     -1.82  sin(az)
+  -715.60    132.62  sin(za)
+ -1089.56    721.35  sin(za)**2
+   -21.52    -10.25  cos(3az)
+   -10.85     -6.13  sin(3az)
+    18.25    -10.92  sin(za-balance)*cos(3az)
+   111.09     11.58  sin(za-balance)*sin(3az)
+     7.92      1.05  cos(2az)
+     0.13     -1.70  sin(2az)
+    -2.56     -0.26  cos(6az)
+     0.56     -0.12  sin(6az)

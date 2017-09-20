@@ -1,0 +1,66 @@
+# pointing model file for CH
+# format is:
+# # comment, 
+# #!modelXX hdr for model, 
+# #! num num  archived data for model
+#    num num  current dat for model
+#  hdr line for model:
+# #!modelXX numcoef format encTbl date
+# units are great circle arcseconds
+#
+#!modelCH16 13 B enctblch16 050301  
+    67.53    -46.37  constant
+    -6.19     96.58  cos(az)
+   -94.86      6.81  sin(az)
+ -1612.47    172.49  sin(za)
+  1450.15   -336.21  sin(za)**2
+    19.54     13.65  cos(3az)
+    15.42      8.17  sin(3az)
+   -12.44    -47.57  sin(za-balance)*cos(3az)
+    13.61      0.26  sin(za-balance)*sin(3az)
+     4.44     -0.72  cos(2az)
+    -2.34      0.06  sin(2az)
+    -4.70      2.68  cos(6az)
+    -0.62      1.91  sin(6az)
+#!modelCH7 13 B enctblch7 990629   update for lat change..cosaz,sinaz terms
+#   7.4	 -97.1	offsets           lat changed 18dec98. but forgot to update
+#   5.4	  66.1	cosAz             ch model.
+#  -49.1  14.3	sinAz
+#!    7.4	 -97.1	offsets
+#!    5.4	 104.1	cosAz lat change 18 20 36.6->18 21 14.2
+#!   -87.1  14.3	sinAz long. 04h 27m   .793s->04h 27m   .720
+#!  -1091.0 321.7	sinZa .. 25sep02 added -1446 for az jump 
+#!0.	  0.   
+#!0.	  0.                            
+#!0.	  0.						 
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!modelCH7A 13 B enctblch 980210   original model in model7 format thru 29jun99
+#!  7.4	 -97.1		offsets
+#!  5.4	  66.1		cosAz
+#! -49.1	  14.3		sinAz
+#! 355.0	 321.7		sinZa
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!modelCH 4 M none 971103   original model
+#!  7.4	 -97.1		offsets
+#!  5.4	  66.1		cosAz
+#! -49.1	  14.3		sinAz
+#! 355.0	 321.7		sinZa
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.
+#!0.	  0.

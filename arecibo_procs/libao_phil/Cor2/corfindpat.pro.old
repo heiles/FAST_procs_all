@@ -1,0 +1,185 @@
+;+
+;NAME:
+;corfindpat - get the indices for the start of a pattern
+;
+;SYNTAX: nfound=corfindpat(sl,indar,pattype=pattype,rcv=rcv)
+;
+;ARGS:  
+;   sl[]:   {getsl} scan list array from getsl
+;
+;KEYWORDS:
+;   pattype: int  Type of pattern we are looking for.
+;                 1 - on/off position switch with cal on/off
+;                 2 - on/off position switch whether or not cal there
+;                 3 - on followed by cal on ,off
+;                 4 - heiles calibrate scan two crosses
+;                 5 - heiles calibrate scan 1   cross
+;
+;                 If not provided than pattype 1 is the default.
+;
+;      dosl: lun  if keyword dosl is set to a valid open file, then this 
+;                 routine will do the sl=getsl(lun) call and return the 
+;                 scan list in sl.
+;      rcv : int  if supplied then only find patterns for this receiver.
+;                 1..12 (see helpdt feeds) for a list of the feeds 
+;RETURNS:
+;   ind[npat]: long indices into sl[] for start of the pattern
+;   npat     : long number of patterns found
+;
+;DESCRIPTION:
+;   corfindpat() is used for the automatic processing of entire datafiles. 
+;It processes a scanlist array (returned by getsl()) and returns an array of
+;pointers telling where all completed patterns of a particular type are 
+;located in the datafile. Patterns can be: on/off position switching,
+;heiles calibration runs, on with cal on/off,..etc.  
+;
+;   The requirements for a completed scan depend on the pattern type:
+;
+;  type   order needed                requirements
+;   1     posOn,posOff,calon,caloff. Number of on recs must equal number of
+;                                    off recs
+;   2     posOn,posOff.              Number of on recs must equal number of
+;                                    off recs.
+;   3     posOn,calon,caloff.        
+;   4     calon,caloff,heiles calibrate scan with 2 crosses. 
+;                                    nrecs in each cross is the same.
+;   5     calon,caloff,heiles calibrate scan with at least 1 cross. 
+;                                    nrecs in each cross is the same.
+;   
+;   You can call sl=getsl(lun) once prior to this routine, or you can
+;set the keyword dosl=lun and it will create the sl array and return it.
+;It is also possible to limit the pattern to a particular receiver using
+;the rcv=rcvnum keyword.
+;
+;EXAMPLE:
+;   openr,lun,'/share/olcor/corfile.23aug02.x101.1',/get_lun
+;   sl=getsl(lun)
+;;   get poson,off,followed by cal on,off
+;   npat=corfindpa(sl,indfound)
+;   for i=0,npat-1 do begin
+;      scan=sl[indfound[i]].scan
+;      .. process this scan
+;   
+;;  get ons followed by cal on,off. have the routine do the sl search.
+;;  only get data for cband (rcv=9)
+;   openr,lun,'/share/olcor/corfile.23aug02.x101.1',/get_lun
+;   npat=corfindpa(sl,indfound,dosl=lun,pattype=3,rcv=9)
+;
+;SEE ALSO: mmfindpattern,getsl (in general routines)
+;-
+function corfindpat,sl,indfound,pattype=pattype,dosl=lun,rcv=rcv
+;
+    if not keyword_set(pattype) then pattype=1
+    if keyword_set(lun) then sl=getsl(lun)
+    if not keyword_set(rcv) then rcv=0
+    npat=0
+    case 1 of
+;------------------------------------------
+;   position on/off with cal onoff
+;
+    (pattype eq 1) or (pattype eq 2): begin
+        indPosOn =where(sl.rectype eq 3,count)
+        if count eq 0 then goto,done
+        indPosOff=where(sl.rectype eq 4,count)
+        if count eq 0 then goto,done
+        indCalOn =where(sl.rectype eq 1,count)
+        indCalOff=where(sl.rectype eq 2,count)
+        goodInd=indPosOn*0
+        for i=0,n_elements(indPosOn)-1 do begin
+            ok=0
+            ion =indPosOn[i]
+            ind=where(indPosoff   eq (ion+1),countOff)
+            if countOff gt 0 then begin 
+               if sl[ion].numrecs eq sl[ion+1].numrecs then ok=1
+            endif
+;
+;           check cal on,off
+;
+            if (pattype eq 1) and ok then begin
+                ind=where(indcalon  eq ion+2,countCalOn)
+                ind=where(indcaloff eq ion+3,countCalOff)
+                ok= (countCalOn*countCalOff) gt 0
+            endif
+            goodInd[i]=ok
+        endfor
+        ind=where(goodInd eq 1,npat)
+        if npat gt 0 then indfound=indposon[ind]
+    end
+;------------------------------------------
+;   position on  with cal onoff
+;
+    (pattype eq 3) : begin
+        indPosOn =where(sl.rectype eq 5,count)
+        if count eq 0 then goto,done
+        indCalOn =where(sl.rectype eq 1,count)
+        indCalOff=where(sl.rectype eq 2,count)
+        goodInd=indPosOn*0
+        for i=0,n_elements(indPosOn)-1 do begin
+            ok=0
+            ion =indPosOn[i]
+            ind=where(indcalon  eq ion+1,countCalOn)
+            ind=where(indcaloff eq ion+2,countCalOff)
+            ok= (countCalOn*countCalOff) gt 0
+            goodInd[i]=ok
+        endfor
+        ind=where(goodInd eq 1,npat)
+        if npat gt 0 then indfound=indPosOn[ind]
+    end
+;------------------------------------------
+;   heiles calibrate scan 1 or two crosses
+;
+    (pattype eq 4) or (pattype eq 5): begin
+        stripspat=4
+        if  pattype eq 5 then stripspat=2
+;
+;     starts with cal on
+;
+        indcalOn   =where(sl.rectype eq 1,count)
+        if count eq 0 then return,0
+;       cal off
+        indcalOff  =where(sl.rectype eq 2,count)
+        if count eq 0 then return,0
+;       cor crossch
+        indcorCross=where(sl.procname eq 'corcrossch',count)
+        if count eq 0 then goto,done
+;
+;       make sure we have calon, caloff then stripspat corcrossch
+;
+        goodInd=indCalOn*0
+        for i=0,n_elements(indcalOn)-1 do begin 
+            ok=0
+            ion =indcalon[i] 
+            ind=where(indcaloff   eq (ion+1),countOff) 
+            if countOff gt 0 then begin
+                countCross=1 
+                for j=0,stripspat-1 do begin 
+                    ind=where(indcorCross eq (ion+2+j),k) 
+                    if (k*countCross) gt 0 then begin
+                       if j eq 0 then nrecs=sl[ion+2+j].numrecs
+                       if  nrecs ne sl[ion+2+j].numrecs then k=0
+                    endif
+                    countCross=countCross*K 
+                endfor 
+                if (countCross gt 0) then ok=1
+            endif
+            goodInd[i]=ok
+        endfor
+        ind=where(goodInd eq 1,npat)
+        if npat gt 0 then indfound=indcalon[ind]
+        goto,done
+    end
+    else: message,'illegal pattern type requested'
+    endcase
+;------------------------------------------
+done:
+    if (npat gt 0) and keyword_set(rcv) then begin
+        ind=where(sl[indfound].rcvnum eq rcv,count) 
+        if count gt 0 then begin
+            indfound=indfound[ind]
+            npat=n_elements(indfound)
+        endif else begin
+            npat=0
+        endelse
+    endif
+    return,npat
+end

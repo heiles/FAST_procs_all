@@ -1,0 +1,19 @@
+.run pspec_to_acf
+.run acf_to_pspec
+
+xdata=findgen(4096)
+;gcurv, xdata, 0., 1., 400.,500,tfit
+gcurv, xdata, 0., 1., 400.*4096./1024.,500*4096./1024.,tfit
+
+tfit=in
+
+pspec_to_acf, tfit, acf, pspecx=pspecx
+
+acf_to_pspec, acf, pspec, acfcnx=acfcnx
+
+;hor,0,50
+plot, tfit
+oplot, pspec, col=!red
+
+plot, pspec-tfit, psym=4
+

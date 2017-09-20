@@ -1,0 +1,41 @@
+#
+# mueller matrix info for lbn
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+#NOTE: psi isindeterminant  we take the value as what the fit happened 
+#      to give at 1415 MHz.
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured, circular,corcal
+#
+#--------------------------------------------------------------------------
+!0 1
+#
+#   The parameters come from B0017+154 and B2209+080, both observed
+#20sep00.
+#\/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+#>                                                                     <
+#>  We HAVE NOT DETERMINED THE ROTATION REQUIRED TO MAKE PA'S     <
+#>     CORRECT FOR ASTRONOMICAL SOURCES                                <
+#>                                                                     <
+#/\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+cfr15= cfr- 1415.
+cfr00= cfr- 1400.
+alpha=(47.74- .363*cfr15)*!dtor
+epsilon= 0.00278+ 1.383e-5* cfr15 + 1.3089e-6* cfr15^2
+phi= 44.8+ 1.0225* cfr00
+phi= 6.+ 1.0225* cfr00
+phi= !dtor* phi
+chi= !dtor*90.
+psi=!dtor* 43.6
+deltag= 0.034- 1.78e-4* cfr15+ 3.267e-6* cfr15^2
+# M_ASTRON IS UNKNOWN, SO WE DEFINE IT AS DIAGONAL...
+angle_astron=0.
+m_astron= fltarr(4,4)
+m_astron[ 5*indgen(4)] = 1.
+pameasured=0
+circular=1
+corcal=0
+end
+#--------------------------------------------------------------------------

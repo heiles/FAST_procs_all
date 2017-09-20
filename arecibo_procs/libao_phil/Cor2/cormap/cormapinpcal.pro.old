@@ -1,0 +1,53 @@
+; 
+;NAME:
+;cormapinpcal - process a cal on/off for cormapinp
+; returns 1.. processed rec, 0 didn't get it..
+; 
+;modhistory
+;31jun00 - checked for corget change.. no mods
+function cormapinpcal,lun,b,cals,ipa,ipb,calrec,totcals,stripNum,$
+                rdrec=rdrec  
+
+    if keyword_set(rdrec) then begin
+        istat=corget(lun,b)
+        if istat ne 1 then begin
+            print,"error inputing cal strip:",stripNum
+            return,0
+        endif
+    endif
+    if (corcalonoff(lun,calDat,b)) eq 0 then begin
+        print,"error processing calonoff, strip:",stripNum
+        return,0
+    endif
+    print,'calOn:          scan:',b[0].b1.h.std.scannumber
+;    if  (n_elements(cals) eq 0)  then begin
+     if  (not keyword_set(cals) )  then begin
+            cals=replicate(caldat[0],totcals)
+    endif
+    cals[calrec].h=caldat[ipa].h
+    if ipa eq ipb then begin
+        cals[calrec].calval=caldat[ipa].calval
+        cals[calrec].calscl=caldat[ipa].calscl
+    endif else begin
+        cals[calrec].calval[0]  =caldat[ipa].calval[0]
+        cals[calrec].calscl[0]  =caldat[ipa].calscl[0]
+        if (b.(ipb).p[0] eq 2) then begin
+            i=0
+        endif else begin
+            if (b.(ipb).p[1] eq 2) then begin
+                 i=1
+            endif else begin
+                print,'cormapinpcal..error: sbc',ipb+1,'does not have polB info'
+                return,0
+            endelse
+        endelse
+        cals[calrec].calval[1]      =caldat[ipb].calval[i]
+        cals[calrec].calscl[1]      =caldat[ipb].calscl[i]
+        cals[calrec].h.cor.calon[1] =caldat[ipb].h.cor.calon[i]
+        cals[calrec].h.cor.caloff[1]=caldat[ipb].h.cor.caloff[i]
+        cals[calrec].h.cor.lag0pwrratio[1]=caldat[ipb].h.cor.lag0pwrratio[1]
+    endelse
+;   print,"dbg:",calrec,cals[calrec].calscl,caldat[ipa].calscl
+    calrec=calrec+1
+    return,1
+end

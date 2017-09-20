@@ -1,0 +1,30 @@
+#
+# mueller matrix info for 430 carriage house
+# file format:
+# !yyyy daynum.. following data valid after this date
+#
+# needs to define alpha,epsilon,phi,psi,chi,deltag,angle_astron,m_astron
+# pameasured,circular,corcal
+!0 1
+#   The parameters come from B0106+130 and B1634+269, board 1,
+#observed 17sep00 and 16sep00, respectively.
+#   This routine assumes that the cal values are the adjusted values
+#by duncan, namely tcalxx=27.4, tcalyy=39.6.
+#   We think that This system does not have a correlated cal.
+#Whether or not it does, the feed is circular so without knowing the
+#source pa psi is indeterminant.  We set psi=0/
+chi=90.* !dtor
+deltag= 0.010
+epsilon=0.036
+alpha= -47.6* !dtor
+phi= -49.3* !dtor
+psi= 0.* !dtor
+angle_astron= 0.
+#M_ASTRON IS UNKNOWN, SO WE DEFINE IT AS DIAGONAL...m_astron= fltarr(4,4)
+m_astron= fltarr(4,4)
+m_astron[ 5*indgen(4)] = 1.
+#
+pameasured=0
+circular=1
+corcal=0
+end

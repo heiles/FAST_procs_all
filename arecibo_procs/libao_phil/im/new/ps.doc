@@ -1,0 +1,13 @@
+postscript device notes
+
+16mar99
+	1. device ,/color... without this option, lookup tables are ignored by
+		postscript. 
+			??With this option it looks like sp300 ignores the plot???
+	2. device,ps,....bits=8   default is 4 bits/pixel
+	3. font size, type
+		!p.font = -1 vector fonts..
+		!p.font =  0 hardware fonts then you can use font keyword in 
+					  device procedure:  /type,/bold
+help,/device to see current device setup
+				

@@ -1,0 +1,6 @@
+prAug01.coef - this is the 2d fit for pitch,roll using the reflector
+			   as the center and a radius of 869.781 feet.
+			  comes from /share/megs/survey/010809/tiltR/prfit2dcor.sav
+prAug01ThOrig.coef - this is the 2d fit for pitch,roll using the reflector
+
+mm.datRX - mueller matrix parameters used to compute the  mueller matrix

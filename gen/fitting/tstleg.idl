@@ -1,0 +1,29 @@
+.run legendrefit_mars.pro
+
+retall
+
+noise= 0.4* randomn( seed, 33)
+
+xd= -1. + findgen( 33)/16.
+cfs= [ 2., 3., 1.1]
+
+ld= flegendre( xd, 3)
+yd= fltarr(33)
+
+for nd=0,2 do yd= yd + cfs[nd]* ld[*,nd]
+yd[15]= 700.
+yd= yd+ noise
+
+legendrefit, xd, yd, 2, coeffs, sigcoeffs, yfit, sigma
+plot, xd, yd
+oplot, xd, yfit, psym=-4, col=!red
+print, coeffs
+print, sigcoeffs
+
+legendrefit_mars, xd, yd, 2, coeffsm, sigcoeffsm, yfitm, sigmam, $
+                  niter=niter, nitmax=100, problem=problem
+oplot, xd, yfitm, psym=-2, col=!green
+print, coeffsm
+print, sigcoeffsm
+print, niter, problem
+

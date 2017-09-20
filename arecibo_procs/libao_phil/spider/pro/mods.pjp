@@ -1,0 +1,132 @@
+<pjp001> cor_newcal() needed to update nrcmax after making arrays larger
+
+<pjp002> fp {muellerfitpol} argument to
+	     -mmproc,
+		 -cor_newcal
+		 -mmtostr
+		  the savefile
+		was not being used. It was in a.fitIpol
+		also changed
+
+		- mm2/mm2_read() removed fp from argument list.. no longer used.
+		-runumm0/tstm0.idl, tstm0_xrc.idl removed from mmproc call
+		-runumm2/mm2_read removed fp from arguement list
+
+get_offsets_newcal - pass in beamin_arr and index instead of beamin
+				     get rid of all the other parameters. they weren't used.
+					 also put data directly into beamin_arr. don't use
+					 temporary variables.
+mm_corr, mm_corr_stokesc1 .. pass in beamin_arr with index rather than beamin
+
+<pjp003> not done..
+		 in cor_newcal sourcename,sourceflux, cfr could change, had to put 
+		 value from each pattern, not single value in beamout_arr
+----
+rewrote mmproc, setup, etc..
+
+<pjp004> 18nov02
+ 
+beam1d_fit when byChnl set. for single channel fit was returning
+	nan for heights.. put in a test for finite. for any non-finite
+	channels, 0 the fit and return
+
+	This then caused extract_normalized stokes to bomb when it divides
+	by the height (0.). so had to put a check there.
+	would be better to just ignore the fits that fail but would probably
+	have to throw out the entire pattern if a single channel fit was bad.
+------------------
+07feb03 - added carls fix for factor of two problem..
+		  sq2dfit_allcal.pro,sqfit_newcal.pro,
+		-   also updated for ch eliminated subtracting the polarized tsys
+		   offsets. 04jan03
+		-  copied over and checked 
+> > also, i have made a version of the mueller matrix fitting that uses
+> > the 2d beam pattern instead of teh 1d strip fits. it's probably
+> > better...time will tell. the new versions have names that reflect
+> > the old ones. they are called at the beginning of mm4.pro, and
+> > the substitutions are probably obvious... i've been working on 
+> > these for the gbt, and i dont think (but cannot guarantee) that
+> > i havent changed things so that they wont work at arecibo...
+> > you might want to give these a whirl...
+> > 
+> > /home/heiles/newcal/idlprocs/mm2/make_mmlsfit2d_inputs.pro
+> > 
+> > /home/heiles/newcal/idlprocs/mm2/extract_2d_normalizedstokes.pro
+	But he never included them in routines where the are called:
+	- make_mmlsfit .. mm4
+    - extract_     .. mm2lsfit
+    so the version we have still does the 1d fits. All that's needed is to
+    flip the calls..
+
+
+------------------
+11aug03 - added carls fix for squash bug. replaced with carls version
+	(diff'ed so they came out the same.
+
+beam2dfit.pro: replaced with carls version.
+	;PUT SQUOOSH IN IF APPROPRIATE...
+	IF ( N_ELEMENTS( A) GT 7) THEN BEGIN
+	b2dfit[ (7 + 10+ 10*nstk), 0 ]= hpbw_guess* a[ 7]/ 0.6005612
+	b2dfit[ (7 + 10+ 10*nstk), 1 ]= hpbw_guess* sigarray[ 7]/ 0.6005612
+	ENDIF
+
+sq2dfit_allcal.pro
+	replaced with carls version
+
+------------------
+10jul04 - updated mmlsfit.pro to newer version of carls with better 
+		  convergence.
+
+14aug04 - <pjp005> mmtostr_carl.pro 
+		   slhgt was being stored as Kelvins rather than fraction of Tsrc.
+
+28nov04.. created directories mm0N,mm2N these will support the 
+		  variable versions:
+		  1. variable number of lags
+		  2. with or without  cross correlations
+------------------
+01jun05. installed carls fix to ffteval, added dft.
+------------------
+26jun07. installed mms/mmlsfit.pro new version sent by carl.
+		 removed this version 04aug07 and used newer version.
+------------------
+27jun07. pro/mm2/mm4.pro 
+         when calling prtplot() with ps option:
+         1a. call plotcolors,/ps  .. to load lut, redefine color names
+			 call prtplot()
+         2. call plotcolors,  .. to reload to whatever the default was
+				 and reset color names
+--------------------
+04aug07
+	1. changes for nominal_linear in mmlsfit.pro
+	   in mm2/
+       - mmlsfit.pro changes (and new nominal_linear  keyword)
+       - mm4.pro (nominal_linear keyword added
+       - carl has adde mm4_2d which fits the 2d beam rather than the strips
+         i haven't included that yet..
+	   - print_stokespa()... adde posrc,pasrc and errrors.
+	   - prtplot - use pasrc,polsrc from muellerparams1
+       - replace modangle.pro with carls new version. Had to update the
+         routines that called it since the format has changed. I left the
+         calls to modanglem , modangle360. They can be eventually replaced
+         with the calls to modangle with the new args.
+	  in mm0/
+		 - get lin/cir and passs nominal_linear to mm4
+         - also changed mmproc in was/
+	  in idl/h/hdrMueller.h 
+	   - muellerparams_carl
+		  added .pasrc, .polsrc .sigpasrc, .sigpolsrc .. these weren't needed
+          since not used anywhere else, but i added them anyway
+          .. means that the save files for mueller processing will be different.
+	   in idl/Cor2
+		  mmgetparams .. was not loading mmp.circular
+       
+--------------------
+07feb10
+	1. ./was/get_offsets_newcal
+       - was using  first digit of scan number for year.
+         this didn't work after 2009. switched to use hdr.date (which i updated in
+         wasftochdr.pro
+      
+	   
+      

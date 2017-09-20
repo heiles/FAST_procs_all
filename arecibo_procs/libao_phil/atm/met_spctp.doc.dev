@@ -1,0 +1,13 @@
+;
+; 111008/
+50/430 Mhz ran with ryans machine using olmost continous mode.
+to see if meteors emmited any rf (no transmitter used)
+2 mhz bw. used 10ms ipp but took less that 16K samples
+
+metspcimg.pro.dev
+break each ipp into N lenfft .. compute fft 
+;                            .. then make dynamic spectra
+mettmimg.pro.dev
+;
+; computer tp each point then make waterfall plot
+; with total power wrapping right edge to left on next row up.

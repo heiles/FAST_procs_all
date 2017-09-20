@@ -1,0 +1,39 @@
+#   rcvnum 1  327 dome  one diode.
+#  nd1/2  noise diode 1/2
+#  Pa/b   feeding polarization a/b
+#  H/L    high,low cal
+# 0. --> no meausurement
+# !yyyy daynum.. following data valid after this date
+# 06oct00 initial values from lisa wray
+#
+#frq nd1PaH nd1PaL nd1PbH Nd1PbL nd2PaH nd2PaL nd2PbH nd2PbL  
+# 0    1       2     3       4    5       6     7       8
+# 13jun08  cals measured by ganesh. new cooled receiver single diode
+#
+!2008 165
+302	    7.40   0   8.02      0    0       0    0        0
+317	    7.42   0   8.17      0    0       0    0        0
+327	    8.18   0   8.16      0    0       0    0        0
+337	    8.01   0   8.51      0    0       0    0        0
+352	    8.03   0   8.29      0    0       0    0        0
+#
+# 11jul02 cals measured by lisa .. see Misc/327cals...
+#
+!2002 192
+305.   70.16   0   72.67     0.   0       0     0       0
+311.   70.98   0   73.60     0.   0       0     0       0
+315.   71.53   0   74.22     0.   0       0     0       0
+321.   72.36   0   75.16     0.   0       0     0       0
+325.   72.91   0   75.78     0.   0       0     0       0 
+331.   73.74   0   76.71     0.   0       0     0       0
+335.   74.29   0   77.33     0.   0       0     0       0
+341.   75.11   0   78.27     0.   0       0     0       0
+347.   75.94   0   79.20     0.   0       0     0       0
+# 21sep01 remeasured in lab with noise figure meter
+!2001 264
+312   36      0.    57.      0.   0.     0.     0.      0.
+327   37      0.    63.      0.   0.     0.     0.      0.
+312   42      0.    68.      0.   0.     0.     0.      0.
+# original data
+!0 1
+ 327  71.1     0.   86.9     0.   0.     0.     0.       0.  

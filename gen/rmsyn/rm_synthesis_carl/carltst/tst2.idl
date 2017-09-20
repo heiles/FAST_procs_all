@@ -1,0 +1,49 @@
+ps= 0.7
+rm=-50.
+;rm=64.
+nobs=2048
+lsqmin= 1.024
+lambdasq= -lsqmin + findgen(nobs)*2.*lsqmin/nobs
+phitot= rm* lambdasq
+phi= atan( 0.5* tan( phitot))
+pol= ps* sin(phitot)/phitot
+indx= where( phitot eq 0, count)
+if count ne 0 then pol[indx]= ps
+;
+;phi= phitot
+;pol= ps + fltarr( nobs)
+q0= pol* cos( 2. * phi)
+u0= pol* sin( 2. * phi)
+
+;--------------------------------------------------
+ps= 0.7
+rm=50.
+phitot= rm* lambdasq
+phi= atan( 0.5* tan( phitot))
+pol= ps* sin(phitot)/phitot
+indx= where( phitot eq 0, count)
+if count ne 0 then pol[indx]= ps
+;
+;phi= phitot
+;pol= ps + fltarr( nobs)
+q1= pol* cos( 2. * phi)
+u1= pol* sin( 2. * phi)
+;---------------------------------
+q=q0 + q1
+u=u0 + u1
+
+
+fdmin= 32.*8*2
+fd= -fdmin + 2.*fdmin* findgen( 4092)/4092
+rmsynthesis, q, u, lambdasq, fd, fdf
+
+wset,0
+!p.multi=[0,1,2]
+plot, lambdasq, pol
+plot, lambdasq, phi
+!p.multi=0
+
+wset,1
+plot, fd, real_part(fdf)          
+oplot, fd, imaginary(fdf),col=!red
+oplot, fd, abs( fdf), colo=!green

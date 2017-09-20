@@ -1,0 +1,7 @@
+files for cormapping.. cormap1 or cordrift
+
+cormapbl   - baseline removal by strips using the edges.
+cormapdo   - default processing of a map
+cormapinit - defines cormapstr ..
+cormapinp  - input a map
+cormapstr  - cormap structure

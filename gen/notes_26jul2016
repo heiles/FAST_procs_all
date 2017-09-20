@@ -1,0 +1,6 @@
+
+if you are at fast, define this symbolic link:
+idlstartup_vermu.pro -> fast_init.pro
+
+if you are running for arecibo data, define this symbolic link:
+idlstartup_vermu.pro -> idlstartup_vermu_11jul2016.pro

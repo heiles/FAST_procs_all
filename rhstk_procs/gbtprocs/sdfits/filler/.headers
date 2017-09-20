@@ -1,0 +1,710 @@
+Antenna/
+
+ANHDR           STRING    = Array[59]
+SIMPLE  =                    T / file does conform to FITS standard             
+ BITPIX  =                    8 / number of bits per data pixel                  
+ NAXIS   =                    0 / number of data axes                            
+ EXTEND  =                    T / FITS dataset may contain extensions            
+ ORIGIN  = 'NRAO Green Bank'    /                                                
+ INSTRUME= 'Antenna '           / device or program of origin                    
+ GBTMCVER= '3.7.patches'        / telescope control software release             
+ FITSVER = '1.1     '           / FITS definition version for this device        
+ DATEBLD = 'Tue Sep 24 15:56:58 UTC 2002' / time program was linked              
+ SIMULATE=                    0 / Is the instrument in simulate mode?            
+ DATE-OBS= '2002-10-02T04:15:50' / Manager parameter startTime                   
+ TIMESYS = 'UTC     '           / time scale specification for DATE-OBS          
+ TELESCOP= 'NRAO_GBT'           / Green Bank Telescope (Robert C. Byrd 100m)     
+ OBJECT  = '3c29    '           / Manager parameter source                       
+ PROJID  = 'GBT02A-053-T5'      / Manager parameter projectId                    
+ OBSID   = 'test    '           / Manager parameter scanId                       
+ SCAN    =                   12 / Manager parameter scanNumber                   
+ LSTSTART= 8.515963152964141E+04 / Start Time in seconds since local sidereal mid
+ SITELAT =        3.8433119E+01 / North latitude of intersection of the az/el axe
+ SITELONG=        7.9839833E+01 / West longitude of intersection of the az/el axe
+ SITEELEV=          8.24595E+02 / Height of the intersection of az/el axes       
+ SITESYS = 'NAD83   '           / Coordinate system datum                        
+ SITETYPE= 'GEODETIC'           / Type of position                               
+ INDICSYS= 'RADEC   '           / Coordinate system of major/minor axes          
+ RADESYS = 'FK5     '           / Coordinate reference frame of major/minor axes 
+ EQUINOX =          2.00000E+03 / Equinox of selected coordinate reference frame 
+ DELTAUTC=          -2.3341E-01 / UT1 - UTC offset for beginning of scan         
+ IERSPMX =           5.4753E-05 / X Polar motion correction for beginning of scan
+ IERSPMY =           5.5285E-05 / Y Polar motion correction for beginning of scan
+ MNTOFFAZ=         -3.59403E+02 / Azimuth servo encoder offset                   
+ MNTOFFEL=          8.50000E-02 / Elevation servo encoder offset                 
+ COMMENT   AZ LPC is defined as LPC_AZ1 + LPC_AZ2 DIV COS(EL)                    
+ LPC_AZ1 =           0.0000E+00 / First azimuth local zero point correction coeff
+ LPC_AZ2 =           8.5982E-04 / Second azimuth local zero point correction coef
+ LPC_EL  =           5.5787E-03 / Elevation local zero point correction coefficie
+ PNTMODEL= 'GBT MEMO 173'       / Type of az/el pointing correction model        
+ COMMENT   PNTAZXXX and PNTELXXX coefficients are defined in GBT Memo 173        
+ PNTAZD00=          -1.4457E-04 / Horizontal collimation coefficient             
+ PNTAZB01=          -1.7308E-05 / Elevation Axis collimation coefficient         
+ PNTAZD01=          -5.6781E-05 / Azimuth zero                                   
+ PNTAZA11=           1.4399E-05 / Zenith E tilt                                  
+ PNTAZB11=           1.0676E-05 / Zenith N tilt                                  
+ PNTAZC21=           0.0000E+00 / Azimuth track                                  
+ PNTAZD21=           0.0000E+00 / Azimuth track                                  
+ PNTELD00=          -3.6772E-03 / Elevation zero                                 
+ PNTELC10=          -1.0676E-05 / Zenith E tilt                                  
+ PNTELD10=           1.4399E-05 / Zenith N tilt                                  
+ PNTELB01=           3.2877E-03 / Asymmetric gravity                             
+ PNTELD01=           3.8544E-03 / Symmetric gravity                              
+ DIABMODE= 'ON      '           / State of diurnal aberration correction         
+ POLARMTN= 'ON      '           / State of polar motion correction parameter     
+ COSVMODE= 'ON      '           / State of cosVMode parameter                    
+ AMBTEMP =             1.42E+01 / Ambient Temperature C                          
+ AMBPRESS=             9.31E+02 / Ambient Pressure in milliBars                  
+ AMBHUMID=             1.00E+00 / Ambient Humidity fraction                      
+ OPTICSMD= 'GREGORIAN OPTICS'   / Optical path configuration                     
+ FOCTRMOD= 'ON      '           / Focus tracking mode selection                  
+ FOCPATM = 'OFF     '           / Parallactic angle tracking selection           
+ END                                                                             
+
+AN_1            STRUCT    = -> <Anonymous> Array[1201]
+   DMJD            DOUBLE           52549.178
+   RAJ2000         DOUBLE           14.773881
+   DECJ2000        DOUBLE          -2.3079948
+   MNT_AZ          DOUBLE           150.95271
+   MNT_EL          DOUBLE           45.398454
+   REFRACT         DOUBLE         0.020096930
+   MAJOR           DOUBLE           14.773881
+   MINOR           DOUBLE          -2.3079948
+   SR_XP           DOUBLE          -18.070625
+   SR_YP           DOUBLE          -12.025018
+   SR_ZP           DOUBLE           1.8983133
+   SR_XT           DOUBLE         -0.12959468
+   SR_YT           DOUBLE      -0.00026720521
+   SR_ZT           DOUBLE        -0.059835251
+
+AN_1HDR         STRING    = Array[52]
+XTENSION= 'BINTABLE'           / binary table extension                         
+ BITPIX  =                    8 / 8-bit bytes                                    
+ NAXIS   =                    2 / 2-dimensional binary table                     
+ NAXIS1  =                  112 / width of table in bytes                        
+ NAXIS2  =                 1201 / number of rows in table                        
+ PCOUNT  =                    0 / size of special data area                      
+ GCOUNT  =                    1 / one data group (required keyword)              
+ TFIELDS =                   14 / number of fields in each row                   
+ TTYPE1  = 'DMJD    '           / label for field   1                            
+ TFORM1  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT1  = 'd       '           / physical unit of field                         
+ TTYPE2  = 'RAJ2000 '           / label for field   2                            
+ TFORM2  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT2  = 'deg     '           / physical unit of field                         
+ TTYPE3  = 'DECJ2000'           / label for field   3                            
+ TFORM3  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT3  = 'deg     '           / physical unit of field                         
+ TTYPE4  = 'MNT_AZ  '           / label for field   4                            
+ TFORM4  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT4  = 'deg     '           / physical unit of field                         
+ TTYPE5  = 'MNT_EL  '           / label for field   5                            
+ TFORM5  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT5  = 'deg     '           / physical unit of field                         
+ TTYPE6  = 'REFRACT '           / label for field   6                            
+ TFORM6  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT6  = 'deg     '           / physical unit of field                         
+ TTYPE7  = 'MAJOR   '           / label for field   7                            
+ TFORM7  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT7  = 'deg     '           / physical unit of field                         
+ TTYPE8  = 'MINOR   '           / label for field   8                            
+ TFORM8  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT8  = 'deg     '           / physical unit of field                         
+ TTYPE9  = 'SR_XP   '           / label for field   9                            
+ TFORM9  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT9  = 'mm      '           / physical unit of field                         
+ TTYPE10 = 'SR_YP   '           / label for field  10                            
+ TFORM10 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT10 = 'mm      '           / physical unit of field                         
+ TTYPE11 = 'SR_ZP   '           / label for field  11                            
+ TFORM11 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT11 = 'mm      '           / physical unit of field                         
+ TTYPE12 = 'SR_XT   '           / label for field  12                            
+ TFORM12 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT12 = 'deg     '           / physical unit of field                         
+ TTYPE13 = 'SR_YT   '           / label for field  13                            
+ TFORM13 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT13 = 'deg     '           / physical unit of field                         
+ TTYPE14 = 'SR_ZT   '           / label for field  14                            
+ TFORM14 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT14 = 'deg     '           / physical unit of field                         
+ EXTNAME = 'ANTPOSGR'           / name of this binary table extension            
+ END                                                                             
+
+==========================================================================================
+GO/
+
+GOHDR           STRING    = Array[40]
+SIMPLE  =                    T / file does conform to FITS standard             
+ BITPIX  =                    8 / number of bits per data pixel                  
+ NAXIS   =                    0 / number of data axes                            
+ EXTEND  =                    T / FITS dataset may contain extensions            
+ COMMENT   FITS (Flexible Image Transport System) format defined in Astronomy and
+ COMMENT   Astrophysics Supplement Series v44/p363, v44/p371, v73/p359, v73/p365.
+ COMMENT   Contact the NASA Science Office of Standards and Technology for the   
+ COMMENT   FITS Definition document #100 and other FITS information.             
+ ORIGIN  = 'NRAO Green Bank'    /                                                
+ INSTRUME= 'GO      '           / device or program of origin                    
+ GBTMCVER= '3.7.patches'        / telescope control software release             
+ FITSVER = '1.2     '           / FITS definition version for this device        
+ DATEBLD = 'Tue Sep 24 11:58:35 UTC 2002' / time program was modified            
+ SIMULATE=                    0 / Is the instrument in simulate mode?            
+ DATE-OBS= '2002-10-02T04:15:50' / Manager parameter startTime                   
+ TIMESYS = 'UTC     '           / time scale specification for DATE-OBS          
+ TELESCOP= 'NRAO_GBT'           / Green Bank Telescope (Robert C. Byrd 100m)     
+ OBJECT  = '3c29    '           / Manager parameter source                       
+ PROJID  = 'GBT02A-053-T5'      / Manager parameter projectId                    
+ OBSID   = 'test    '           / Manager parameter scanId                       
+ SCAN    =                   12 / Manager parameter scanNumber                   
+ OBSERVER= 'Anish Roshi'        / Name of observer                               
+ PROCNAME= 'Track   '           / Name of observing procedure                    
+ PROCTYPE= 'SIMPLE  '           / Observing procedure class                      
+ PROCSEQN=                    1 / Scan sequence number                           
+ PROCSIZE=                    1 / Number of scans in procedure                   
+ OBSTYPE = 'LINE    '           / Mode of Observation                            
+ SWSTATE = 'NONE    '           / Type of switching                              
+ SWTCHSIG= 'TPWCAL  '           / Switching Signals Mode?                        
+ LASTON  =                    0 / Last On for pos switching                      
+ LASTOFF =                    0 / Last Off for pos switching                     
+ COORDSYS= 'RADEC   '           / co-ordinate system used to command telescope   
+ RADESYS = 'FK5     '           / Type of equatorial system in use               
+ EQUINOX = 2.00000000000000E+03 / Equinox of selected coordinate reference frame 
+ RA      = 1.43954166666667E+01 / Commanded Major Axis Value in Degrees          
+ DEC     = -1.39111111111111E+00 / Commanded Minor Axis Value in Degrees         
+ VELOCITY= 0.00000000000000E+00 / Line velocity in rest frame in m/s             
+ VELDEF  = 'VRAD-TOP'           / Velocity definition and reference frame        
+ RESTFRQ = 1.42050000000000E+09 / line rest frequency in Hz                      
+ END                                                                             
+
+==========================================================================================
+IF/
+
+IFHDR           STRING    = Array[18]
+SIMPLE  =                    T / file does conform to FITS standard             
+ BITPIX  =                    8 / number of bits per data pixel                  
+ NAXIS   =                    0 / number of data axes                            
+ EXTEND  =                    T / FITS dataset may contain extensions            
+ ORIGIN  = 'NRAO Green Bank'    /                                                
+ INSTRUME= 'IFManager'          / device or program of origin                    
+ GBTMCVER= '3.7.patches'        / telescope control software release             
+ FITSVER = '1.1     '           / FITS definition version for this device        
+ DATEBLD = 'Sun Sep 22 20:27:19 UTC 2002' / time program was linked              
+ SIMULATE=                    0 / Is the instrument in simulate mode?            
+ DATE-OBS= '2002-10-02T04:15:50' / Manager parameter startTime                   
+ TIMESYS = 'UTC     '           / time scale specification for DATE-OBS          
+ TELESCOP= 'NRAO_GBT'           / Green Bank Telescope (Robert C. Byrd 100m)     
+ OBJECT  = '3c29    '           / Manager parameter source                       
+ PROJID  = 'GBT02A-053-T5'      / Manager parameter projectId                    
+ OBSID   = 'test    '           / Manager parameter scanId                       
+ SCAN    =                   12 / Manager parameter scanNumber                   
+ END                                                                             
+
+IF_1            STRUCT    = -> <Anonymous> Array[16]
+   BACKEND         STRING    'DCR                             '
+   BANK            STRING    'A '
+   PORT            LONG                 1
+   RECEIVER        STRING    'Rcvr1_2                         '
+   RECEPTOR        STRING    'XL      '
+   LO_CIRCUIT      STRING    'LO1A                            '
+   LO_COMPONENT    STRING    'synthesizer                     '
+   SIDEBAND        STRING    'L '
+   POLARIZE        STRING    'X '
+   CENTER_IF       FLOAT       3.00525e+09
+   CENTER_SKY      FLOAT       1.41525e+09
+   BANDWDTH        FLOAT       6.95000e+07
+   TEST_TONE_IF    FLOAT              -NaN
+   TEST_TONE_SKY   FLOAT              -NaN
+   TEST_TONE_CIRCUIT
+                   STRING    = ''
+   TEST_TONE_COMPONENT
+                   STRING    = ''
+   SFF_MULTIPLIER  DOUBLE           1.0000000
+   SFF_SIDEBAND    DOUBLE          -1.0000000
+   SFF_OFFSET      DOUBLE           0.0000000
+   TRANSFORM_COUNT LONG                 8
+   TRANSFORMS      STRING    'feed(Rcvr1_2:XL): 1100 to 1752, linear_x pola'...
+
+IF_1HDR         STRING    = Array[98]
+XTENSION= 'BINTABLE'           / binary table extension                         
+ BITPIX  =                    8 / 8-bit bytes                                    
+ NAXIS   =                    2 / 2-dimensional binary table                     
+ NAXIS1  =                 4354 / width of table in bytes                        
+ NAXIS2  =                   16 / number of rows in table                        
+ PCOUNT  =                    0 / size of special data area                      
+ GCOUNT  =                    1 / one data group (required keyword)              
+ TFIELDS =                   21 / number of fields in each row                   
+ TTYPE1  = 'BACKEND '           / label for field   1                            
+ TFORM1  = '32A     '           / data format of field: ASCII Character          
+ TUNIT1  = 'none    '           / physical unit of field                         
+ TTYPE2  = 'BANK    '           / label for field   2                            
+ TFORM2  = '2A      '           / data format of field: ASCII Character          
+ TUNIT2  = 'none    '           / physical unit of field                         
+ TTYPE3  = 'PORT    '           / label for field   3                            
+ TFORM3  = '1J      '           / data format of field: 4-byte INTEGER           
+ TUNIT3  = 'none    '           / physical unit of field                         
+ TTYPE4  = 'RECEIVER'           / label for field   4                            
+ TFORM4  = '32A     '           / data format of field: ASCII Character          
+ TUNIT4  = 'none    '           / physical unit of field                         
+ TTYPE5  = 'RECEPTOR'           / label for field   5                            
+ TFORM5  = '8A      '           / data format of field: ASCII Character          
+ TUNIT5  = 'none    '           / physical unit of field                         
+ TTYPE6  = 'LO_CIRCUIT'         / label for field   6                            
+ TFORM6  = '32A     '           / data format of field: ASCII Character          
+ TUNIT6  = 'none    '           / physical unit of field                         
+ TTYPE7  = 'LO_COMPONENT'       / label for field   7                            
+ TFORM7  = '32A     '           / data format of field: ASCII Character          
+ TUNIT7  = 'none    '           / physical unit of field                         
+ TTYPE8  = 'SIDEBAND'           / label for field   8                            
+ TFORM8  = '2A      '           / data format of field: ASCII Character          
+ TUNIT8  = 'none    '           / physical unit of field                         
+ TTYPE9  = 'POLARIZE'           / label for field   9                            
+ TFORM9  = '2A      '           / data format of field: ASCII Character          
+ TUNIT9  = 'none    '           / physical unit of field                         
+ TTYPE10 = 'CENTER_IF'          / label for field  10                            
+ TFORM10 = '1E      '           / data format of field: 4-byte REAL              
+ TUNIT10 = 'Hz      '           / physical unit of field                         
+ TTYPE11 = 'CENTER_SKY'         / label for field  11                            
+ TFORM11 = '1E      '           / data format of field: 4-byte REAL              
+ TUNIT11 = 'Hz      '           / physical unit of field                         
+ TTYPE12 = 'BANDWDTH'           / label for field  12                            
+ TFORM12 = '1E      '           / data format of field: 4-byte REAL              
+ TUNIT12 = 'Hz      '           / physical unit of field                         
+ TTYPE13 = 'TEST_TONE_IF'       / label for field  13                            
+ TFORM13 = '1E      '           / data format of field: 4-byte REAL              
+ TUNIT13 = 'Hz      '           / physical unit of field                         
+ TTYPE14 = 'TEST_TONE_SKY'      / label for field  14                            
+ TFORM14 = '1E      '           / data format of field: 4-byte REAL              
+ TUNIT14 = 'Hz      '           / physical unit of field                         
+ TTYPE15 = 'TEST_TONE_CIRCUIT'  / label for field  15                            
+ TFORM15 = '32A     '           / data format of field: ASCII Character          
+ TUNIT15 = 'none    '           / physical unit of field                         
+ TTYPE16 = 'TEST_TONE_COMPONENT' / label for field  16                           
+ TFORM16 = '32A     '           / data format of field: ASCII Character          
+ TUNIT16 = 'none    '           / physical unit of field                         
+ TTYPE17 = 'SFF_MULTIPLIER'     / label for field  17                            
+ TFORM17 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT17 = 'none    '           / physical unit of field                         
+ TTYPE18 = 'SFF_SIDEBAND'       / label for field  18                            
+ TFORM18 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT18 = 'none    '           / physical unit of field                         
+ TTYPE19 = 'SFF_OFFSET'         / label for field  19                            
+ TFORM19 = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT19 = 'none    '           / physical unit of field                         
+ TTYPE20 = 'TRANSFORM_COUNT'    / label for field  20                            
+ TFORM20 = '1J      '           / data format of field: 4-byte INTEGER           
+ TUNIT20 = 'none    '           / physical unit of field                         
+ TTYPE21 = 'TRANSFORMS'         / label for field  21                            
+ TFORM21 = '4096A:SSTR256/059'  / data format of field: ASCII Character          
+ TUNIT21 = 'none    '           / physical unit of field                         
+ EXTNAME = 'IF      '           / name of this binary table extension            
+ COMMENT   Sky Frequency Formula:                                                
+ COMMENT       sky = SFF_SIDEBAND*IF + SFF_MULTIPLIER*LO1 + SFF_OFFSET           
+ COMMENT   Signed Sum of the LOs:                                                
+ COMMENT       sum =  -(SFF_MULTIPLIER*LO1 + SFF_OFFSET)/SFF_SIDEBAND            
+ COMMENT   BACKEND: name of the terminating backend                              
+ COMMENT   BANK: name of the backend's set of inputs                             
+ COMMENT   PORT: index of the backend's input                                    
+ COMMENT   RECEIVER: name of the receiver of origin                              
+ COMMENT   RECEPTOR: name of the receiver's detector                             
+ COMMENT   LO_CIRCUIT: circuit producing the tracking frequency                  
+ COMMENT   LO_COMPONENT: component producing the tracking frequency              
+ COMMENT   SIDEBAND: resulting sideband: upper or lower                          
+ COMMENT   POLARIZE: resulting polarization                                      
+ COMMENT   CENTER_IF: approximate physical center frequency                      
+ COMMENT   CENTER_SKY: approximate center frequency on the sky                   
+ COMMENT   BANDWDTH: approximate resulting bandwidth                             
+ COMMENT   TEST_TONE_IF: approximate physical test tone frequency, if any        
+ COMMENT   TEST_TONE_SKY: approximate test tone frequency on the sky, if any     
+ COMMENT   TEST_TONE_CIRCUIT: circuit producing the test tone, if any            
+ COMMENT   TEST_TONE_COMPONENT: component producing the test tone, if any        
+ COMMENT   SFF_MULTIPLIER: Sky Frequency Formula multiplier coefficient          
+ COMMENT   SFF_SIDEBAND: Sky Frequency Formula sideband coefficient              
+ COMMENT   SFF_OFFSET: Sky Frequency Formula offset coefficient                  
+ COMMENT   TRANSFORM_COUNT: number of transform                                  
+ COMMENT   TRANSFORMS: matrix of transform descriptions (frequencies in MHz)     
+ END                                        
+
+==========================================================================================
+LO1A/
+
+LO1AHDR         STRING    = Array[37]
+SIMPLE  =                    T / file does conform to FITS standard             
+ BITPIX  =                    8 / number of bits per data pixel                  
+ NAXIS   =                    0 / number of data axes                            
+ EXTEND  =                    T / FITS dataset may contain extensions            
+ ORIGIN  = 'NRAO Green Bank'    /                                                
+ INSTRUME= 'LO1A    '           / device or program of origin                    
+ GBTMCVER= '3.7.patches'        / telescope control software release             
+ FITSVER = '1.3     '           / FITS definition version for this device        
+ DATEBLD = 'Tue Sep 24 15:58:09 UTC 2002' / time program was linked              
+ SIMULATE=                    0 / Is the instrument in simulate mode?            
+ DATE-OBS= '2002-10-02T04:15:50' / Manager parameter startTime                   
+ TIMESYS = 'UTC     '           / time scale specification for DATE-OBS          
+ TELESCOP= 'NRAO_GBT'           / Green Bank Telescope (Robert C. Byrd 100m)     
+ OBJECT  = '3c29    '           / Manager parameter source                       
+ PROJID  = 'GBT02A-053-T5'      / Manager parameter projectId                    
+ OBSID   = 'test    '           / Manager parameter scanId                       
+ SCAN    =                   12 / Manager parameter scanNumber                   
+ LSTSTART= 8.51596311940615E+04 / Start Time in seconds since local sidereal midn
+ SITELAT =        3.8433121E+01 / North latitude of intersection of the az/el axe
+ SITELONG=        7.9839835E+01 / West longitude of intersection of the az/el axe
+ SITEELEV=          8.24551E+02 / Height of the intersection of az/el axes       
+ SITESYS = 'NAD83   '           / Coordinate system datum                        
+ SITETYPE= 'GEODETIC'           / Type of position                               
+ RADESYS = 'FK5     '           / Coordinate reference frame of major/minor axes 
+ EQUINOX =          2.00000E+03 / Equinox of selected coordinate reference frame 
+ DELTAUTC=          -2.3341E-01 / UT1 - UTC offset for beginning of scan         
+ IERSPMX =           5.4753E-05 / X Polar motion correction for beginning of scan
+ IERSPMY =           5.5285E-05 / Y Polar motion correction for beginning of scan
+ COSVMODE= 'OFF     '           / State of cosVMode parameter                    
+ RESTFRQ = 1.42050000000000E+09 / Rest Frequency of source in Hz                 
+ IFFREQ  = 3.00000000000000E+09 / Specified IF center Frequency in Hz            
+ LOOFFSET= 0.00000000000000E+00 / Additional Frequency offset due to Rcvr interna
+ LOMULT  =           1.0000E+00 / Frequency Multiplier due to Rcvr internal multi
+ REQDPTOL=           1.0000E+03 / Requested Doppler tracking tolerance in Hz     
+ POWERLVL=           -1.170E+01 / Requested LO Power Level in dBm                
+ SIDEBAND= 'LOWER   '           / i.e. LOFREQ = (SKY+IFFREQ)/LOMULTI-LOOFFSET    
+ END                                                                             
+
+LO1A_1          STRUCT    = -> <Anonymous> Array[2]
+   BLANKTIM        DOUBLE        0.0020000000
+   PHSESTRT        DOUBLE           0.0000000
+   SIGREF          LONG                 0
+   CAL             LONG                 0
+   FREQOFF         DOUBLE           0.0000000
+
+LO1A_1HDR       STRING    = Array[28]
+XTENSION= 'BINTABLE'           / binary table extension                         
+ BITPIX  =                    8 / 8-bit bytes                                    
+ NAXIS   =                    2 / 2-dimensional binary table                     
+ NAXIS1  =                   32 / width of table in bytes                        
+ NAXIS2  =                    2 / number of rows in table                        
+ PCOUNT  =                    0 / size of special data area                      
+ GCOUNT  =                    1 / one data group (required keyword)              
+ TFIELDS =                    5 / number of fields in each row                   
+ TTYPE1  = 'BLANKTIM'           / label for field   1                            
+ TFORM1  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT1  = 'SECONDS '           / physical unit of field                         
+ TTYPE2  = 'PHSESTRT'           / label for field   2                            
+ TFORM2  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT2  = 'NONE    '           / physical unit of field                         
+ TTYPE3  = 'SIGREF  '           / label for field   3                            
+ TFORM3  = '1J      '           / data format of field: 4-byte INTEGER           
+ TUNIT3  = 'T/F     '           / physical unit of field                         
+ TTYPE4  = 'CAL     '           / label for field   4                            
+ TFORM4  = '1J      '           / data format of field: 4-byte INTEGER           
+ TUNIT4  = 'T/F     '           / physical unit of field                         
+ TTYPE5  = 'FREQOFF '           / label for field   5                            
+ TFORM5  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT5  = 'Hz      '           / physical unit of field                         
+ EXTNAME = 'STATE   '           / name of this binary table extension            
+ NUMPHASE=                    2 / Number of Phases if only Internal Switching Sig
+ SWPERIOD=            1.000E+00 / Switching period                               
+ MASTER  = 'SpectralProcessor'  / Switching Signals Master                       
+ END                                                                             
+
+LO1A_2          STRUCT    = -> <Anonymous> Array[1]
+   DMJD            DOUBLE           52549.178
+   VELOCITY        DOUBLE           0.0000000
+   VDOT            DOUBLE           0.0000000
+   VDOTDOT         DOUBLE           0.0000000
+
+LO1A_2HDR       STRING    = Array[23]
+XTENSION= 'BINTABLE'           / binary table extension                         
+ BITPIX  =                    8 / 8-bit bytes                                    
+ NAXIS   =                    2 / 2-dimensional binary table                     
+ NAXIS1  =                   32 / width of table in bytes                        
+ NAXIS2  =                    1 / number of rows in table                        
+ PCOUNT  =                    0 / size of special data area                      
+ GCOUNT  =                    1 / one data group (required keyword)              
+ TFIELDS =                    4 / number of fields in each row                   
+ TTYPE1  = 'DMJD    '           / label for field   1                            
+ TFORM1  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT1  = 'd       '           / physical unit of field                         
+ TTYPE2  = 'VELOCITY'           / label for field   2                            
+ TFORM2  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT2  = 'm/s     '           / physical unit of field                         
+ TTYPE3  = 'VDOT    '           / label for field   3                            
+ TFORM3  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT3  = 'm/s/s   '           / physical unit of field                         
+ TTYPE4  = 'VDOTDOT '           / label for field   4                            
+ TFORM4  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT4  = 'm/s/s/s '           / physical unit of field                         
+ EXTNAME = 'SOUVEL  '           / name of this binary table extension            
+ VELDEF  = 'VRAD-TOP'           / Radio definition, Observatory or Topocentric   
+ END                                                                             
+
+LO1A_3          STRUCT    = -> <Anonymous> Array[1]
+   DMJD            DOUBLE           52549.178
+   RA              DOUBLE           14.776125
+   DEC             DOUBLE          -2.3159594
+   LO1FREQ         DOUBLE       4.4205000e+09
+   VFRAME          DOUBLE           0.0000000
+   RVSYS           DOUBLE           0.0000000
+
+LO1A_3HDR       STRING    = Array[28]
+XTENSION= 'BINTABLE'           / binary table extension                         
+ BITPIX  =                    8 / 8-bit bytes                                    
+ NAXIS   =                    2 / 2-dimensional binary table                     
+ NAXIS1  =                   48 / width of table in bytes                        
+ NAXIS2  =                    1 / number of rows in table                        
+ PCOUNT  =                    0 / size of special data area                      
+ GCOUNT  =                    1 / one data group (required keyword)              
+ TFIELDS =                    6 / number of fields in each row                   
+ TTYPE1  = 'DMJD    '           / label for field   1                            
+ TFORM1  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT1  = 'd       '           / physical unit of field                         
+ TTYPE2  = 'RA      '           / label for field   2                            
+ TFORM2  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT2  = 'deg     '           / physical unit of field                         
+ TTYPE3  = 'DEC     '           / label for field   3                            
+ TFORM3  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT3  = 'deg     '           / physical unit of field                         
+ TTYPE4  = 'LO1FREQ '           / label for field   4                            
+ TFORM4  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT4  = 'Hz      '           / physical unit of field                         
+ TTYPE5  = 'VFRAME  '           / label for field   5                            
+ TFORM5  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT5  = 'm/s     '           / physical unit of field                         
+ TTYPE6  = 'RVSYS   '           / label for field   6                            
+ TFORM6  = '1D      '           / data format of field: 8-byte DOUBLE            
+ TUNIT6  = 'm/s     '           / physical unit of field                         
+ EXTNAME = 'LO1TBL  '           / name of this binary table extension            
+ END                                                                             
+
+==========================================================================================
+LO1B/
+
+==========================================================================================
+Rcvr1_2/
+
+RCVRHDR         STRING    = Array[26]
+SIMPLE  =                    T / file does conform to FITS standard             
+ BITPIX  =                    8 / number of bits per data pixel                  
+ NAXIS   =                    0 / number of data axes                            
+ EXTEND  =                    T / FITS dataset may contain extensions            
+ ORIGIN  = 'NRAO Green Bank'    /                                                
+ INSTRUME= 'Measurements'       / device or program of origin                    
+ GBTMCVER= '3.7.patches'        / telescope control software release             
+ FITSVER = '1.1     '           / FITS definition version for this device        
+ DATEBLD = 'Sun Sep 22 20:40:52 UTC 2002' / time program was linked              
+ SIMULATE=                    0 / Is the instrument in simulate mode?            
+ DATE-OBS= '2002-02-15T00:00:00' / Manager parameter startTime                   
+ TIMESYS = 'UTC     '           / time scale specification for DATE-OBS          
+ TELESCOP= 'NRAO_GBT'           / Green Bank Telescope (Robert C. Byrd 100m)     
+ OBJECT  = 'noise_diode'        / Manager parameter source                       
+ PROJID  = 'GBT02A-053-T5'      / Manager parameter projectId                    
+ OBSID   = 'calibration'        / Manager parameter scanId                       
+ SCAN    =                    0 / Manager parameter scanNumber                   
+ RECEIVER= 'Rcvr1_2 '           / receiver name                                  
+ MIN_FREQ=             1.15E+09 / lowest sky frequency (Hz) cutoff               
+ MAX_FREQ=             1.73E+09 / highest sky frequency (Hz) cutoff              
+ NBEAM   =                    1 / number of beams                                
+ ETAL    =            9.900E-01 / rear spillover and scattering efficiency       
+ APEREFF =            7.100E-01 / aperture efficiency                            
+ BEAMEFF =            9.900E-01 / main beam efficiency                           
+ TAUZENIT=            1.100E-02 / opacity per unit air mass                      
+ END                                                                             
+
+==========================================================================================
+ScanLog.fits
+
+SCANLOG_1       STRUCT    = -> <Anonymous> Array[720]
+   DATE_OBS        STRING    '2002-10-02T02:34:03 '
+   SCAN            LONG                 1
+   FILEPATH        STRING    '/hvc/robishaw/obs/gbt/test/data/GBT02A-053-T5'...
+
+SCANLOG_1HDR    STRING    = Array[19]
+XTENSION= 'BINTABLE'           / binary table extension                         
+ BITPIX  =                    8 / 8-bit bytes                                    
+ NAXIS   =                    2 / 2-dimensional binary table                     
+ NAXIS1  =                  216 / width of table in bytes                        
+ NAXIS2  =                  720 / number of rows in table                        
+ PCOUNT  =                    0 / size of special data area                      
+ GCOUNT  =                    1 / one data group (required keyword)              
+ TFIELDS =                    3 / number of fields in each row                   
+ TTYPE1  = 'DATE-OBS'           / label for field   1                            
+ TFORM1  = '20A     '           / data format of field: ASCII Character          
+ TUNIT1  = 'UTC     '           / physical unit of field                         
+ TTYPE2  = 'SCAN    '           / label for field   2                            
+ TFORM2  = 'J       '           / data format of field: 4-byte INTEGER           
+ TUNIT2  = 'none    '           / physical unit of field                         
+ TTYPE3  = 'FILEPATH'           / label for field   3                            
+ TFORM3  = '192A    '           / data format of field: ASCII Character          
+ TUNIT3  = 'none    '           / physical unit of field                         
+ EXTNAME = 'ScanLog '           / name of this binary table extension            
+ END                                                                             
+
+==========================================================================================
+SpectralProcessor/
+
+SPHDR           STRING    = Array[19]
+SIMPLE  =                    T / File conforms to FITS standards.               
+ BITPIX  =                    8 /                                                
+ NAXIS   =                    0 / No image data array present.                   
+ EXTEND  =                    T / Standard table extensions follow.              
+ FORMATID= 'GBSDD007'           / SDD_FORMAT_ID                                  
+ PROJECT = 'GBT02A-053-T5'      / Project Id                                     
+ SCAN    =                   12 / Scan number                                    
+ SCANID  = 'null    '           / Scan Id                                        
+ BACKEND = 'SPAB    '           / Spectral processor                             
+ INSTRUME= 'SPAB    '           / Spectral processor                             
+ FITSVER = '0.1     '           / FITS definition version for this device        
+ DATE-OBS= '2002-10-02T04:15:50.000' / Date of Observation                       
+ OBJECT  = '3c29    '           / Source name                                    
+ SPMODE  = 'SSL StdSpectLine'   / SPECTRAL PROCESSOR MODE                        
+ UTDATE  =                52549 / MJD of start time                              
+ UTCSTART=   1.534999999998E+04 / start time seconds                             
+ UTCSTOP =   1.547200000000E+04 / stop time seconds                              
+ COMMENT    Green Bank Telescope Project                                         
+ END                                                                             
+
+SP_1            STRUCT    = -> <Anonymous> Array[4]
+   RCVRID          LONG                 0
+   TAPER           STRING    'Box'
+   OBSFREQ         DOUBLE       1.4200000e+09
+   IFF             DOUBLE       2.5000000e+08
+   FREQRES         DOUBLE           19531.250
+   BANDWD          FLOAT       2.00000e+07
+   TCAL            FLOAT           1.00000
+   TPLEVEL         FLOAT           35.0000
+   FASTTIM         FLOAT         0.0100000
+   SLOWTIM         FLOAT           1.00000
+   CLIP            FLOAT           9.99500
+   THRESH          FLOAT           9.99500
+   SYNTHL          BYTE         0
+   OVERL           BYTE         0
+   IMODF           BYTE         0
+   IFSYNTH         BYTE         0
+   TAPEROFF        BYTE         0
+   RFIEXC          BYTE         0
+   CLKSRC          BYTE         0
+   IFLO            BYTE         0
+   IFSIDE          BYTE         0
+   RFSIDE          BYTE         0
+
+SP_1HDR         STRING    = Array[77]
+XTENSION= 'BINTABLE'           / FITS binary table.                             
+ BITPIX  =                    8 / Binary data.                                   
+ NAXIS   =                    2 / Table is a Matrix.                             
+ NAXIS1  =                   74 / Width of table in bytes.                       
+ NAXIS2  =                    4 / Number of entries (rows) in Table.             
+ PCOUNT  =                    0 / Pointer Count                                  
+ GCOUNT  =                    1 / Only one group.                                
+ TFIELDS =                   22 / Number of fields in each row.                  
+ SCAN    =                   12 / Scan number                                    
+ UTDATE  =                52549 / MJD of start time                              
+ UTCSTART=   1.534999999998E+04 / start time seconds                             
+ UTCSTOP =   1.547200000000E+04 / stop time seconds                              
+ TTYPE1  = 'RCVRID  '           /                                                
+ TFORM1  = '1J      '           /                                                
+ TTYPE2  = 'TAPER   '           /                                                
+ TFORM2  = '8A      '           /                                                
+ TTYPE3  = 'OBSFREQ '           /                                                
+ TUNIT3  = 'HZ      '           /                                                
+ TFORM3  = '1D      '           /                                                
+ TTYPE4  = 'IFF     '           /                                                
+ TUNIT4  = 'HZ      '           /                                                
+ TFORM4  = '1D      '           /                                                
+ TTYPE5  = 'FREQRES '           /                                                
+ TUNIT5  = 'HZ      '           /                                                
+ TFORM5  = '1D      '           /                                                
+ TTYPE6  = 'BANDWD  '           /                                                
+ TUNIT6  = 'HZ      '           /                                                
+ TFORM6  = '1E      '           /                                                
+ TTYPE7  = 'TCAL    '           /                                                
+ TUNIT7  = 'DEGREES '           /                                                
+ TFORM7  = '1E      '           /                                                
+ TTYPE8  = 'TPLEVEL '           /                                                
+ TFORM8  = '1E      '           /                                                
+ TTYPE9  = 'FASTTIM '           /                                                
+ TUNIT9  = 'SECONDS '           /                                                
+ TFORM9  = '1E      '           /                                                
+ TTYPE10 = 'SLOWTIM '           /                                                
+ TUNIT10 = 'SECONDS '           /                                                
+ TFORM10 = '1E      '           /                                                
+ TTYPE11 = 'CLIP    '           /                                                
+ TUNIT11 = 'SECONDS '           /                                                
+ TFORM11 = '1E      '           /                                                
+ TTYPE12 = 'THRESH  '           /                                                
+ TUNIT12 = 'SECONDS '           /                                                
+ TFORM12 = '1E      '           /                                                
+ TTYPE13 = 'SYNTHL  '           /                                                
+ TUNIT13 = 'CODE    '           /                                                
+ TFORM13 = '1B      '           /                                                
+ TTYPE14 = 'OVERL   '           /                                                
+ TUNIT14 = 'CODE    '           /                                                
+ TFORM14 = '1B      '           /                                                
+ TTYPE15 = 'IMODF   '           /                                                
+ TUNIT15 = 'CODE    '           /                                                
+ TFORM15 = '1B      '           /                                                
+ TTYPE16 = 'IFSYNTH '           /                                                
+ TUNIT16 = 'CODE    '           /                                                
+ TFORM16 = '1B      '           /                                                
+ TTYPE17 = 'TAPEROFF'           /                                                
+ TUNIT17 = 'CODE    '           /                                                
+ TFORM17 = '1B      '           /                                                
+ TTYPE18 = 'RFIEXC  '           /                                                
+ TUNIT18 = 'CODE    '           /                                                
+ TFORM18 = '1B      '           /                                                
+ TTYPE19 = 'CLKSRC  '           /                                                
+ TUNIT19 = 'CODE    '           /                                                
+ TFORM19 = '1B      '           /                                                
+ TTYPE20 = 'IFLO    '           /                                                
+ TUNIT20 = 'CODE    '           /                                                
+ TFORM20 = '1B      '           /                                                
+ TTYPE21 = 'IFSIDE  '           /                                                
+ TUNIT21 = 'CODE    '           /                                                
+ TFORM21 = '1B      '           /                                                
+ TTYPE22 = 'RFSIDE  '           /                                                
+ TUNIT22 = 'CODE    '           /                                                
+ TFORM22 = '1B      '           /                                                
+ EXTNAME = 'RECEIVER          ' / extension name                                 
+ END                                                                             
+
+SP_3            STRUCT    = -> <Anonymous> Array[121]
+   SUBSCAN         LONG                 1
+   UTDATE          LONG             52549
+   UTCSTART        DOUBLE           15350.000
+   PSRPER          DOUBLE           1.0000000
+   DATA            FLOAT     Array[1024, 2, 4]
+
+SP_3HDR         STRING    = Array[36]
+XTENSION= 'BINTABLE'           / FITS binary table.                             
+ BITPIX  =                    8 / Binary data.                                   
+ NAXIS   =                    2 / Table is a Matrix.                             
+ NAXIS1  =                32792 / Width of table in bytes.                       
+ NAXIS2  =                  121 / Number of entries (rows) in Table.             
+ PCOUNT  =                    0 / Pointer Count                                  
+ GCOUNT  =                    1 / Only one group.                                
+ TFIELDS =                    5 / Number of fields in each row.                  
+ OBJECT  = '3c29    '           / Source_name                                    
+ SCAN    =                   12 / Scan number                                    
+ SUBSCAN =                    1 / Scan record number                             
+ BACKEND = 'SPAB    '           / Spectral processor                             
+ UTDATE  =                52549 / MJD start of integration                       
+ UTCSTART=   1.534999999998E+04 / start time seconds                             
+ UTCSTOP =   1.547200000000E+04 / stop time seconds                              
+ INTTIME =   9.999360000000E-01 / sample time seconds                            
+ CTYPE1  = 'FREQUENCY'          / First data axis is Frequency                   
+ CTYPE2  = 'STATE   '           / Second data axis is State                      
+ CTYPE3  = 'RECEIVER'           / Third data axis is Receiver                    
+ TTYPE1  = 'SUBSCAN '           /                                                
+ TFORM1  = '1J      '           /                                                
+ TTYPE2  = 'UTDATE  '           /                                                
+ TUNIT2  = 'MJD     '           /                                                
+ TFORM2  = '1J      '           /                                                
+ TTYPE3  = 'UTCSTART'           /                                                
+ TUNIT3  = 'SECONDS '           /                                                
+ TFORM3  = '1D      '           /                                                
+ TTYPE4  = 'PSRPER  '           /                                                
+ TUNIT4  = 'PULSAR PERIOD'      /                                                
+ TFORM4  = '1D      '           /                                                
+ TTYPE5  = 'DATA    '           /                                                
+ TUNIT5  = 'COUNTS  '           /                                                
+ TFORM5  = '8192E   '           /                                                
+ TDIM5   = '(1024,2,4)   '      / data dimension of the field                    
+ EXTNAME = 'DATA              ' / extension name                                 
+ END                                                                             
+
+==========================================================================================

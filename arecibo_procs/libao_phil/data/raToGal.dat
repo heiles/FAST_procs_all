@@ -1,0 +1,13 @@
+aips++ gridzilla..
+>?:w
+double equ2gal[] = {192.85948125, 62.87174874, 122.93191814,
+					  0.455983795747, 0.889988077457};
+if (gCoordSys == "GALACTIC") {
+          // Convert to galactic.
+          sphs2x(equ2gal, 1, 1, 1, 1, &ra, &dec, &lng, &lat);
+        } else {
+          lng = ra;
+          lat = dec;
+        }
+      }
+

@@ -1,0 +1,6 @@
+!p.multi=[0,1,3]
+plot, ha, para_ang_phil, /ysty
+oplot, ha, b.h.para_ang,col=!red
+plot, ha, b.h.para_ang,col=!red, /ysty
+plot, ha, b.h.azimuth, /ysty
+print, b[0].h.req_decj

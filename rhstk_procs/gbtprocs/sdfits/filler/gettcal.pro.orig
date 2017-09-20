@@ -1,0 +1,122 @@
+pro gettcal, FitsFiles, SkyFreq, High_Cal, TCalXX, TCalYY
+; USES FITS_OPEN, FITS_CLOSE, SXPAR
+
+; GET THE RECEIVER HEADER...
+Rcvr = mrdfits(FitsFiles.Rcvr, 0, Rcvr_head, /SILENT)
+
+; IS THE RECEIVER NATIVE CIRCULAR... 
+
+Rcvr_name = strtrim(sxpar(Rcvr_head, 'RECEIVER'),2)
+
+Native_Circular = (Rcvr_name eq 'Rcvr8_10') OR (Rcvr_name eq 'Rcvr12_18')
+
+; HOW MANY EXTENSIONS ARE IN THE RCVR FITS FILE...
+fits_open, FitsFiles.Rcvr, fcb
+fits_close, fcb
+N_extensions = fcb.nextend
+
+; READ EACH OF THE FITS EXTENSIONS IN THE RECEIVER FITS FILE...
+for ext = 1, N_Extensions do begin
+
+    ; READ IN THE FITS EXTENSION AND GET THE HEADER...
+    Rcvr = mrdfits(FitsFiles.Rcvr, ext, Rcvr_head, /SILENT)
+
+    ; RETRIEVE THE X AND Y CALS...
+    Polarize = strtrim(sxpar(Rcvr_head, 'POLARIZE'),2)
+    Receptor = strtrim(sxpar(Rcvr_head, 'RECEPTOR'),2)
+
+;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+; DID CLARK FIX THIS????
+
+    ; SELECT THE CORRECT EXTENSIONS...
+    Pol = Native_Circular $
+          ? where((['R','L'] eq Receptor) AND (['R','L'] eq Polarize), Match) $
+          : where((['XL','YR'] eq Receptor) AND (['X','Y'] eq Polarize), Match)
+
+;!!!!!!!!!!!!!!!!!!!!!!!!
+; KLUDGE FOR TROLANDS KU OBSERVATIONS...
+	if (Rcvr_name eq 'Rcvr12_18') $
+	then Pol = where((['R1','L1'] eq Receptor) AND (['R','L'] eq Polarize), Match)
+
+    if not Match then continue
+    
+;    message, string(ext,receptor,polarize,pol,form='(I2,2A3,I2)'), /INFO
+    
+    ; DO WE WANT THE HIGH OR LOW CAL...
+    calspec = keyword_set(HIGH_CAL) ? Rcvr.high_cal_temp : Rcvr.low_cal_temp
+
+    ; 2003 AUG 06
+    ; SEE NOTE BELOW ON OLD SCHEME.
+    ; NEW SCHEME IS TO SIMPLY DO A SIGMA-REJECTION FIRST ORDER LEAST
+    ; SQUARES FIT TO THE CALIBRATION SPECTRUM.  ALL BANDS EXHIBIT
+    ; CALIBRATION SPECTRA THAT ARE LINEAR WITH ROUGHLY 200 MHZ
+    ; RIPPLES.  WORD ON THE STREET IS THAT THIS IS AN INSTRUMENTAL
+    ; EFFECT (CORRESPONDING TO A CABLE LENGTH OF ABOUT 5 FEET OR SO.)
+    ; SO WE'RE NOT WORRYING ABOUT THE OFFSET FROM LINEARITY.
+
+    ; DO A SIGMA-REJECTION FIRST ORDER LEAST SQUARES FIT...
+    XData = Rcvr.frequency
+    YData = CalSpec
+    for i = 1, 3 do begin
+        Param = linfit(XData, YData, YFIT=CalFit)
+        Resid = YData - CalFit
+        Good  = where(abs(Resid)/stddev(Resid,/DOUBLE) le 3.0, NGood)
+        if (NGood eq N_elements(YData)) then break
+        XData = XData[Good]
+        YData = YData[Good]
+    endfor
+
+    ; GET THE TCAL AT THE SKY FREQUENCY...
+    TCal = Param[0] + Param[1] * SkyFreq
+
+; KLUDGE FOR TOM'S KU CAL DATA WHICH ARE NOT LINEAR...
+    if (Rcvr_name eq 'Rcvr12_18') then begin
+    ballpark = where(abs(rcvr.frequency - SkyFreq) le 3d8,nbp)
+    if nbp eq 0 then stop, 'emergency!'
+    Tcal = total(CalSpec[ballpark],/nan,/double)/nbp	
+    endif
+
+    if (Pol eq 0) $
+      then TCalXX = TCal $
+      else TCalYY = TCal
+
+    TEST=0
+    if Test then begin
+        plot, Rcvr.frequency/1d9, CalSpec, ys=18, xs=18, /NODATA
+        oplot, XData/1d9, CalFit, co=!green
+        oplot, SkyFreq*[1,1]/1d9, !y.crange, co=!red
+        oplot, Rcvr.frequency/1d9, CalSpec, ps=4, co=!yellow
+        io = get_kbrd(1)
+    endif
+
+    continue
+
+    ; 03AUG06, TR
+    ; NOTE TO SELF...  AS A QUICK AND DIRTY FIX, WE DECIDED ON THE
+    ; METHOD BELOW IN JANUARY.  I NEVER CAME BACK AND STRAIGHTENED
+    ; THIS OUT.  IN THE CASE OF X BAND, THE RANGE DEFINED BY 11
+    ; BANDWIDTHS CENTERED ON THE OBSERVING FREQUENCY NEVER ACTUALLY
+    ; SAMPLES A SINGLE POINT IN THE CALIBRATION SPECTRUM!!!  SO THE
+    ; KLUDGE WAS TO SIMPLY TAKE THE FINAL POINT IN THE SPECTRUM.  THIS
+    ; ITSELF WAS A KLUDGE FOR C-BAND WHERE WE OBSERVING SLIGHTLY OFF
+    ; THE EDGE OF THE CALIBRATION SPECTRUM.  SO THERE YOU GO.  WE'RE
+    ; DOING A MUCH BETTER JOB OF THIS NOW.
+        
+    ; DOING SOMETHING VERY SIMPLE HERE...
+    ; LET'S AVERAGE THE TCAL SPECTRA CENTERED ON CENTRAL FREQ
+    ; OF OBSERVATIONS WITHIN +/- 5.5 BANDWIDTHS...
+    AvgBand = where(ABS(Rcvr.frequency - freq) LE 5.5*BW, NChan)
+
+;    message, 'NChan: '+strtrim(Nchan,2), /INFO
+
+    ; IF SKY FREQUENCY IS OUTSIDE OF CAL SPECTRUM,
+    ; JUST AVERAGE OVER THE ENTIRE CAL SPECTRUM...
+    if (NChan eq 0) then AvgBand = N_elements(calspec)-1L
+
+    if (Pol eq 0) $
+      then TCalXX = mean(calspec[AvgBand]) $
+      else TCalYY = mean(calspec[AvgBand])
+
+endfor
+
+end; gettcal

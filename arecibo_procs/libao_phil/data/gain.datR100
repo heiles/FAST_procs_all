@@ -1,0 +1,7 @@
+; ch 430Mhz linefeed
+; installed 17mar05, back to start since this is the first gain curve we have
+;
+;frq typ c0          za          (za-14)^2  (za-14)^3    sigma     pol calVal
+!2001 1
+ 430.  4  1.8674e+01 -5.4140e-01 -3.7635e-02  7.8617e-03  5.6589e-01 I   47.5  31.0
+

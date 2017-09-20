@@ -1,0 +1,71 @@
+;
+; ran 46.8 chan 1 and 430 chan 2.
+; passive observing
+; to testCont/
+; at 15:31 broadcast 46.8011 Mhz tone -10db from veritcal
+; antenna on the hill
+; meteor_08oct2011_013.shs 2140119648 Oct  8 15:32
+;
+;  maybe around file 16 turned off sine wave??`
+;  or maybe file 16 cal was being turned on,off??
+; file 16 block 17 3sec cal.
+;
+; 2mhz bandwidth, about 8 millisecs out of every 10 millisecs.
+;
+; processed on aserv21 .. it has the daeron mount.
+;
+fbase='/mnt/daeron/testCont/meteor_08oct2011_'
+nfiles=26
+recsPerRead=8L
+tosmo=25L
+zx=1
+zy=1
+nsig=3
+y0=150
+x0=100
+x1=x0+750
+pwin50   =[x0,y0]
+pwin430=[x1,y0]
+ln=1
+csn=2.0
+
+key=''
+for ifile=0,nfiles-1 do begin
+	shsclose,/all
+	fname=fbase+string(format='(i03,".shs")',ifile)
+	istat=shsopen(fname,desc)
+	readsPerFile=desc.numrec/recsPerRead
+	for iread=0,readsPerFile-1 do begin
+		istat=shsget(desc,d,nrec=recsPerRead)
+		ndat=n_elements(d[0].d1.dat[0,*,0])
+		nipps=d[0].nipps
+		tp50=(reform(d.d1.dat[0,*,*])^2. + reform(d.d1.dat[1,*,*])^2.)
+		tp50=reform(tp50,ndat,nipps*nrec)
+		tp50=total(reform(tp50,tosmo,ndat/tosmo,nipps*nrec),1)/tosmo
+		a=meanrob(tp50,sig=sig)
+		img50=(tp50 - a)/sig
+;
+		tp430=(reform(d.d2.dat[0,*,*])^2. + reform(d.d2.dat[1,*,*])^2.)
+		tp430=reform(tp430,ndat,nipps*nrec)
+		tp430=total(reform(tp430,tosmo,ndat/tosmo,nipps*nrec),1)/tosmo
+		a=meanrob(tp430,sig=sig)
+		img430=(tp430 - a)/sig
+		key=checkkey()
+		if key ne '' then begin
+			print,'xmit to continue, s to stop' 
+		    key=checkkey(/wait)
+			if key eq 's' then stop
+			key=''
+		endif
+;
+		title=string(format='("50M file:",i03," blk:",i3)',ifile,iread)
+		imgdisp,img50,nsigclip=nsig,zx=zx,zy=zy,win=1,poswin=pwin50
+		note,ln,title,chars=csn
+
+		title=string(format='("430M file:",i03," blk:",i3)',ifile,iread)
+		imgdisp,img430,nsigclip=nsig,zx=zx,zy=zy,win=2,poswin=pwin430
+		note,ln,title,chars=csn
+		empty
+	endfor
+endfor
+end

@@ -1,0 +1,99 @@
+help
+-------
+help,/routines 		- show args..
+help,/source_files	- show source files
+help,/strutures     - show structures
+help,/traceback     - show current nesting of procedures
+help,/system_variables - show all system variables
+---------------------
+specical characters
+---------------------
+!	starts system variables
+'	delimits strings and hex/octal constants 
+"	delimits strings and octal     constants 
+$	end of line      ... continue line
+$	beginning of line... execute command in shell. no command, start shell
+.   within number, float/double
+.   start of line: executive command
+.   structure.name   ... structure tag reference.
+& 	separate multiple statements on 1 line
+*   multiply, ending subscript range equal to size of dimension.
+		a(3:*)  3 to end, b(*,3) all columns of row 3
+@file ... (include) substitutes contents of file for line then 
+			execute if running from file.
+@file ... if in interactive mode, execute @file in batch mode.
+?         help.. navigator
+ctrl-c    interrupt char.
+ctrl-d    eof if first char of line, else just eol.
+ctrl-z    put idl in the background
+ctrl-\    kill
+
+Executive commands - not case sensitive
+
+.run [-t] [-l file] file1,file2.,,, 
+					-compile and possibly run prog. 
+					- assumes .pro at end of each filename, 
+					- no file puts you in editor to enter progr.
+					- if main prog found, it runs it.
+					- -t, print listing to term, -l to file
+.rnew [-t] [-l file] file1,file2.,,, 
+					- same as run but erases all variables in main program unit.
+.compile file1,file2.,,, 
+					- compile programs to memory, don't run
+.continue		-continue execution.
+			      on error. reexecutes offending line
+			      on ctrl-c at point of interruption
+				  on stop .. at next line
+			  	- can abreviate to .c 
+.go				start execution at beginning of previously compiled main
+				program.
+.step [n] or .s [n]  - execute 1 or n lines then return to interactive mode.
+
+.stepover [n] or .so [n]
+				 same as .step except that calling  a function counts as
+				 only 1 line in stepover.
+.skip [n] 		skip 1 [n] lines then execute 1 line
+				use when error occurs...
+				error....  stops
+				fix error manually..then need to skip line
+				.skip    since rexecutes error.  
+				.continue
+.size code_size,data_size .. default is 32K, 8K
+			size used to compile programs. data_size if not the data, but the
+			data descriptors (types,len,etc).
+.trace 			- same as continue, but print each line of code
+
+
+------------------
+environment variables:
+---------------------
+setenv IDL_DEVICE	"X"  calls set_plot  with this value
+setenv IDL_PATH  	 directories to search for file
+setenv IDL_STARTUP 	 startup procedure to execute
+---------------------
+system variables
+---------------------
+!EDIT_INPUT  1/0  enables/disables recall line editing.
+!EDIT_INPUT  50   --> save 50 lines. must be in startup file
+!PATH             current search path . set by idl_path on startup
+---------------------
+path
+---------------------
+initialy set in /pkg/rsi/idl/bin/idl_setup.. you can change it online
+setenv IDL_PATH +path   --> expands to all subdirectories of path. See
+				expand path. note +, does not guarantee a specific order..
+!path = '/home/aosun/u4/phil/idl/...' + !path 
+---------------------
+
+making plots for overheads 
+;
+thick lines:
+!p.charthick or charthick= make thick characters .. try 5
+
+thick=10    make thick lines
+
+xthick=5
+ythick=5 make fat axis
+
+charsize=1.4 makes larger characters
+

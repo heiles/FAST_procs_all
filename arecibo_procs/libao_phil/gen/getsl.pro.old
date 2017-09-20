@@ -1,0 +1,218 @@
+;+
+;NAME:
+;getsl  - scan a corfile and return the scan list.
+;SYNTAX: sl=getsl(lun,scan=scan,maxscans=maxscans)
+;ARGS:
+;       lun:    int assigned to open file
+;KEYWORDS:
+;      scan: long if supplied then start scanning from this scan number.
+;                   default is the beginning of the file
+;  maxscans: long if supplied then quit after this many scans are found
+;                   default: 5000L
+;RETURNS:
+;      sl[nscans]:{sl} holds scan list info
+;DESCRIPTION
+;   This routine reads a corfile and returns an array of scanlist structures.
+;This array contains summary information for each scan of the file:
+;
+;   sl.scan       - long   scan number for this scan
+;   sl.bytepos    - unsigned long for start of this scan
+;   sl.stat       - .. not used yet..
+;   sl.rcvnum     - byte receiver number 1-16
+;			        note: ch is rcvnum 100
+;   sl.numfrq     - byte  .. number of freq,cor boards used this scan
+;   sl.rectype    - byte 1 -calon
+;                        2 -caloff
+;                        3 -onoff on  pos
+;                        4 -onoff off pos
+;                        5 -coron (track just on position)
+;   sl.numrecs    - long  .. number of groups(records in scan)
+;   sl.freq[4] float- topocentric frequency center each subband
+;   sl.srcname  string  - source name (max 12 long)
+;   sl.procname string  - procedure name used.
+;
+;   Some routines can use the sl structure to perform random access to
+;files (bypassing the need to search for a scan). The sl[] array can
+;also be used with the where() command to rapidly extract subsets of a
+;file.
+;
+;EXAMPLE:
+;   openr,lun,'/share/olcor/corfile.02nov00.x101.1',/get_lun
+;   sl=getsl(lun)
+;   1. process all of the lband wide data in a file:
+;       ind=where(sl.rcvnum eq 5,count)
+;       for i=0,n_elements(ind)-1
+;           print,corinpscan(lun,b,scan=sl[ind[i]].scan,sl=sl)
+;           .. process
+;       endfor
+;   2. Find all of the on/off patterns in a file. Make sure that the
+;      number of records in the on equals the number in the off.
+;      indon=where(sl.rectype eq 3 ,count)
+;      if count le 0 then goto,nopairs
+;;   make sure an off follows the on and has the same number of records..
+;;   (actually this will fail if the last rec of the file is an on since
+;;   indon+1 will go beyond the end of the sl array..)
+;      ind=  where((sl[indon+1].rectype eq 4) and $
+;            (sl[indon].numrecs eq sl[indon+1].numrecs),count)
+;      if count le 0 then goto,nopairs
+;      indon=indon[ind]
+;   3. plot all of the cal on/off records in a file with cormon().
+;       ind=where(sl.rectype le 2)
+;       cormon,lun,sl=sl[ind]
+;
+;Note this will not work with files > 2gigabytes since it is
+;using a 32 bit integer.
+;-
+;history:
+;02may02 - if we hit max scan, need to continue reading to the end
+;          of the current scan to get the correct rec count.
+;		   put i lt maxscans after we read maxscans+1 scan.
+;05jul02 - check for cor header
+;19sep02 - added rectype=5 coron
+;10nov02 - if ch master, set feed number to 100
+;14nov02 - needed to check swaprec for ch master
+;
+function getsl,lun,scan=scan,maxscans=maxscans
+    on_error,1
+    on_ioerror,done
+    forward_function iflorfnum,corhcalrec
+
+    if not keyword_set(maxscans)  then maxscans=5000L
+    if n_elements(scan) eq 0 then begin
+        rew,lun
+    endif else begin
+        istat=posscan(lun,scan,1)
+        if istat ne 1 then return,0
+    endelse
+    curscan=-1L
+    hdr={hdr}
+    gotdop=1
+    gotcor=1
+    gotpnt=1
+    a=tag_names(hdr)
+    ind=where((a eq 'dop') or (a eq 'DOP'),count)
+    if count le 0 then gotdop=0
+    ind=where((a eq 'cor') or (a eq 'COR'),count)
+    if count le 0 then gotcor=0
+    ind=where((a eq 'pnt') or (a eq 'PNT'),count)
+    if count le 0 then gotpnt=0
+
+    sl=replicate({sl},maxscans)
+    i=0L
+    grpsinscan=0L
+    point_lun,-lun,curpos
+    
+    while (1 ) do begin
+        readu,lun,hdr
+        if chkswaprec(hdr.std) then begin
+            hdr.std=swap_endian(hdr.std)
+            hdr.iflo.if1.st1=swap_endian(hdr.iflo.if1.st1)
+            if gotdop then begin
+                hdr.dop.freqbcrest=swap_endian(hdr.dop.freqbcrest)
+                hdr.dop.freqoffsets=swap_endian(hdr.dop.freqoffsets)
+                hdr.dop.factor     =swap_endian(hdr.dop.factor)
+                hdr.dop.stat       =swap_endian(hdr.dop.stat)
+            endif
+			if (gotpnt eq 1) then hdr.pnt.stat= swap_endian(hdr.pnt.stat)
+        endif
+
+;   if new scan,output old summary
+;
+        if (hdr.std.scannumber ne curscan) then begin
+			if i ge maxscans then goto,done
+            sl[i].scan=hdr.std.scannumber
+            sl[i].bytepos=curpos
+			if gotpnt then begin
+				if pnthgrmaster(hdr.pnt) eq 0 then begin 
+					sl[i].rcvnum = 100
+				endif else begin
+            		sl[i].rcvnum=iflohrfnum(hdr.iflo)
+				endelse
+			endif else begin
+            	sl[i].rcvnum=iflohrfnum(hdr.iflo)
+			endelse
+            sl[i].numfrq=hdr.std.grptotrecs
+            if (i gt 0) then begin
+                sl[i-1].numrecs=grpsinscan  ;always for the prev scan
+            endif
+            sl[i].srcname =string(hdr.proc.srcname)
+            sl[i].procname=string(hdr.proc.procname)
+            sl[i].stat=0 
+            sl[i].rectype=0
+			if gotcor then begin
+            	calrec=corhcalrec(hdr)
+			endif else begin
+            	calrec=0
+			endelse
+            if (calrec ne 0) then begin
+                sl[i].rectype=calrec
+            endif else begin
+                if sl[i].procname eq 'onoff' then begin
+                    if string(hdr.proc.car[*,0]) eq 'on' then begin
+                        sl[i].rectype=3
+                    endif else begin
+                        if string(hdr.proc.car[*,0]) eq 'off' then begin
+                            sl[i].rectype=4
+                        endif
+                    endelse
+                endif
+                if sl[i].procname eq 'on' then begin
+                    if string(hdr.proc.car[*,0]) eq 'on' then sl[i].rectype=5
+				endif
+            endelse
+            if gotdop then begin
+;
+;				dop correct each subbband
+;
+				if (hdr.dop.stat and '80000000'XL) ne 0 then begin
+            	  for j=0,sl[i].numfrq-1 do begin
+                	sl[i].freq[j]=(hdr.dop.freqbcrest + $
+						hdr.dop.freqoffsets[j])* hdr.dop.factor		
+            	  endfor
+				endif else begin
+            	  for j=0,sl[i].numfrq-1 do begin
+                	sl[i].freq[j]=hdr.dop.freqbcrest*hdr.dop.factor + $
+						hdr.dop.freqoffsets[j]
+            	  endfor
+				endelse
+            endif
+            curscan=hdr.std.scannumber
+            i=i+1
+        endif
+;
+;   position to next rec
+;
+        grpsinscan=hdr.std.grpnum
+        curpos=curpos + hdr.std.reclen
+        point_lun,lun,curpos
+end
+done:
+    if i ne 0 then sl[i-1].numrecs=grpsinscan    ;always for the prev scan
+    if i lt maxscans then sl=temporary(sl[0:i-1])
+;
+;   fix up the cal on/off scans. some routines don't bother to 
+;   fill in the hdrs correctly.. 
+;   a cal must have on followed by off..
+;
+    len=n_elements(sl)
+    if len gt 0 then begin
+        ontype=1
+        offtype=2
+    if len gt 1 then begin
+        for i=0,len-2 do begin
+            if (sl[i].rectype eq ontype) and $
+               (sl[i+1].rectype  ne offtype) then sl[i].rectype=0
+        endfor
+        for i=1,len-1 do begin
+            if (sl[i].rectype eq offtype) and $
+               (sl[i-1].rectype  ne ontype) then sl[i].rectype=0
+        endfor
+    endif else begin
+        if (sl[0].rectype eq ontype ) or (sl[0].rectype eq offtype) then $
+                sl[0].rectype=0
+    endelse
+    endif
+    point_lun,lun,0
+
+return,sl
+end

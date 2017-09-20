@@ -1,0 +1,43 @@
+;+
+;corfrq - compute the frequency or velocity array for a single board.
+;
+;SYNTAX:
+;     retArr=corfrq(hdr,retvel=retvel)
+;
+;ARGS:
+;     hdr: header for this board
+;
+;OPTIONAL ARGS:
+;
+;KEYWORDS:
+;     retvel: if not equal to zero, then return velocity rather
+;             than frequency array
+;
+;RETURNS:
+;     retArr: Array of floating point frequencies or velocities.
+;
+;COMMON BLOCKS:
+;
+;DESCRIPTION:
+;
+;   Compute the frequency array (in Mhz) for the correlator board
+; corresponding the the header (hdr) passed in. If the keyword retvel
+; is set (not equal zero) then return the velocity (optical definition).
+; The array returned (retArr) will have the same number of elements
+; as a single output sub correlator.
+;
+;   The order of the data  assumes that the spectral channels are in
+; increasing frequency order (corget always returns the data this way).
+; If the spectra are spDat[2048] and then retAr[0] will be the lowest
+; frequecy or the highest velocity.
+;
+;EXAMPLE:
+;   .. assume 2 boards used, pola,b per board
+;   corget,lun,b
+;   frqArr=corfrq(b[0].h)
+;   velArr=corfrq(b[0].h,/retvel)
+;   plot,frqArr,b[0].d[*,0]
+;
+;SEE ALSO:
+;     a 
+;-

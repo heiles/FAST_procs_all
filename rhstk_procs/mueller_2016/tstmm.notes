@@ -1,0 +1,41 @@
+
+Given observed polarized sources, there are three programs that fit the
+data to provide the Mueller matrix elements:
+
+1. mmfit_2016.pro
+
+Given a single polarized source observed over a range of parallactic
+angles, this least squares fits the data to provide the Mueller matrix
+parameters. This is our classic fitting procedure, modified to allow
+nonzero Stokes V. It is intended for the very common case where you have
+well-sampled parallactic angle covereage of a single polarization
+calibration standard source.
+
+If cables or cross-products are interchanged, the derived Mueller matrix
+coefficients and also the source Stokes parameters are affected. In
+particular, it can change the 'handedness' of the position angle of
+linear polarization. We used our fitting programs to investigate these
+effects, which we show in the table below.  'X<->Y' means X_cable is
+conneced to Y_probe and vice-versa, so that XX-YY changes sign and XY,YX
+are interchanged; 'XY<->YX' means the backend cross-product outputs are
+reversed but the X and Y cable labels are correct.
+
+	X<->Y	                                XY<->YX
+DeltaG_{X<->Y}=-DeltaG	                DeltaG_{XY<->YX}=DeltaG		
+
+psi_{X<->Y}=-(psi + 90)       		psi_{XY<->YX}=-(psi + 90)
+
+alpha_{X<->Y}=-alpha          		alpha_{XY<->YX}=(alpha + 90)
+
+epsilon_{X<->Y}=epsilon       		----(can't fit properly)
+
+phi{X<->Y}=phi + 180	      		----
+
+Q_src{X<->Y}=-Qsrc          		Q_src{XY<->YX}=-Qsrc
+
+U_src{X<->Y}=-Usrc          		U_src{XY<->YX}=-Usrc
+
+V_src{X<->Y}=Vsrc           		V_src{XY<->YX}=-Vsrc
+
+pasrc{X<->Y}=(pasrc + 90)   		pasrc{XY<->YX}=(pasrc + 90)
+
