@@ -17,6 +17,7 @@ function grabfits, inpath, infile, b=b, hdr=hdr, silent=silent
 ;ISTAT[2], indicates success:
 ;       istat[0] is 0 if the file couldn't be opened
 ;       istat[1] is 0 if the file couldn't be read
+;
 ;-
 
 forward_function masopen, masgetfile, masfreq
