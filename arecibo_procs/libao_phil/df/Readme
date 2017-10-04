@@ -1,9 +1,0 @@
-defining files:
-
-hbfilter.coef - filte coef from fax from harris
- hbfilter.spc - spectrum coef from hpsp43216 tech note jul 1994
-;
-the values in coef should be exact
-;
-;
-

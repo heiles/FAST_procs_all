@@ -1,7 +1,0 @@
-
-dipolexyoff.pro     - compute x,y offsets for 19 dipoles
-xytosky,x,y,dza,daz - convert cm x,y coord to amin on sky
-
-
-plotoffsets         - plot x,y, sky offsets
-

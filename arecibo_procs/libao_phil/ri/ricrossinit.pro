@@ -1,2 +1,0 @@
-;
-@hdrRiFull.h

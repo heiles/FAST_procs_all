@@ -1,1 +1,0 @@
-Unable to get write access to sound device /dev/audio

@@ -1,6 +1,0 @@
-;
-;routines for pointing model
-; fitmod  - fit model to pointing errors
-; modeval - evaluate model, encoder table at requested az,za
-; modinp  - input model coef/encoder table from disc files used by pointing.
-

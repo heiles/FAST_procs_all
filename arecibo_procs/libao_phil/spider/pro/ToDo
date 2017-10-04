@@ -1,8 +1,0 @@
-hdrMuellerN.h : new version combines old and new.
-
-				if flags the things that need to be changed in mmtostr.pro
-mmtostr.pro - working on adding new junk to this. combines old and new
-;			  not finished adding the new values.
-			 left off ra1950.. probably needs to be changed in
-			 mmproc..
-              ;

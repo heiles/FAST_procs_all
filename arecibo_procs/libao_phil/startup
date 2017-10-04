@@ -1,5 +1,0 @@
-!EDIT_INPUT=500
-;!path = expand_path('+~phil/idl/gen')+':'+ !path
-!path = expand_path('+/home/phil/idl/gen')+':'+ !path
-!x.style=1
-!y.style=1

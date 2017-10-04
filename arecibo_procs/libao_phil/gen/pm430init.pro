@@ -1,2 +1,0 @@
-@geninit
-addpath,'pm430'
